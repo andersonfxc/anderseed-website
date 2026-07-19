@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apply & Checkout | Anderseed Consulting</title>
+<meta name="description" content="Apply for the Anderseed Business Analysis Mentorship and choose a payment option." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23318A6E'/%3E%3Cpath d='M32 46 L32 24 M32 33 C24 26 20 18 26 13 C30 19 31 26 32 33 Z M32 29 C40 21 46 15 43 8 C37 14 34 21 32 29 Z' stroke='white' stroke-width='2.5' fill='white'/%3E%3C/svg%3E" />
+<style>
+*{box-sizing:border-box}
+:root{
+  --leaf:#318A6E;
+  --leaf-dark:#1F6B52;
+  --mint:#eaf5e8;
+  --ink:#171918;
+  --soft-ink:#4f5857;
+  --paper:#fffdf8;
+  --warm:#f6efe2;
+  --line:#ddd5c8;
+  --shadow:0 18px 50px rgba(49,43,31,.10);
+  --radius:8px;
+}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink);line-height:1.6}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+img{max-width:100%;display:block}
+.nav{border-bottom:1px solid var(--line);background:rgba(255,253,248,.94);backdrop-filter:blur(14px)}
+.nav-inner{max-width:1120px;height:84px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo img{width:220px;height:auto}
+.back-link{font-size:14px;font-weight:850;color:var(--leaf-dark)}
+.page{max-width:1120px;margin:0 auto;padding:44px 24px 58px}
+.eyebrow{display:inline-flex;margin-bottom:14px;padding:6px 10px;border-radius:999px;background:#0F2E22;color:#7ED4A0;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+.intro h1{margin:0 0 12px;font-family:Georgia,"Times New Roman",serif;font-size:48px;line-height:1.08;letter-spacing:-.2px}
+.intro p{max-width:650px;margin:0 0 22px;color:var(--soft-ink);font-size:16px;line-height:1.65}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 12px 34px rgba(49,43,31,.06)}
+.form-panel{padding:24px}
+.summary-panel{position:sticky;top:22px;padding:24px}
+.section-title{margin:0 0 16px;font-size:20px;line-height:1.25}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;margin-bottom:6px;font-size:13px;font-weight:850;color:#27312e}
+input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;color:var(--ink)}
+textarea{min-height:94px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid rgba(49,138,110,.14);border-color:var(--leaf)}
+.field-wide{grid-column:1/-1}
+.required{color:var(--leaf)}
+.order-box{padding:16px;border-radius:var(--radius);background:linear-gradient(135deg,#fff,#f9f2e6);border:1px solid var(--line)}
+.order-box h2{margin:0 0 10px;font-family:Georgia,"Times New Roman",serif;font-size:25px;line-height:1.15}
+.price{display:flex;align-items:end;gap:10px;margin:12px 0 6px}
+.price strong{font-family:Georgia,"Times New Roman",serif;font-size:48px;line-height:1}
+.price span{color:var(--soft-ink);text-decoration:line-through;font-size:14px}
+.save{display:inline-flex;margin-bottom:12px;padding:5px 9px;border-radius:999px;background:var(--mint);color:var(--leaf-dark);font-size:12px;font-weight:900}
+.mini-list{display:grid;gap:7px;margin:0;padding:0;list-style:none;color:#35403c;font-size:13px}
+.mini-list li{display:flex;gap:8px}
+.mini-list li:before{content:"";width:9px;height:9px;flex:0 0 9px;margin-top:7px;border-radius:50%;background:var(--leaf)}
+.payment-title{margin:20px 0 10px;font-size:15px;font-weight:900}
+.payment-methods{display:grid;gap:9px}
+.payment-method{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;text-align:left;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.payment-method:hover,.payment-method.active{border-color:rgba(49,138,110,.55);box-shadow:0 10px 22px rgba(49,43,31,.06);transform:translateY(-1px)}
+.payment-method strong{display:block;font-size:13px}
+.payment-method span{display:block;color:var(--soft-ink);font-size:12px}
+.method-logo{display:inline-grid;place-items:center;min-width:58px;height:28px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:950}
+.method-logo.card{background:#635bff;color:#fff}
+.method-logo.klarna{background:#ffb3c7;color:#161616}
+.method-logo.bank{background:#0F2E22;color:#7ED4A0}
+.pay-panel{display:none;margin-top:12px;padding:13px;border-radius:var(--radius);background:var(--mint);border:1px solid rgba(49,138,110,.2)}
+.pay-panel.active{display:block}
+.pay-panel p{margin:0 0 10px;color:var(--soft-ink);font-size:12px;line-height:1.5}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:46px;padding:12px 18px;border-radius:var(--radius);border:1px solid transparent;background:var(--leaf);color:#fff;font-size:15px;font-weight:900;cursor:pointer;transition:background .18s ease,transform .18s ease}
+.btn:hover{background:var(--leaf-dark);transform:translateY(-1px)}
+.btn.secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+.bank-details{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.bank-card{padding:9px;border-radius:var(--radius);background:#fff;border:1px solid rgba(49,138,110,.16)}
+.bank-card span{display:block;color:var(--soft-ink);font-size:10px;font-weight:850;letter-spacing:.05em;text-transform:uppercase}
+.bank-card b{display:block;color:var(--ink);font-size:12px;line-height:1.35}
+.bank-card.wide{grid-column:1/-1}
+.privacy{display:flex;align-items:flex-start;gap:10px;margin:14px 0 14px;color:var(--soft-ink);font-size:11px;line-height:1.45}
+.privacy input{width:auto;margin-top:3px;flex:0 0 auto}
+.footer{padding:24px;color:var(--soft-ink);font-size:12px;text-align:center;border-top:1px solid var(--line)}
+.footer a{color:var(--leaf-dark);font-weight:850;text-decoration:underline;text-underline-offset:3px}
+.tg-float{position:fixed;right:22px;bottom:22px;z-index:50;display:flex;align-items:center;gap:10px}
+.tg-label{padding:9px 12px;border-radius:var(--radius);background:#101411;color:#fff;font-size:13px;font-weight:850;box-shadow:0 12px 30px rgba(0,0,0,.18);opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.tg-float:hover .tg-label,.tg-float:focus-visible .tg-label{opacity:1;transform:translateX(0)}
+.tg-button{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#229ed9;color:#fff;box-shadow:0 14px 34px rgba(34,158,217,.32);transition:transform .18s ease,background .18s ease}
+.tg-float:hover .tg-button,.tg-float:focus-visible .tg-button{transform:scale(1.06);background:#1c93cc}
+.tg-button svg{width:29px;height:29px;fill:currentColor}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .summary-panel{position:static}
+  .intro h1{font-size:40px}
+}
+@media(max-width:640px){
+  .nav-inner{height:76px;padding:0 18px}
+  .logo img{width:184px}
+  .page{padding:34px 18px 46px}
+  .intro h1{font-size:34px}
+  .form-grid,.bank-details{grid-template-columns:1fr}
+  .bank-card.wide{grid-column:auto}
+  .tg-label{display:none}
+  .tg-float{right:16px;bottom:16px}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="../index.html" aria-label="Anderseed Consulting home"><img src="../assets/anderseed-logo-header.png" alt="Anderseed Consulting" /></a>
+    <a class="back-link" href="../index.html#pricing">Back to pricing</a>
+  </div>
+</header>
+<main class="page">
+  <div class="hero">
+    <section class="intro">
+      <span class="eyebrow">Secure your place</span>
+      <h1>Apply for the Anderseed BA Mentorship.</h1>
+      <p>Complete the short application details, then choose the payment route that works best for you. Card and Klarna use secure checkout links; bank transfer details are shown only when selected.</p>
+      <form class="panel form-panel" action="https://YOUR-CRM-FORM-ENDPOINT" method="post">
+        <h2 class="section-title">Application details</h2>
+        <div class="form-grid">
+          <div>
+            <label for="first-name">First name <span class="required">*</span></label>
+            <input id="first-name" name="first_name" autocomplete="given-name" required />
+          </div>
+          <div>
+            <label for="last-name">Last name <span class="required">*</span></label>
+            <input id="last-name" name="last_name" autocomplete="family-name" required />
+          </div>
+          <div>
+            <label for="email">Email address <span class="required">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div>
+            <label for="phone">Phone number</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+          <div class="field-wide">
+            <label for="referral">Where did you first hear about us? <span class="required">*</span></label>
+            <select id="referral" name="referral_source" required>
+              <option value="">Select one</option>
+              <option>Telegram community</option>
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>YouTube</option>
+              <option>Google search</option>
+              <option>Friend or referral</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field-wide">
+            <label for="goal">What support do you need most?</label>
+            <textarea id="goal" name="goal" placeholder="Example: CV positioning, BA project confidence, interview preparation, or getting my first UK BA role."></textarea>
+          </div>
+        </div>
+        <label class="privacy" for="application-consent">
+          <input id="application-consent" name="application_consent" type="checkbox" required />
+          <span>By submitting, you agree to be contacted about your application and payment, and to the <a href="../terms/index.html">terms</a> and <a href="../privacy/index.html">privacy notice</a>. Your details are not sold to third parties.</span>
+        </label>
+        <button class="btn secondary" type="submit">Send application details</button>
+      </form>
+    </section>
+    <aside class="panel summary-panel">
+      <div class="order-box">
+        <h2>Complete BA Mentorship Bundle</h2>
+        <div class="price"><strong>£800</strong><span>£1,280+ separately</span></div>
+        <div class="save">Save £480+ with the bundle</div>
+        <ul class="mini-list">
+          <li>Live mentorship and real project practice</li>
+          <li>ATS-proof CV, LinkedIn and interview support</li>
+          <li>Recruiter contacts, job playbook and alumni community</li>
+        </ul>
+      </div>
+      <h3 class="payment-title">Choose payment method</h3>
+      <div class="payment-methods" role="tablist" aria-label="Payment methods">
+        <button class="payment-method active" type="button" data-method="card" aria-selected="true">
+          <span><strong>Stripe card payment</strong><span>Pay securely by debit or credit card</span></span>
+          <span class="method-logo card">Stripe</span>
+        </button>
+        <button class="payment-method" type="button" data-method="klarna" aria-selected="false">
+          <span><strong>Klarna Pay in 3</strong><span>About £266.67 x 3 payments</span></span>
+          <span class="method-logo klarna">Klarna</span>
+        </button>
+        <button class="payment-method" type="button" data-method="bank" aria-selected="false">
+          <span><strong>Bank transfer</strong><span>Use your name as payment reference</span></span>
+          <span class="method-logo bank">Bank</span>
+        </button>
+      </div>
+      <div class="pay-panel active" data-panel="card">
+        <p>You will be taken to a secure Stripe checkout. Replace this placeholder with your live Stripe payment link before launch.</p>
+        <a class="btn" href="https://YOUR-STRIPE-CHECKOUT-LINK" target="_blank" rel="noopener">Continue to Stripe checkout</a>
+      </div>
+      <div class="pay-panel" data-panel="klarna">
+        <p>Klarna example: £800 split into 3 payments of about £266.67. Final instalment amount may vary slightly by provider.</p>
+        <a class="btn" href="https://YOUR-KLARNA-CHECKOUT-LINK" target="_blank" rel="noopener">Continue with Klarna</a>
+      </div>
+      <div class="pay-panel" data-panel="bank">
+        <p>Use the details below, then send your payment confirmation after transfer.</p>
+        <div class="bank-details" aria-label="Bank transfer details">
+          <div class="bank-card"><span>Payee name</span><b>Anderseed Consulting Ltd</b></div>
+          <div class="bank-card"><span>Bank</span><b>Mettle Business Account</b></div>
+          <div class="bank-card"><span>Sort code</span><b>04-03-33</b></div>
+          <div class="bank-card"><span>Account number</span><b>69499865</b></div>
+          <div class="bank-card wide"><span>Reference</span><b>Your full name + BA Mentorship</b></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="footer">© 2026 Anderseed Consulting. All rights reserved. <a href="../about/index.html">About</a> · <a href="../faq/index.html">FAQ</a> · <a href="../privacy/index.html">Privacy</a> · <a href="../terms/index.html">Terms</a></footer>
+<a class="tg-float" href="https://t.me/anderseedconsulting" target="_blank" rel="noopener" aria-label="Join the free Anderseed Telegram community">
+  <span class="tg-label">Join free BA community</span>
+  <span class="tg-button" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M27.6 5.1 3.9 14.2c-1.6.6-1.6 1.5-.3 1.9l6.1 1.9 2.3 7.1c.3.9.2 1.3 1 1.3.7 0 1-.3 1.4-.7l3.4-3.3 7 5.2c1.3.7 2.2.3 2.5-1.2L31.8 7c.5-1.8-.7-2.6-2.1-2Zm-3.8 5.5L12.4 20.8l-.4 4.1-2.3-7.1 14.6-9.2c.6-.4 1.1-.2.5.4Z"/></svg></span>
+</a>
+<script>
+const methodButtons=[...document.querySelectorAll(".payment-method")];
+const panels=[...document.querySelectorAll(".pay-panel")];
+methodButtons.forEach(button=>{
+  button.addEventListener("click",()=>{
+    const method=button.dataset.method;
+    methodButtons.forEach(item=>{
+      const active=item===button;
+      item.classList.toggle("active",active);
+      item.setAttribute("aria-selected",String(active));
+    });
+    panels.forEach(panel=>panel.classList.toggle("active",panel.dataset.panel===method));
+  });
+});
+</script>
+</body>
+</html>
