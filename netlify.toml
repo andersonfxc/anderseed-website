@@ -1,0 +1,8 @@
+[build]
+  command = "node scripts/build.js"
+  publish = "dist"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301

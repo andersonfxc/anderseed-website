@@ -1,0 +1,261 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "site_settings"
+    label: "Site Settings"
+    files:
+      - label: "Global settings"
+        name: "settings"
+        file: "content/settings.json"
+        format: "json"
+        fields:
+          - { label: "Site name", name: "siteName", widget: "string" }
+          - { label: "Site URL", name: "siteUrl", widget: "string" }
+          - { label: "Default description", name: "defaultDescription", widget: "text" }
+          - label: "Contact"
+            name: "contact"
+            widget: "object"
+            fields:
+              - { label: "Email", name: "email", widget: "string" }
+              - { label: "Phone display", name: "phone", widget: "string" }
+              - { label: "Phone link", name: "phoneHref", widget: "string" }
+              - { label: "WhatsApp label", name: "whatsappLabel", widget: "string" }
+              - { label: "WhatsApp URL", name: "whatsappUrl", widget: "string" }
+          - label: "Social links"
+            name: "social"
+            widget: "object"
+            fields:
+              - { label: "Telegram", name: "telegram", widget: "string" }
+              - { label: "Instagram", name: "instagram", widget: "string" }
+              - { label: "TikTok", name: "tiktok", widget: "string" }
+              - { label: "YouTube", name: "youtube", widget: "string" }
+          - label: "Form and checkout links"
+            name: "forms"
+            widget: "object"
+            fields:
+              - { label: "Roadmap form endpoint", name: "roadmapEndpoint", widget: "string" }
+              - { label: "Application form endpoint", name: "applicationEndpoint", widget: "string" }
+              - { label: "Stripe checkout URL", name: "stripeCheckoutUrl", widget: "string" }
+              - { label: "Klarna checkout URL", name: "klarnaCheckoutUrl", widget: "string" }
+          - label: "Bank transfer details"
+            name: "bank"
+            widget: "object"
+            fields:
+              - { label: "Payee name", name: "payeeName", widget: "string" }
+              - { label: "Bank name", name: "bankName", widget: "string" }
+              - { label: "Sort code", name: "sortCode", widget: "string" }
+              - { label: "Account number", name: "accountNumber", widget: "string" }
+              - { label: "Payment reference", name: "reference", widget: "string" }
+          - { label: "Footer tagline", name: "footerTagline", widget: "string" }
+
+  - name: "page_content"
+    label: "Page Content"
+    files:
+      - label: "Homepage"
+        name: "homepage"
+        file: "content/pages/homepage.json"
+        format: "json"
+        fields:
+          - label: "Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Eyebrow text", name: "eyebrowText", widget: "string" }
+              - { label: "Eyebrow highlight", name: "eyebrowHighlight", widget: "string" }
+              - { label: "Journey button label", name: "journeyButtonLabel", widget: "string" }
+              - { label: "Headline prefix", name: "headlinePrefix", widget: "string" }
+              - { label: "Headline highlight", name: "headlineHighlight", widget: "string" }
+              - { label: "Subline", name: "subline", widget: "string" }
+              - { label: "Body", name: "body", widget: "text" }
+              - { label: "Primary button label", name: "primaryButtonLabel", widget: "string" }
+              - { label: "Primary button URL", name: "primaryButtonUrl", widget: "string" }
+              - { label: "Secondary button label", name: "secondaryButtonLabel", widget: "string" }
+              - { label: "Secondary button URL", name: "secondaryButtonUrl", widget: "string" }
+              - { label: "Community button label", name: "communityButtonLabel", widget: "string" }
+          - label: "Programme"
+            name: "programme"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Featured title", name: "featuredTitle", widget: "string" }
+              - { label: "Featured badge", name: "featuredBadge", widget: "string" }
+              - { label: "Featured text", name: "featuredText", widget: "text" }
+          - label: "Programme cards"
+            name: "serviceCards"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+              - { label: "Icon type", name: "type", widget: "select", options: ["cv", "guide", "counselling", "interview", "linkedin", "community"] }
+              - { label: "Wide card", name: "wide", widget: "boolean", required: false, default: false }
+          - label: "Process"
+            name: "process"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - label: "Steps"
+                name: "steps"
+                widget: "list"
+                fields:
+                  - { label: "Marker", name: "marker", widget: "string" }
+                  - { label: "Timeline", name: "time", widget: "string" }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Text", name: "text", widget: "text" }
+                  - { label: "Style", name: "style", widget: "select", options: ["start", "training", "action", "confidence", "hired", "support"] }
+          - label: "Salary"
+            name: "salary"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Permanent label", name: "permanentLabel", widget: "string" }
+              - { label: "Permanent range", name: "permanentRange", widget: "string" }
+              - { label: "Permanent note", name: "permanentNote", widget: "string" }
+              - { label: "Contract label", name: "contractLabel", widget: "string" }
+              - { label: "Contract range", name: "contractRange", widget: "string" }
+              - { label: "Contract note", name: "contractNote", widget: "string" }
+              - { label: "Student label", name: "studentLabel", widget: "string" }
+              - { label: "Student range", name: "studentRange", widget: "string" }
+          - label: "Contact"
+            name: "contact"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Social title", name: "socialTitle", widget: "string" }
+              - { label: "Social intro", name: "socialIntro", widget: "text" }
+          - label: "Community CTA"
+            name: "community"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Primary button label", name: "primaryButtonLabel", widget: "string" }
+              - { label: "Secondary button label", name: "secondaryButtonLabel", widget: "string" }
+              - { label: "Roadmap button label", name: "roadmapButtonLabel", widget: "string" }
+      - label: "Pricing"
+        name: "pricing"
+        file: "content/pages/pricing.json"
+        format: "json"
+        fields:
+          - { label: "Section label", name: "sectionLabel", widget: "string" }
+          - { label: "Section title", name: "sectionTitle", widget: "string" }
+          - { label: "Section intro", name: "sectionIntro", widget: "text" }
+          - { label: "Individual services title", name: "individualServicesTitle", widget: "string" }
+          - label: "Services"
+            name: "services"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Description", name: "description", widget: "string" }
+              - { label: "Price", name: "price", widget: "string" }
+          - label: "Bundle"
+            name: "bundle"
+            widget: "object"
+            fields:
+              - { label: "Badge", name: "badge", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Price", name: "price", widget: "string" }
+              - { label: "Was price", name: "was", widget: "string" }
+              - { label: "Save text", name: "save", widget: "string" }
+              - { label: "Features", name: "features", widget: "list", field: { label: "Feature", name: "feature", widget: "string" } }
+              - { label: "Button label", name: "buttonLabel", widget: "string" }
+              - { label: "Button URL", name: "buttonUrl", widget: "string" }
+              - { label: "Payment note", name: "paymentNote", widget: "text" }
+      - label: "Testimonials"
+        name: "testimonials"
+        file: "content/pages/testimonials.json"
+        format: "json"
+        fields:
+          - { label: "Label", name: "label", widget: "string" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text" }
+          - label: "Testimonials"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Quote", name: "quote", widget: "text" }
+              - { label: "Name", name: "name", widget: "string" }
+      - label: "FAQs"
+        name: "faqs"
+        file: "content/pages/faqs.json"
+        format: "json"
+        fields:
+          - { label: "Homepage FAQ intro", name: "homepageIntro", widget: "text" }
+          - { label: "Homepage questions", name: "homepageQuestions", widget: "list", field: { label: "Question", name: "question", widget: "string" } }
+          - label: "FAQ categories"
+            name: "categories"
+            widget: "list"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - label: "Questions"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Question", name: "question", widget: "string" }
+                  - { label: "Answer", name: "answer", widget: "text" }
+      - label: "About page"
+        name: "about"
+        file: "content/pages/about.json"
+        format: "json"
+        fields:
+          - { label: "SEO title", name: "seoTitle", widget: "string" }
+          - { label: "SEO description", name: "seoDescription", widget: "text" }
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text" }
+          - label: "Difference cards"
+            name: "differenceCards"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+      - label: "Roadmap page"
+        name: "roadmap"
+        file: "content/pages/roadmap.json"
+        format: "json"
+        fields:
+          - { label: "SEO title", name: "seoTitle", widget: "string" }
+          - { label: "SEO description", name: "seoDescription", widget: "text" }
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text" }
+          - { label: "Inside title", name: "insideTitle", widget: "string" }
+          - { label: "Inside text", name: "insideText", widget: "text" }
+          - { label: "Points", name: "points", widget: "list", field: { label: "Point", name: "point", widget: "string" } }
+          - { label: "Form title", name: "formTitle", widget: "string" }
+          - { label: "Form intro", name: "formIntro", widget: "text" }
+          - { label: "Next steps title", name: "nextStepsTitle", widget: "string" }
+          - { label: "Next steps intro", name: "nextStepsIntro", widget: "text" }
+
+  - name: "blog"
+    label: "Blog Posts"
+    label_singular: "Blog Post"
+    folder: "content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    preview_path: "blog/{{slug}}/"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Meta description", name: "description", widget: "text" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Publish date", name: "date", widget: "date" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Body", name: "body", widget: "markdown" }

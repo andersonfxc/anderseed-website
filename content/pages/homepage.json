@@ -1,0 +1,134 @@
+{
+  "hero": {
+    "eyebrowText": "Business Analyst-ready in",
+    "eyebrowHighlight": "90 days",
+    "journeyButtonLabel": "See journey",
+    "headlinePrefix": "From zero to BA -",
+    "headlineHighlight": "No IT experience needed",
+    "subline": "Mentorship that plants you. Guidance that helps you grow.",
+    "body": "Practical Business Analysis mentorship for career changers, graduates, and newcomers to the UK market. Build real BA skills, confidence, and a job-ready plan without guessing your way through the process.",
+    "primaryButtonLabel": "Join Premium",
+    "primaryButtonUrl": "#pricing",
+    "secondaryButtonLabel": "See the BA Journey",
+    "secondaryButtonUrl": "#steps",
+    "communityButtonLabel": "Join Free BA Community"
+  },
+  "programme": {
+    "label": "The programme",
+    "title": "Everything you need to become BA-ready",
+    "intro": "A structured live mentorship experience that brings together fundamentals, practical exercises, career support, and accountability.",
+    "featuredTitle": "8-Week Live Mentorship Cohort",
+    "featuredBadge": "Join premium",
+    "featuredText": "Hands-on BA training across the end-to-end software development lifecycle. Practise requirements gathering, process mapping, stakeholder conversations, documentation, and real project thinking with mentor feedback and accountability."
+  },
+  "serviceCards": [
+    {
+      "title": "CV Review",
+      "text": "Expert feedback on your BA CV to make it land interviews",
+      "type": "cv"
+    },
+    {
+      "title": "Job Application Guide",
+      "text": "Step-by-step playbook to find BA roles in the UK",
+      "type": "guide"
+    },
+    {
+      "title": "1-on-1 Counselling",
+      "text": "Direct mentor time for personalised career guidance",
+      "type": "counselling",
+      "wide": true
+    },
+    {
+      "title": "Interview Prep",
+      "text": "Mock BA interviews with feedback so you walk in confident",
+      "type": "interview"
+    },
+    {
+      "title": "LinkedIn Review",
+      "text": "Full rewrite to attract BA recruiters in the UK market",
+      "type": "linkedin"
+    },
+    {
+      "title": "Lifetime Community",
+      "text": "Weekly catch-ups and peer support - forever, not just 8 weeks",
+      "type": "community"
+    }
+  ],
+  "process": {
+    "label": "How it works",
+    "title": "Your BA journey, mapped like a real project.",
+    "intro": "A clear route from beginner to supported BA professional, with practical training, live project experience, job-readiness, and ongoing career support.",
+    "steps": [
+      {
+        "marker": "Start",
+        "time": "Day 0",
+        "title": "Choose programme",
+        "text": "Select the mentorship path that matches your current stage, goals, and level of BA confidence.",
+        "style": "start"
+      },
+      {
+        "marker": "Access",
+        "time": "Week 1",
+        "title": "Get onboarded",
+        "text": "Join smoothly and receive access to premium training, resources, mentor guidance, and your support community.",
+        "style": "training"
+      },
+      {
+        "marker": "Build",
+        "time": "Weeks 2-8",
+        "title": "Learn and take action",
+        "text": "Work through BA concepts, practical tasks, and live project scenarios that mirror real workplace expectations.",
+        "style": "action"
+      },
+      {
+        "marker": "Ready",
+        "time": "90 days",
+        "title": "Build confidence",
+        "text": "Strengthen your BA language, stakeholder thinking, documentation skills, and ability to explain your work clearly.",
+        "style": "confidence"
+      },
+      {
+        "marker": "Career",
+        "time": "6 months",
+        "title": "Get hired",
+        "text": "Use your CV, LinkedIn, job application strategy, and interview preparation to move confidently toward BA roles.",
+        "style": "hired"
+      },
+      {
+        "marker": "Ongoing",
+        "time": "Lifetime",
+        "title": "Lifetime job support group",
+        "text": "Stay connected after the programme with career check-ins, peer support, job leads, and continued accountability.",
+        "style": "support"
+      }
+    ]
+  },
+  "salary": {
+    "label": "Career outlook",
+    "title": "UK Business Analysis salary snapshot",
+    "intro": "Indicative guide only. Ranges vary by industry, experience, location, and hiring market.",
+    "permanentLabel": "Permanent roles",
+    "permanentRange": "£40k-£85k",
+    "permanentNote": "Based on industry and experience",
+    "contractLabel": "Contract roles",
+    "contractRange": "£350-£600/day",
+    "contractNote": "Typical day-rate opportunity",
+    "studentLabel": "Anderseed students get hired around",
+    "studentRange": "£41k-£55k average"
+  },
+  "contact": {
+    "label": "Contact us",
+    "title": "Speak with Anderseed Consulting",
+    "intro": "Have a question about the mentorship, free roadmap, or the right next step for your BA journey? Reach out and we will point you in the right direction.",
+    "socialTitle": "Stay connected with us",
+    "socialIntro": "Follow Anderseed for BA tips, job-search guidance, live sessions, community support, and cohort updates."
+  },
+  "community": {
+    "label": "Ready to grow?",
+    "title": "Join the Anderseed community",
+    "intro": "Come into the free community, follow the socials, and get practical BA career support before you commit to the full programme.",
+    "primaryButtonLabel": "Join Telegram community",
+    "secondaryButtonLabel": "View paid programme",
+    "roadmapButtonLabel": "Get Free Roadmap"
+  }
+}

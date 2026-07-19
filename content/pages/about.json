@@ -1,0 +1,76 @@
+{
+  "seoTitle": "About Anderseed Consulting | Business Analysis Mentorship UK",
+  "seoDescription": "Learn about Anderseed Consulting, a practical Business Analysis mentorship brand helping beginners, career changers, graduates, and newcomers to the UK market become BA-ready.",
+  "eyebrow": "About Anderseed Consulting",
+  "headline": "Business Analysis mentorship for people ready to grow.",
+  "intro": "Anderseed Consulting helps beginners, career changers, graduates, and newcomers to the UK market build the practical skills, language, confidence, and career positioning needed to move toward Business Analysis roles.",
+  "sections": [
+    {
+      "style": "dark",
+      "label": "Why we exist",
+      "title": "Clear guidance for the messy career-change middle.",
+      "body": "Many people want to become Business Analysts but do not know what to learn first, how to describe their current experience, or how to become confident enough for interviews. Anderseed turns that uncertainty into a structured path.",
+      "points": [
+        "Start from your current experience, not an unrealistic perfect background.",
+        "Build practical BA habits through guided tasks and live project thinking.",
+        "Translate your story into CV, LinkedIn, application, and interview language."
+      ]
+    },
+    {
+      "style": "light",
+      "label": "Our approach",
+      "title": "Practical first. Human always.",
+      "body": "The Anderseed model combines live mentorship, project-style practice, career support, and community accountability. Learners are supported beyond the classroom so they can build confidence, keep applying, and stay close to people on the same journey.",
+      "points": [
+        "Business Analysis fundamentals explained in plain language.",
+        "Hands-on requirements, stakeholder, process, and documentation practice.",
+        "Career assets built around UK recruiter expectations.",
+        "Community support that continues after the cohort ends."
+      ]
+    }
+  ],
+  "differenceTitle": "Built around the full journey, not just the lessons.",
+  "differenceIntro": "The goal is to help learners understand the role, practise the work, position their experience, and stay supported through the job-search process.",
+  "differenceCards": [
+    {
+      "title": "Beginner-friendly structure",
+      "text": "Clear steps for people with no IT background, no BA title, or no confidence about where to start."
+    },
+    {
+      "title": "Real project thinking",
+      "text": "Practice goes beyond theory, with requirements, process mapping, documentation, stakeholder scenarios, and delivery awareness."
+    },
+    {
+      "title": "Career positioning",
+      "text": "CV, LinkedIn, job application, recruiter, and interview support help learners explain their value with stronger BA language."
+    },
+    {
+      "title": "UK market focus",
+      "text": "Guidance is shaped around UK Business Analyst roles, hiring expectations, salary context, and recruiter language."
+    },
+    {
+      "title": "Small cohort attention",
+      "text": "The mentorship is designed for feedback, accountability, and personal attention instead of anonymous learning."
+    },
+    {
+      "title": "Support after training",
+      "text": "Learners stay close to community support, career check-ins, job-search encouragement, and alumni accountability."
+    }
+  ],
+  "audienceTitle": "You do not need to arrive as a Business Analyst.",
+  "audienceIntro": "Anderseed is built for people with ambition, transferable experience, and the willingness to practise. The mentorship helps connect what you already know to the Business Analysis role you want.",
+  "audiences": [
+    {
+      "title": "Career changers",
+      "text": "People moving from operations, customer service, admin, healthcare, retail, finance, education, or other fields into Business Analysis."
+    },
+    {
+      "title": "Graduates",
+      "text": "People who need practical project language, clearer positioning, and support moving from study into BA-ready applications."
+    },
+    {
+      "title": "Newcomers to the UK market",
+      "text": "People who need help understanding UK recruiter expectations, CV language, LinkedIn positioning, and interview confidence."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "label": "Testimonials",
+  "title": "Built for people starting from scratch",
+  "intro": "Use these as starter examples until real member stories are ready.",
+  "items": [
+    {
+      "quote": "The structure gave me clarity on what Business Analysts actually do and how to position my existing experience.",
+      "name": "Career changer"
+    },
+    {
+      "quote": "The CV and LinkedIn guidance helped me understand how to speak the language recruiters expect.",
+      "name": "Graduate learner"
+    },
+    {
+      "quote": "The community makes the journey feel less lonely. You can ask questions and get support.",
+      "name": "New to UK market"
+    }
+  ]
+}

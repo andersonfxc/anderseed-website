@@ -1,0 +1,32 @@
+{
+  "siteName": "Anderseed Consulting",
+  "siteUrl": "https://YOUR-DOMAIN.com",
+  "defaultDescription": "Practical Business Analysis mentorship for career changers, graduates and newcomers to the UK market.",
+  "contact": {
+    "email": "hello@anderseedconsulting.com",
+    "phone": "+44 7000 000000",
+    "phoneHref": "tel:+447000000000",
+    "whatsappLabel": "Chat with a consultant",
+    "whatsappUrl": "https://wa.me/447000000000"
+  },
+  "social": {
+    "telegram": "https://t.me/anderseedconsulting",
+    "instagram": "https://instagram.com/YOUR-HANDLE",
+    "tiktok": "https://www.tiktok.com/@ba.transition?_r=1&_t=ZN-97tTUfgYvmY",
+    "youtube": "https://youtube.com/@YOUR-HANDLE"
+  },
+  "forms": {
+    "roadmapEndpoint": "https://YOUR-CRM-FORM-ENDPOINT",
+    "applicationEndpoint": "https://YOUR-CRM-FORM-ENDPOINT",
+    "stripeCheckoutUrl": "https://YOUR-STRIPE-CHECKOUT-LINK",
+    "klarnaCheckoutUrl": "https://YOUR-KLARNA-CHECKOUT-LINK"
+  },
+  "bank": {
+    "payeeName": "Anderseed Consulting Ltd",
+    "bankName": "Mettle Business Account",
+    "sortCode": "04-03-33",
+    "accountNumber": "69499865",
+    "reference": "Your full name + BA Mentorship"
+  },
+  "footerTagline": "Career clarity. Skills. Confidence. Growth."
+}
