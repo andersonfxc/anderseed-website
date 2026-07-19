@@ -1,17 +1,17 @@
 {
   "hero": {
-    "eyebrowText": "Business Analyst-ready in",
-    "eyebrowHighlight": "90 days",
+    "headlineHighlight": "No IT experience needed",
+    "primaryButtonLabel": "Join Premium",
+    "body": "Practical Business Analysis mentorship for career changers, graduates, and newcomers to the UK market. Build real BA skills, confidence, and a job-ready plan without guessing your way through the process.",
     "journeyButtonLabel": "See journey",
     "headlinePrefix": "From zero to BA -",
-    "headlineHighlight": "No IT experience needed",
-    "subline": "Mentorship that plants you. Guidance that helps you grow.",
-    "body": "Practical Business Analysis mentorship for career changers, graduates, and newcomers to the UK market. Build real BA skills, confidence, and a job-ready plan without guessing your way through the process.",
-    "primaryButtonLabel": "Join Premium",
-    "primaryButtonUrl": "#pricing",
-    "secondaryButtonLabel": "See the BA Journey",
     "secondaryButtonUrl": "#steps",
-    "communityButtonLabel": "Join Free BA Community"
+    "eyebrowHighlight": "90 days",
+    "secondaryButtonLabel": "See the BA Journey",
+    "subline": "Mentorship that plants you. Guidance that helps you grow.",
+    "eyebrowText": "Become Business Analyst-ready in",
+    "communityButtonLabel": "Join Free BA Community",
+    "primaryButtonUrl": "#pricing"
   },
   "programme": {
     "label": "The programme",
@@ -104,17 +104,17 @@
     ]
   },
   "salary": {
-    "label": "Career outlook",
-    "title": "UK Business Analysis salary snapshot",
-    "intro": "Indicative guide only. Ranges vary by industry, experience, location, and hiring market.",
-    "permanentLabel": "Permanent roles",
-    "permanentRange": "£40k-£85k",
     "permanentNote": "Based on industry and experience",
     "contractLabel": "Contract roles",
-    "contractRange": "£350-£600/day",
+    "studentRange": "£41k-£55k average",
     "contractNote": "Typical day-rate opportunity",
-    "studentLabel": "Anderseed students get hired around",
-    "studentRange": "£41k-£55k average"
+    "permanentLabel": "Permanent roles",
+    "contractRange": "£350-£600/day",
+    "intro": "Indicative guide only. Ranges vary by industry, experience, location, and hiring market.",
+    "permanentRange": "£40k-£85k",
+    "label": "Career outlook",
+    "title": "UK Business Analysis salary snapshot",
+    "studentLabel": "Anderseed students get hired around"
   },
   "contact": {
     "label": "Contact us",
