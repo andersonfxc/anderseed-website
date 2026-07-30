@@ -2,7 +2,7 @@
   "hero": {
     "headlineHighlight": "No IT experience needed",
     "primaryButtonLabel": "Join Premium",
-    "body": "The Anderseed Mentorship Programme was built around one goal: making you employable, not just knowledgeable. Through practical projects, personalised mentorship, our Signature Job Application Guide, and real-world application, you'll build the skills, confidence, and experience employers look for, so you can stand out and succeed in today's competitive job market.",
+    "body": "The Anderseed Mentorship Programme is built around one goal: making you employable, not just knowledgeable. Through practical projects, personalised mentorship, and our Signature Job Application Guide, you'll build the skills, confidence, and real-world experience employers value most.",
     "journeyButtonLabel": "See journey",
     "headlinePrefix": "From zero to BA -",
     "secondaryButtonUrl": "#steps",
@@ -16,7 +16,7 @@
   "programme": {
     "label": "The programme",
     "title": "Everything you need to become BA-ready",
-    "intro": "A structured live mentorship experience that brings together fundamentals, practical exercises, career support, and accountability.",
+    "intro": "A structured mentorship programme that blends practical learning, live coaching, real-world projects, and career support to accelerate your journey into Business Analysis.",
     "featuredTitle": "8-Week Live Mentorship Cohort",
     "featuredBadge": "Join premium",
     "featuredText": "Hands-on BA training across the end-to-end software development lifecycle. Practise requirements gathering, process mapping, stakeholder conversations, documentation, and real project thinking with mentor feedback and accountability."
