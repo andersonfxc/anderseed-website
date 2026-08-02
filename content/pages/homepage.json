@@ -62,15 +62,15 @@
       {
         "marker": "Start",
         "time": "Day 0",
-        "title": "Choose programme",
-        "text": "Select the mentorship path that matches your current stage, goals, and level of BA confidence.",
+        "title": "Start Your Journey",
+        "text": "Take the first step towards becoming a Business Analyst with Anderseed.",
         "style": "start"
       },
       {
         "marker": "Access",
         "time": "Week 1",
         "title": "Get onboarded",
-        "text": "Join smoothly and receive access to premium training, resources, mentor guidance, and your support community.",
+        "text": "Meet with me, your mentor, for a 15-minute welcome call to map out your journey and set you up for success from day one. Then unlock your training, resources, and support community.",
         "style": "training"
       },
       {
@@ -91,7 +91,7 @@
         "marker": "Career",
         "time": "6 months",
         "title": "Get hired",
-        "text": "Use your CV, LinkedIn, job application strategy, and interview preparation to move confidently toward BA roles.",
+        "text": "Confidently apply for BA roles with a standout CV, an optimised LinkedIn profile, our Signature Application Guide, and interview preparation designed to help you stand out.",
         "style": "hired"
       },
       {
