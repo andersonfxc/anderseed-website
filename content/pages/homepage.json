@@ -15,7 +15,7 @@
   },
   "programme": {
     "label": "The programme",
-    "title": "Everything you need to become BA-ready",
+    "title": "Everything you need to become BA ready",
     "intro": "More than a course, this is a structured mentorship programme designed to bridge the gap between learning Business Analysis and becoming a Business Analyst.",
     "featuredTitle": "8-Week Live Mentorship Cohort",
     "featuredBadge": "Join premium",
@@ -23,34 +23,34 @@
   },
   "serviceCards": [
     {
-      "title": "Expert CV Review",
-      "text": "Expert feedback on your BA CV to make it land interviews",
+      "title": "CV Workshop",
+      "text": "Turn your experience into a CV recruiters notice.",
       "type": "cv"
     },
     {
-      "title": "Job Application Guide",
-      "text": "Step-by-step playbook to find BA roles in the UK",
+      "title": "Signature Application Guide",
+      "text": "Apply smarter, not harder.",
       "type": "guide"
     },
     {
-      "title": "1-on-1 Counselling",
-      "text": "Direct mentor time for personalised career guidance",
+      "title": "Career Mentoring",
+      "text": "Get honest guidance from someone who's walked the path.",
       "type": "counselling",
       "wide": true
     },
     {
-      "title": "Interview Prep",
+      "title": "Interview Preparation",
       "text": "Mock BA interviews with feedback so you walk in confident",
       "type": "interview"
     },
     {
-      "title": "LinkedIn Review",
-      "text": "Full rewrite to attract BA recruiters in the UK market",
+      "title": "LinkedIn Optimisation",
+      "text": "Position yourself to attract recruiters and opportunities.",
       "type": "linkedin"
     },
     {
       "title": "Lifetime Community",
-      "text": "Weekly catch-ups and peer support - forever, not just 8 weeks",
+      "text": "Your support network doesn't end after programme.",
       "type": "community"
     }
   ],
