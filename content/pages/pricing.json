@@ -31,23 +31,24 @@
     }
   ],
   "bundle": {
+    "buttonLabel": "Apply and secure your place",
     "badge": "Save £480+ with the bundle",
-    "title": "Complete Anderseed BA Mentorship Bundle",
     "price": "800",
     "was": "£1,280+ if bought separately",
-    "save": "Save £480+",
+    "title": "Complete Anderseed BA Mentorship Bundle",
+    "paymentNote": "pay by card, Klarna Pay in 3, or bank transfer after approval.",
     "features": [
-      "8-week live mentorship cohort",
+      "8-week live mentorship programme",
       "Real project experience - not theory",
-      "ATS-proof CV & LinkedIn framework + expert reviews",
-      "Job application playbook that gets interviews",
+      "Professional BA portfolio",
+      "CV Workshop & LinkedIn optimisation",
+      "Signature Job Application Guide",
       "1:1 mock interviews & career coaching",
       "50+ BA recruiter & hiring contacts",
-      "6 months of support once you're in the role",
-      "Lifetime alumni community"
+      "Workplace support after you get hired",
+      "Lifetime access to The Anderseed Circle"
     ],
-    "buttonLabel": "Apply and secure your place",
     "buttonUrl": "checkout/index.html",
-    "paymentNote": "pay by card, Klarna Pay in 3, or bank transfer after approval."
+    "save": "Save £480+"
   }
 }
