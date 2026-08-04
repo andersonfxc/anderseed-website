@@ -5,29 +5,29 @@
   "individualServicesTitle": "Individual services",
   "services": [
     {
-      "name": "CV Writing",
-      "description": "Written from scratch",
+      "name": "8-Week Live Mentorship",
+      "description": "Weekly live coaching & accountability",
+      "price": "£800"
+    },
+    {
+      "name": "Real Project Experience",
+      "description": "Build your professional BA portfolio",
+      "price": "£259"
+    },
+    {
+      "name": "CV Workshop",
+      "description": "Create a recruiter ready CV",
       "price": "£200"
     },
     {
-      "name": "CV Review",
-      "description": "Improve your existing CV",
-      "price": "£200"
+      "name": "Signature Job Application Guide",
+      "description": "Proven interview-winning framework",
+      "price": "£199"
     },
     {
-      "name": "Job Application Guide",
-      "description": "Step-by-step UK BA job search",
-      "price": "£200"
-    },
-    {
-      "name": "Interview Prep",
-      "description": "Mock interview and feedback",
-      "price": "£150"
-    },
-    {
-      "name": "LinkedIn Review",
-      "description": "Optimise your profile",
-      "price": "£100"
+      "name": "Interview Preparation",
+      "description": "Mock interviews & expert feedback",
+      "price": "£149"
     }
   ],
   "bundle": {
