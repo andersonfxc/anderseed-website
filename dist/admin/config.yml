@@ -225,7 +225,7 @@ collections:
             fields:
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Text", name: "text", widget: "text" }
-      - label: "Roadmap page"
+      - label: "Homepage roadmap section"
         name: "roadmap"
         file: "content/pages/roadmap.json"
         format: "json"
@@ -235,13 +235,54 @@ collections:
           - { label: "Eyebrow", name: "eyebrow", widget: "string" }
           - { label: "Headline", name: "headline", widget: "string" }
           - { label: "Intro", name: "intro", widget: "text" }
+          - { label: "Hero primary button label", name: "heroPrimaryButtonLabel", widget: "string" }
+          - { label: "Hero secondary button label", name: "heroSecondaryButtonLabel", widget: "string" }
+          - { label: "Homepage section label", name: "homeSectionLabel", widget: "string" }
+          - { label: "Homepage title", name: "homeTitle", widget: "string" }
+          - { label: "Homepage title highlight", name: "homeTitleHighlight", widget: "string" }
+          - { label: "Homepage intro", name: "homeIntro", widget: "text" }
+          - label: "Homepage roadmap cards"
+            name: "homeCards"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+          - { label: "Homepage includes aria label", name: "homeIncludesLabel", widget: "string" }
+          - label: "Homepage includes cards"
+            name: "homeIncludes"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+          - { label: "Inside section label", name: "insideLabel", widget: "string" }
           - { label: "Inside title", name: "insideTitle", widget: "string" }
           - { label: "Inside text", name: "insideText", widget: "text" }
           - { label: "Points", name: "points", widget: "list", field: { label: "Point", name: "point", widget: "string" } }
+          - { label: "Form label", name: "formLabel", widget: "string" }
           - { label: "Form title", name: "formTitle", widget: "string" }
           - { label: "Form intro", name: "formIntro", widget: "text" }
+          - { label: "First name label", name: "firstNameLabel", widget: "string" }
+          - { label: "First name placeholder", name: "firstNamePlaceholder", widget: "string" }
+          - { label: "Email label", name: "emailLabel", widget: "string" }
+          - { label: "Email placeholder", name: "emailPlaceholder", widget: "string" }
+          - { label: "Stage dropdown label", name: "stageLabel", widget: "string" }
+          - { label: "Stage dropdown placeholder", name: "stagePlaceholder", widget: "string" }
+          - { label: "Stage dropdown options", name: "stageOptions", widget: "list", field: { label: "Option", name: "option", widget: "string" } }
+          - { label: "Hidden lead source value", name: "leadSource", widget: "string" }
+          - { label: "Consent text before links", name: "consentText", widget: "string" }
+          - { label: "Terms link label", name: "termsLinkLabel", widget: "string" }
+          - { label: "Privacy link label", name: "privacyLinkLabel", widget: "string" }
+          - { label: "Submit button label", name: "submitButtonLabel", widget: "string" }
+          - { label: "Required fields note", name: "requiredNote", widget: "string" }
+          - { label: "Next steps label", name: "nextStepsLabel", widget: "string" }
           - { label: "Next steps title", name: "nextStepsTitle", widget: "string" }
           - { label: "Next steps intro", name: "nextStepsIntro", widget: "text" }
+          - label: "Next step cards"
+            name: "nextStepCards"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
 
   - name: "blog"
     label: "Blog Posts"

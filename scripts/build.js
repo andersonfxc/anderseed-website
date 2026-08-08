@@ -99,7 +99,7 @@ function nav(base = "", active = "") {
     ["Home", `${base}index.html`, "home"],
     ["About", `${base}about/index.html`, "about"],
     ["Pricing", `${base}index.html#pricing`, "pricing"],
-    ["Free Roadmap", `${base}roadmap/index.html`, "roadmap"],
+    ["Free Roadmap", `${base}index.html#roadmap-landing`, "roadmap"],
     ["Blog", `${base}blog/index.html`, "blog"],
     ["FAQ", `${base}faq/index.html`, "faq"],
     ["Contact Us", `${base}index.html#contact`, "contact"],
@@ -113,7 +113,7 @@ function footer(base = "", settings) {
   return `<footer class="footer">
   <div class="footer-inner">
     <div><strong>${escapeHtml(settings.siteName)}</strong><p>${escapeHtml(settings.footerTagline)}</p></div>
-    <div class="footer-links"><a href="${base}about/index.html">About</a><a href="${base}blog/index.html">Blog</a><a href="${base}roadmap/index.html">Free Roadmap</a><a href="${base}faq/index.html">FAQ</a><a href="${base}privacy/index.html">Privacy</a><a href="${base}terms/index.html">Terms</a></div>
+    <div class="footer-links"><a href="${base}about/index.html">About</a><a href="${base}blog/index.html">Blog</a><a href="${base}index.html#roadmap-landing">Free Roadmap</a><a href="${base}faq/index.html">FAQ</a><a href="${base}privacy/index.html">Privacy</a><a href="${base}terms/index.html">Terms</a></div>
   </div>
 </footer>`;
 }
@@ -380,6 +380,77 @@ function generateContactSection(home, settings) {
   </section>`;
 }
 
+function generateHomeRoadmapSection(settings, roadmap) {
+  const title = escapeHtml(roadmap.homeTitle || "Download the free BA Career Roadmap").replace(
+    escapeHtml(roadmap.homeTitleHighlight || "BA Career Roadmap"),
+    `<span class="highlight">${escapeHtml(roadmap.homeTitleHighlight || "BA Career Roadmap")}</span>`
+  );
+  const cards = (roadmap.homeCards && roadmap.homeCards.length ? roadmap.homeCards : [
+    { title: "Know the path", text: "Understand what to learn first and what to avoid wasting time on." },
+    { title: "Position yourself", text: "See how your current experience can connect to BA roles." },
+    { title: "Take action", text: "Leave with a simple plan for skills, CV, LinkedIn, and applications." },
+  ])
+    .map((item) => `<div class="roadmap-point"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span></div>`)
+    .join("\n            ");
+  const includes = (roadmap.homeIncludes && roadmap.homeIncludes.length ? roadmap.homeIncludes : [
+    { title: "BA Career Roadmap", text: "Clear beginner-friendly stages from exploring BA to becoming interview-ready." },
+    { title: "Starter CV Template", text: "A simple structure you can adapt for BA applications and transferable experience." },
+    { title: "Community Invitation", text: "Get access to updates, practical tips, live sessions, and cohort announcements." },
+  ])
+    .map((item) => `<div class="roadmap-include"><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.text)}</span></div>`)
+    .join("\n        ");
+  const stageOptions = (roadmap.stageOptions && roadmap.stageOptions.length ? roadmap.stageOptions : [
+    "Career changer",
+    "Graduate",
+    "New to the UK job market",
+    "Already in tech or business",
+    "Just exploring Business Analysis",
+  ])
+    .map((option) => `<option>${escapeHtml(option)}</option>`)
+    .join("\n              ");
+  const requiredNote = roadmap.requiredNote ? `<p class="form-note">${escapeHtml(roadmap.requiredNote)}</p>` : "";
+
+  return `<section class="section roadmap-landing" id="roadmap-landing">
+    <div class="section-inner">
+      <div class="roadmap-hero">
+        <div class="roadmap-copy">
+          <div class="section-label">${escapeHtml(roadmap.homeSectionLabel || "Free resource")}</div>
+          <h2>${title}</h2>
+          <p class="section-copy">${escapeHtml(roadmap.homeIntro || roadmap.intro)}</p>
+          <div class="roadmap-points">
+            ${cards}
+          </div>
+        </div>
+        <div class="roadmap-form-panel">
+          <h3>${escapeHtml(roadmap.formTitle)}</h3>
+          <p>${escapeHtml(roadmap.formIntro)}</p>
+          <form class="lead-form" action="${escapeAttr(settings.forms.roadmapEndpoint)}" method="post">
+            <label for="firstName">${escapeHtml(roadmap.firstNameLabel || "First name")} <span class="required-mark" aria-hidden="true">*</span></label>
+            <input id="firstName" name="firstName" type="text" placeholder="${escapeAttr(roadmap.firstNamePlaceholder || "Your first name")}" required aria-required="true" />
+            <label for="email">${escapeHtml(roadmap.emailLabel || "Email address")} <span class="required-mark" aria-hidden="true">*</span></label>
+            <input id="email" name="email" type="email" placeholder="${escapeAttr(roadmap.emailPlaceholder || "you@example.com")}" required aria-required="true" />
+            <label for="stage">${escapeHtml(roadmap.stageLabel || "Where are you now?")}</label>
+            <select id="stage" name="stage" required>
+              <option value="">${escapeHtml(roadmap.stagePlaceholder || "Select one")}</option>
+              ${stageOptions}
+            </select>
+            <input type="hidden" name="leadSource" value="${escapeAttr(roadmap.leadSource || "BA Roadmap Website")}" />
+            <label class="terms-consent" for="termsConsent">
+              <input id="termsConsent" name="termsConsent" type="checkbox" required aria-required="true" />
+              <span>${escapeHtml(roadmap.consentText || "I agree to the")} <a href="terms/index.html">${escapeHtml(roadmap.termsLinkLabel || "terms")}</a> and <a href="privacy/index.html">${escapeHtml(roadmap.privacyLinkLabel || "privacy notice")}</a>.</span>
+            </label>
+            <button class="btn btn-primary" type="submit">${escapeHtml(roadmap.submitButtonLabel || "Send me the free roadmap")}</button>
+            ${requiredNote}
+          </form>
+        </div>
+      </div>
+      <div class="roadmap-includes" aria-label="${escapeAttr(roadmap.homeIncludesLabel || "What the free BA roadmap includes")}">
+        ${includes}
+      </div>
+    </div>
+  </section>`;
+}
+
 function generateHomeFaqSection(faqs) {
   const all = flattenFaqs(faqs);
   const selected = faqs.homepageQuestions
@@ -403,7 +474,7 @@ function generateHomeFaqSection(faqs) {
   </section>`;
 }
 
-function updateHomepage(settings, home, pricing, testimonials, faqs) {
+function updateHomepage(settings, home, pricing, testimonials, faqs, roadmap) {
   let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const homeFaqItems = faqs.homepageQuestions
     .map((question) => flattenFaqs(faqs).find((item) => item.question === question))
@@ -439,10 +510,12 @@ function updateHomepage(settings, home, pricing, testimonials, faqs) {
   );
   html = replaceFirst(
     html,
-    /<section class="section" id="pricing">[\s\S]*?<\/section>\s*<section class="section roadmap-landing"/,
+    /<section class="section" id="pricing">[\s\S]*?<\/section>\s*<section class="section" id="proof">/,
     `${generatePricingSection(pricing)}
 
-  <section class="section roadmap-landing"`,
+  ${generateHomeRoadmapSection(settings, roadmap)}
+
+  <section class="section" id="proof">`,
     "pricing section"
   );
   html = replaceFirst(
@@ -495,7 +568,7 @@ function generateAbout(settings, about) {
       <p class="hero-copy">${escapeHtml(about.intro)}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="../index.html#pricing">View premium mentorship</a>
-        <a class="btn btn-secondary" href="../roadmap/index.html">Get Free BA Roadmap</a>
+        <a class="btn btn-secondary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
       </div>
     </div>
   </section>
@@ -536,7 +609,7 @@ function generateAbout(settings, about) {
         <h2>Start with clarity.</h2>
         <p>Download the free BA Career Roadmap, join the free Telegram community, or move straight into the premium mentorship when you are ready for deeper support.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="../roadmap/index.html">Get Free BA Roadmap</a>
+          <a class="btn btn-primary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
           <a class="btn btn-secondary" href="${escapeAttr(settings.social.telegram)}" target="_blank" rel="noopener">Join free community</a>
         </div>
       </div>
@@ -590,7 +663,7 @@ function generateFaq(settings, faqs) {
       <p class="hero-copy">Use this page to understand the Anderseed mentorship, the free roadmap, career support, payment options, and what to expect before joining.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="../index.html#pricing">View premium mentorship</a>
-        <a class="btn btn-secondary" href="../roadmap/index.html">Get Free BA Roadmap</a>
+        <a class="btn btn-secondary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
       </div>
     </div>
   </section>
@@ -605,7 +678,7 @@ function generateFaq(settings, faqs) {
         <h2>Start with the free roadmap.</h2>
         <p>If you are not ready for premium mentorship yet, use the free BA Career Roadmap and community to understand the path first.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="../roadmap/index.html">Get Free BA Roadmap</a>
+          <a class="btn btn-primary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
           <a class="btn btn-secondary" href="../index.html#pricing">View premium mentorship</a>
         </div>
       </div>
@@ -627,73 +700,34 @@ function generateFaq(settings, faqs) {
 }
 
 function generateRoadmap(settings, roadmap) {
-  const body = `<main>
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>${escapeHtml(roadmap.eyebrow)}</div>
-      <h1>${escapeHtml(roadmap.headline).replace("BA Career Roadmap", "<span>BA Career Roadmap</span>")}</h1>
-      <p class="hero-copy">${escapeHtml(roadmap.intro)}</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#roadmap-form">Download roadmap</a>
-        <a class="btn btn-secondary" href="${escapeAttr(settings.social.telegram)}" target="_blank" rel="noopener">Join free BA community</a>
-      </div>
-    </div>
-  </section>
-  <section class="section">
-    <div class="section-inner grid-2">
-      <div class="dark-panel">
-        <div class="section-label">Inside the roadmap</div>
-        <h2>${escapeHtml(roadmap.insideTitle)}</h2>
-        <p>${escapeHtml(roadmap.insideText)}</p>
-        ${list(roadmap.points)}
-      </div>
-      <div class="panel panel-pad" id="roadmap-form">
-        <div class="section-label">Instant access</div>
-        <h2>${escapeHtml(roadmap.formTitle)}</h2>
-        <p class="section-copy">${escapeHtml(roadmap.formIntro)}</p>
-        <form class="lead-form" action="${escapeAttr(settings.forms.roadmapEndpoint)}" method="post">
-          <label for="firstName">First name <span class="required">*</span>
-            <input id="firstName" name="firstName" type="text" placeholder="Your first name" autocomplete="given-name" required />
-          </label>
-          <label for="email">Email address <span class="required">*</span>
-            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
-          </label>
-          <label for="stage">Where are you now? <span class="required">*</span>
-            <select id="stage" name="stage" required>
-              <option value="">Select one</option>
-              <option>Career changer</option>
-              <option>Graduate</option>
-              <option>New to the UK job market</option>
-              <option>Already in tech or business</option>
-              <option>Just exploring Business Analysis</option>
-            </select>
-          </label>
-          <input type="hidden" name="leadSource" value="Roadmap Landing Page" />
-          <label class="terms-consent" for="termsConsent">
-            <input id="termsConsent" name="termsConsent" type="checkbox" required />
-            <span>I agree to the <a href="../terms/index.html">terms</a> and <a href="../privacy/index.html">privacy notice</a>.</span>
-          </label>
-          <button class="btn btn-primary" type="submit">Send me the free roadmap</button>
-        </form>
-      </div>
-    </div>
-  </section>
-  <section class="section alt">
-    <div class="section-inner">
-      <div class="section-head center">
-        <div class="section-label">What happens next</div>
-        <h2>${escapeHtml(roadmap.nextStepsTitle)}</h2>
-        <p class="section-copy">${escapeHtml(roadmap.nextStepsIntro)}</p>
-      </div>
-      <div class="card-grid">
-        <article class="info-card"><h3>Read the roadmap</h3><p>Get a simple beginner-friendly view of what Business Analysts do and what to learn first.</p></article>
-        <article class="info-card"><h3>Join the community</h3><p>Stay close to BA tips, job-search support, live sessions, and cohort updates.</p></article>
-        <article class="info-card"><h3>Choose premium support</h3><p>When ready, move into live mentorship, project practice, CV support, and interview preparation.</p></article>
-      </div>
-    </div>
-  </section>
-</main>`;
-  writeFile("roadmap/index.html", pageShell({ title: roadmap.seoTitle, description: roadmap.seoDescription, canonical: "/roadmap/", base: "../", active: "roadmap", body }, settings));
+  const title = roadmap.seoTitle || "Free BA Career Roadmap | Anderseed Consulting";
+  const description = roadmap.seoDescription || settings.defaultDescription;
+  writeFile(
+    "roadmap/index.html",
+    `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="refresh" content="0; url=../index.html#roadmap-landing" />
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeAttr(description)}" />
+<link rel="canonical" href="${escapeAttr(settings.siteUrl.replace(/\/$/, ""))}/#roadmap-landing" />
+<link rel="stylesheet" href="../assets/landing-pages.css" />
+<link rel="icon" type="image/svg+xml" href="${favicon}" />
+</head>
+<body>
+<main class="section">
+  <div class="section-inner center">
+    <div class="section-label">Free Roadmap</div>
+    <h1>Opening the free roadmap section.</h1>
+    <p class="section-copy">The free roadmap now lives on the homepage.</p>
+    <a class="btn btn-primary" href="../index.html#roadmap-landing">Go to Free Roadmap</a>
+  </div>
+</main>
+</body>
+</html>`
+  );
 }
 
 function parseFrontMatter(content) {
@@ -810,7 +844,7 @@ function generateBlogIndex(settings, posts) {
       <h1>Practical BA articles for people starting from <span>scratch</span></h1>
       <p class="hero-copy">Use this blog to publish SEO-focused articles on Business Analysis careers, CV positioning, LinkedIn, requirements gathering, stakeholder management, interviews, and the UK BA job market.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="../roadmap/index.html">Get Free BA Roadmap</a>
+        <a class="btn btn-primary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
         <a class="btn btn-secondary" href="../index.html#pricing">View mentorship</a>
       </div>
     </div>
@@ -838,7 +872,7 @@ function generateBlogIndex(settings, posts) {
           <div class="section-label">Free resource</div>
           <h2>Get the BA Career Roadmap</h2>
           <p>Start with a clear path before you commit to paid support.</p>
-          <a class="btn btn-primary" href="../roadmap/index.html">Send me the roadmap</a>
+          <a class="btn btn-primary" href="../index.html#roadmap-landing">Send me the roadmap</a>
         </div>
         <div class="sidebar-card">
           <h3>Community</h3>
@@ -872,7 +906,7 @@ function generateBlogPosts(settings, posts) {
       <h1>${escapeHtml(post.title)}</h1>
       <p class="hero-copy">${escapeHtml(post.description)}</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="../../roadmap/index.html">Get Free BA Roadmap</a>
+        <a class="btn btn-primary" href="../../index.html#roadmap-landing">Get Free BA Roadmap</a>
         <a class="btn btn-secondary" href="../../index.html#pricing">View mentorship</a>
       </div>
     </div>
@@ -887,7 +921,7 @@ function generateBlogPosts(settings, posts) {
           <div class="section-label">Free resource</div>
           <h2>Get the BA Career Roadmap</h2>
           <p>Start with a clear path before you commit to paid support.</p>
-          <a class="btn btn-primary" href="../../roadmap/index.html">Download roadmap</a>
+          <a class="btn btn-primary" href="../../index.html#roadmap-landing">Download roadmap</a>
         </div>
         <div class="sidebar-card">
           <h3>Need guided support?</h3>
@@ -941,7 +975,7 @@ function main() {
 
   cleanDist();
   copyDir(root, dist);
-  updateHomepage(settings, home, pricing, testimonials, faqs);
+  updateHomepage(settings, home, pricing, testimonials, faqs, roadmap);
   generateAbout(settings, about);
   generateFaq(settings, faqs);
   generateRoadmap(settings, roadmap);
