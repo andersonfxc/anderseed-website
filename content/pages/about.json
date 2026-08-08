@@ -1,8 +1,32 @@
 {
-  "seoTitle": "About Anderseed Consulting | Business Analysis Mentorship UK",
-  "seoDescription": "Learn about Anderseed Consulting, a practical Business Analysis mentorship brand helping beginners, career changers, graduates, and newcomers to the UK market become BA-ready.",
+  "differenceCards": [
+    {
+      "title": "Beginner-friendly structure",
+      "text": "Clear steps for people with no IT background, no BA title, or no confidence about where to start."
+    },
+    {
+      "title": "Real project thinking",
+      "text": "Practice goes beyond theory, with requirements, process mapping, documentation, stakeholder scenarios, and delivery awareness."
+    },
+    {
+      "title": "Career positioning",
+      "text": "CV, LinkedIn, job application, recruiter, and interview support help learners explain their value with stronger BA language."
+    },
+    {
+      "title": "UK , European and International market focus",
+      "text": "Guidance is shaped around UK Business Analyst roles, hiring expectations, salary context, and recruiter language."
+    },
+    {
+      "title": "Small cohort attention",
+      "text": "The mentorship is designed for feedback, accountability, and personal attention instead of anonymous learning."
+    },
+    {
+      "title": "Support after training",
+      "text": "Learners stay close to community support, career check-ins, job-search encouragement, and alumni accountability."
+    }
+  ],
+  "audienceIntro": "Anderseed is built for people with ambition, transferable experience, and the willingness to practise. The mentorship helps connect what you already know to the Business Analysis role you want.",
   "eyebrow": "About Anderseed Consulting",
-  "headline": "Business Analysis mentorship for people ready to grow.",
   "intro": "Anderseed Consulting helps beginners, career changers, graduates, and newcomers to the UK market build the practical skills, language, confidence, and career positioning needed to move toward Business Analysis roles.",
   "sections": [
     {
@@ -29,36 +53,6 @@
       ]
     }
   ],
-  "differenceTitle": "Built around the full journey, not just the lessons.",
-  "differenceIntro": "The goal is to help learners understand the role, practise the work, position their experience, and stay supported through the job-search process.",
-  "differenceCards": [
-    {
-      "title": "Beginner-friendly structure",
-      "text": "Clear steps for people with no IT background, no BA title, or no confidence about where to start."
-    },
-    {
-      "title": "Real project thinking",
-      "text": "Practice goes beyond theory, with requirements, process mapping, documentation, stakeholder scenarios, and delivery awareness."
-    },
-    {
-      "title": "Career positioning",
-      "text": "CV, LinkedIn, job application, recruiter, and interview support help learners explain their value with stronger BA language."
-    },
-    {
-      "title": "UK market focus",
-      "text": "Guidance is shaped around UK Business Analyst roles, hiring expectations, salary context, and recruiter language."
-    },
-    {
-      "title": "Small cohort attention",
-      "text": "The mentorship is designed for feedback, accountability, and personal attention instead of anonymous learning."
-    },
-    {
-      "title": "Support after training",
-      "text": "Learners stay close to community support, career check-ins, job-search encouragement, and alumni accountability."
-    }
-  ],
-  "audienceTitle": "You do not need to arrive as a Business Analyst.",
-  "audienceIntro": "Anderseed is built for people with ambition, transferable experience, and the willingness to practise. The mentorship helps connect what you already know to the Business Analysis role you want.",
   "audiences": [
     {
       "title": "Career changers",
@@ -72,5 +66,11 @@
       "title": "Newcomers to the UK market",
       "text": "People who need help understanding UK recruiter expectations, CV language, LinkedIn positioning, and interview confidence."
     }
-  ]
+  ],
+  "differenceIntro": "The goal is to help learners understand the role, practise the work, position their experience, and stay supported through the job-search process.",
+  "headline": "Business Analysis mentorship for people ready to grow.",
+  "audienceTitle": "You do not need to arrive as a Business Analyst.",
+  "differenceTitle": "Built around the full journey, not just the lessons.",
+  "seoTitle": "About Anderseed Consulting | Business Analysis Mentorship UK",
+  "seoDescription": "Learn about Anderseed Consulting, a practical Business Analysis mentorship brand helping beginners, career changers, graduates, and newcomers to the UK market become BA-ready."
 }
