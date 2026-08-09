@@ -95,6 +95,47 @@ collections:
               - { label: "Text", name: "text", widget: "text" }
               - { label: "Icon type", name: "type", widget: "select", options: ["cv", "guide", "counselling", "interview", "linkedin", "community"] }
               - { label: "Wide card", name: "wide", widget: "boolean", required: false, default: false }
+          - label: "Portfolio artefacts"
+            name: "artefacts"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Headline", name: "headline", widget: "string" }
+              - { label: "Headline highlight", name: "headlineHighlight", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Case selector label", name: "caseLabel", widget: "string" }
+              - { label: "Journey banner", name: "journeyLabel", widget: "string" }
+              - { label: "Trust line", name: "trustText", widget: "string" }
+              - label: "Proof steps"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Stage label", name: "stage", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Text", name: "text", widget: "text" }
+                  - { label: "Icon type", name: "type", widget: "select", options: ["stakeholder", "process", "stories", "prototype", "requirements"] }
+                  - { label: "Output tags", name: "tags", widget: "list", required: false, field: { label: "Tag", name: "tag", widget: "string" } }
+              - label: "Business case choices"
+                name: "project"
+                widget: "object"
+                fields:
+                  - label: "System examples"
+                    name: "systems"
+                    widget: "list"
+                    fields:
+                      - { label: "Label", name: "label", widget: "string" }
+                      - { label: "Number", name: "number", widget: "string", required: false }
+                      - { label: "Title", name: "title", widget: "string" }
+                      - { label: "Text", name: "text", widget: "string" }
+                      - { label: "System type", name: "type", widget: "select", options: ["crm", "hcm", "erp"] }
+              - label: "Outcome strip"
+                name: "outcome"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Benefits", name: "benefits", widget: "list", field: { label: "Benefit", name: "benefit", widget: "string" } }
+              - { label: "Footer text", name: "footerText", widget: "string" }
+              - { label: "Footer highlight", name: "footerHighlight", widget: "string" }
           - label: "Process"
             name: "process"
             widget: "object"
@@ -179,6 +220,7 @@ collections:
         file: "content/pages/testimonials.json"
         format: "json"
         fields:
+          - { label: "Show testimonials on homepage", name: "visible", widget: "boolean", default: false, required: false }
           - { label: "Label", name: "label", widget: "string" }
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Intro", name: "intro", widget: "text" }
@@ -225,6 +267,82 @@ collections:
             fields:
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Text", name: "text", widget: "text" }
+      - label: "Blog page"
+        name: "blog_page"
+        file: "content/pages/blog.json"
+        format: "json"
+        fields:
+          - { label: "SEO title", name: "seoTitle", widget: "string" }
+          - { label: "SEO description", name: "seoDescription", widget: "text" }
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Headline highlight", name: "headlineHighlight", widget: "string" }
+          - { label: "Introduction", name: "intro", widget: "text" }
+          - { label: "Primary button label", name: "primaryButtonLabel", widget: "string" }
+          - { label: "Secondary button label", name: "secondaryButtonLabel", widget: "string" }
+          - { label: "Latest articles label", name: "latestLabel", widget: "string" }
+          - { label: "Latest articles title", name: "latestTitle", widget: "string" }
+          - { label: "Latest articles introduction", name: "latestIntro", widget: "text" }
+          - { label: "Topics title", name: "topicsTitle", widget: "string" }
+          - { label: "Resource label", name: "resourceLabel", widget: "string" }
+          - { label: "Resource title", name: "resourceTitle", widget: "string" }
+          - { label: "Resource text", name: "resourceText", widget: "text" }
+          - { label: "Resource button label", name: "resourceButtonLabel", widget: "string" }
+          - { label: "Community title", name: "communityTitle", widget: "string" }
+          - { label: "Community text", name: "communityText", widget: "text" }
+          - { label: "Community button label", name: "communityButtonLabel", widget: "string" }
+      - label: "Terms page"
+        name: "terms"
+        file: "content/pages/terms.json"
+        format: "json"
+        fields:
+          - { label: "SEO title", name: "seoTitle", widget: "string" }
+          - { label: "SEO description", name: "seoDescription", widget: "text" }
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Introduction", name: "intro", widget: "text" }
+          - { label: "Last updated", name: "lastUpdated", widget: "string" }
+          - { label: "Professional review notice", name: "reviewNotice", widget: "text" }
+          - label: "Sections"
+            name: "sections"
+            widget: "list"
+            fields:
+              - { label: "Heading", name: "title", widget: "string" }
+              - { label: "Paragraphs", name: "paragraphs", widget: "list", required: false, field: { label: "Paragraph", name: "paragraph", widget: "text" } }
+              - { label: "Bullet points", name: "bullets", widget: "list", required: false, field: { label: "Bullet", name: "bullet", widget: "text" } }
+              - label: "Links"
+                name: "links"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "URL", name: "href", widget: "string" }
+      - label: "Privacy page"
+        name: "privacy"
+        file: "content/pages/privacy.json"
+        format: "json"
+        fields:
+          - { label: "SEO title", name: "seoTitle", widget: "string" }
+          - { label: "SEO description", name: "seoDescription", widget: "text" }
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Introduction", name: "intro", widget: "text" }
+          - { label: "Last updated", name: "lastUpdated", widget: "string" }
+          - { label: "Professional review notice", name: "reviewNotice", widget: "text" }
+          - label: "Sections"
+            name: "sections"
+            widget: "list"
+            fields:
+              - { label: "Heading", name: "title", widget: "string" }
+              - { label: "Paragraphs", name: "paragraphs", widget: "list", required: false, field: { label: "Paragraph", name: "paragraph", widget: "text" } }
+              - { label: "Bullet points", name: "bullets", widget: "list", required: false, field: { label: "Bullet", name: "bullet", widget: "text" } }
+              - label: "Links"
+                name: "links"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "URL", name: "href", widget: "string" }
       - label: "Homepage roadmap section"
         name: "roadmap"
         file: "content/pages/roadmap.json"

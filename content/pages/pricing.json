@@ -1,7 +1,7 @@
 {
   "sectionLabel": "Pricing",
   "sectionTitle": "See Everything That's Included",
-  "sectionIntro": "Everything below is included in the Complete Anderseed Mentorship Programme, helping you save over £650 compared to purchasing each service separately.",
+  "sectionIntro": "Everything below is included in the Complete Anderseed Mentorship Programme, helping you save £807 - over 50% compared to purchasing each service separately.",
   "individualServicesTitle": "Individual services",
   "services": [
     {
@@ -32,9 +32,9 @@
   ],
   "bundle": {
     "buttonLabel": "Apply and secure your place",
-    "badge": "Save £480+ with the bundle",
+    "badge": "Save £807 - over 50% with the bundle",
     "price": "800",
-    "was": "£1,280+ if bought separately",
+    "was": "£1,607 if bought separately",
     "title": "Complete Anderseed Mentorship Programme",
     "paymentNote": "pay by card, Klarna Pay in 3, or bank transfer after approval.",
     "features": [
@@ -49,6 +49,6 @@
       "Lifetime access to The Anderseed Circle"
     ],
     "buttonUrl": "checkout/index.html",
-    "save": "Save £480+"
+    "save": "Save £807"
   }
 }

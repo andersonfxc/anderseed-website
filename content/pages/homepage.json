@@ -54,6 +54,89 @@
       "type": "community"
     }
   ],
+  "artefacts": {
+    "label": "Portfolio projects",
+    "headline": "Turn one business case into a portfolio",
+    "headlineHighlight": "employers can trust.",
+    "intro": "You don't just watch lessons. You build a complete project pack around a realistic business-system scenario, end to end.",
+    "caseLabel": "Choose your business case",
+    "journeyLabel": "A guided journey. Four steps. Real artefacts.",
+    "trustText": "Realistic scenarios. Practical outcomes. Portfolio-ready.",
+    "items": [
+      {
+        "stage": "Analyse",
+        "title": "Understand the business problem.",
+        "text": "Stakeholders, pain points, assumptions and evidence.",
+        "type": "stakeholder",
+        "tags": [
+          "Stakeholder map"
+        ]
+      },
+      {
+        "stage": "Map",
+        "title": "Show the process clearly.",
+        "text": "AS-IS and TO-BE flows using BPMN logic.",
+        "type": "process",
+        "tags": [
+          "BPMN diagram"
+        ]
+      },
+      {
+        "stage": "Specify",
+        "title": "Write the delivery artefacts.",
+        "text": "Requirements, stories, acceptance criteria and BRD.",
+        "type": "requirements",
+        "tags": [
+          "User stories",
+          "BRD"
+        ]
+      },
+      {
+        "stage": "Present",
+        "title": "Explain it like a Business Analyst.",
+        "text": "Prototype walkthrough and interview-ready portfolio story.",
+        "type": "prototype",
+        "tags": [
+          "Prototype walkthrough"
+        ]
+      }
+    ],
+    "project": {
+      "systems": [
+        {
+          "label": "CRM",
+          "number": "01",
+          "title": "Salesforce CRM implementation",
+          "text": "Lead-to-opportunity pipeline + sales reporting",
+          "type": "crm"
+        },
+        {
+          "label": "HCM",
+          "number": "02",
+          "title": "Recruitment & onboarding HCM",
+          "text": "Candidate journey + employee access workflow",
+          "type": "hcm"
+        },
+        {
+          "label": "ERP",
+          "number": "03",
+          "title": "Dynamics 365 ERP procurement",
+          "text": "Purchase approvals + finance controls",
+          "type": "erp"
+        }
+      ]
+    },
+    "outcome": {
+      "title": "From business problem to portfolio-ready project pack.",
+      "benefits": [
+        "Structured thinking",
+        "Industry-relevant scenarios",
+        "Mentor feedback at every step"
+      ]
+    },
+    "footerText": "Build. Review. Refine. Repeat.",
+    "footerHighlight": "That's how you become the BA businesses want."
+  },
   "process": {
     "label": "How it works",
     "title": "Your BA journey, mapped like a real project.",

@@ -1,172 +1,281 @@
 {
-  "homepageIntro": "A shorter set of decision questions for the homepage. The full FAQ now has its own page.",
+  "homepageIntro": "Clear answers about suitability, recorded sessions, practical experience, career outcomes, payments, refunds, and the support you receive before and after the programme.",
   "homepageQuestions": [
-    "Do I need IT experience to join Anderseed Consulting?",
-    "Who is the Business Analysis mentorship for?",
-    "What is included in the 8-week Business Analysis mentorship?",
-    "Is this a Business Analyst course or a mentorship programme?",
-    "Do you help with CV, LinkedIn and interviews?",
-    "Can I pay in instalments?",
-    "Is there a job guarantee?"
+    "Is the mentorship suitable for complete beginners with no IT experience?",
+    "Can I join from outside the UK?",
+    "Are the live sessions recorded?",
+    "What practical experience and portfolio work will I build?",
+    "How much time should I commit each week?",
+    "Does the 90-day journey or six-month support guarantee a job?",
+    "What are the payment, cancellation and refund options?",
+    "What support continues after the live cohort?"
   ],
   "categories": [
     {
       "id": "getting-started",
       "label": "Getting Started",
-      "title": "Starting from where you are",
-      "intro": "These questions help beginners, career changers, graduates, and people new to the UK market understand whether Anderseed is a good fit.",
+      "title": "Who the mentorship is for",
+      "intro": "Start here if you are deciding whether your background, location, experience, or current schedule is a good fit for Anderseed.",
       "items": [
         {
-          "question": "Do I need IT experience to join Anderseed Consulting?",
-          "answer": "No. The mentorship is built for beginners, career changers, graduates, and people entering the UK job market with transferable experience."
+          "question": "Is the mentorship suitable for complete beginners with no IT experience?",
+          "answer": "Yes. The mentorship is designed to take beginners from foundational Business Analysis concepts into guided project work, portfolio artefacts, career positioning, and interview preparation. You do not need previous IT employment, although you must be willing to practise, complete tasks, and act on feedback."
         },
         {
-          "question": "Who is the Business Analysis mentorship for?",
-          "answer": "It is for people who want a structured route into Business Analysis, including career changers, graduates, people returning to work, newcomers to the UK market, and professionals who need CV, LinkedIn, interview, and job-search support."
+          "question": "Who is the Anderseed Business Analysis mentorship for?",
+          "answer": "It is for adult learners, including complete beginners, career changers, graduates, people returning to work, professionals with transferable skills, and aspiring Business Analysts who want more practical structure and accountability. It is also suitable for learners who understand some theory but do not yet feel able to demonstrate Business Analysis work confidently."
         },
         {
-          "question": "Can I join if I work full time?",
-          "answer": "Yes. The programme is designed for busy learners, including people who work full time. You will still need to make time for live sessions, practice, and job-readiness work."
+          "question": "Can I join from outside the UK?",
+          "answer": "Yes. The mentorship is open to adult learners worldwide. The projects, terminology, documentation standards, recruitment guidance, and professional expectations use UK-style Business Analysis industry practice, while the underlying skills and artefacts are transferable to many international markets."
         },
         {
-          "question": "Can I start with the free BA roadmap first?",
-          "answer": "Yes. The free BA Career Roadmap is designed for people who want clarity before joining the premium mentorship or booking paid support."
+          "question": "Do I need a degree, certification, or previous Business Analysis role?",
+          "answer": "No specific degree, certification, or previous Business Analyst job is required. The programme starts with the fundamentals and helps you connect existing education, work, volunteering, or life experience to Business Analysis skills. Any employer or professional certification requirements remain separate from the mentorship."
+        },
+        {
+          "question": "Can I join while working full time or managing other commitments?",
+          "answer": "Yes. The programme is designed to work around different schedules, and teaching sessions are recorded for enrolled learners. You will still need regular time for project tasks, feedback, portfolio work, and career preparation, but the amount can be adjusted around your responsibilities and chosen pace."
+        },
+        {
+          "question": "Can I use the free BA roadmap before deciding about premium mentorship?",
+          "answer": "Yes. The free BA Career Roadmap is a sensible starting point if you want to understand the journey before paying for guided support. You can also join the free Telegram community, read the blog, and return to the mentorship when the timing is right."
         }
       ]
     },
     {
-      "id": "programme",
-      "label": "Programme & Training",
+      "id": "programme-delivery",
+      "label": "Programme Delivery",
       "title": "How the mentorship works",
-      "intro": "The programme is designed to combine live learning, practical Business Analysis work, and accountability.",
+      "intro": "The programme combines live teaching, recordings, practical work, feedback, career preparation, and a small collaborative cohort.",
       "items": [
         {
           "question": "What is included in the 8-week Business Analysis mentorship?",
-          "answer": "The bundle includes live mentorship, practical Business Analysis training, real project practice, CV and LinkedIn support, interview preparation, recruiter and hiring contact guidance, community access, and post-role support."
+          "answer": "The programme includes live mentor-led training, recorded sessions, guided project practice, a professional BA portfolio, CV and LinkedIn support, a job application guide, mock interviews, career coaching, recruiter outreach guidance, community access, and support after the live cohort. The pricing section lists the current bundle inclusions."
         },
         {
-          "question": "Is this a Business Analyst course or a mentorship programme?",
-          "answer": "It is a mentorship programme with training, guided practice, accountability, and career support. The focus is not just learning theory, but building confidence, project language, documentation skills, and job-readiness."
+          "question": "Is this a course or a mentorship programme?",
+          "answer": "It is a structured mentorship programme rather than a self-paced video course. You receive teaching, guided practice, mentor feedback, accountability, project review, and career support so that you can apply what you learn instead of only watching lessons."
         },
         {
-          "question": "Will I work on real Business Analysis project practice?",
-          "answer": "Yes. The programme includes hands-on project-style practice so learners can work through requirements, stakeholder scenarios, process mapping, documentation, and practical Business Analysis thinking."
+          "question": "Why is the live cohort eight weeks if the website shows a 90-day journey?",
+          "answer": "The core mentor-led cohort runs for eight weeks. The 90-day journey describes the wider development path, including onboarding, live training, project completion, portfolio refinement, and job-readiness activity. It is a planning framework and not a promise that every learner will reach the same outcome on the same date."
         },
         {
-          "question": "What Business Analysis skills will I learn?",
-          "answer": "You will learn Business Analysis fundamentals, requirements gathering, stakeholder communication, process mapping, documentation, software development lifecycle awareness, CV positioning, LinkedIn positioning, applications, and interview preparation."
+          "question": "Are the live sessions recorded?",
+          "answer": "Yes. Teaching sessions are recorded so enrolled learners can revisit explanations or catch up when work and personal commitments prevent live attendance. Recordings are for the registered cohort only and are not a substitute for completing the practical work or engaging with feedback."
         },
         {
-          "question": "How long does it take to become Business Analyst-ready?",
-          "answer": "The live cohort runs for 8 weeks, with a 90-day journey designed to help learners build practical skills, confidence, and job-ready positioning."
+          "question": "How long can I access the session recordings?",
+          "answer": "Enrolled learners can access programme recordings for 12 months, subject to the programme terms and the continued availability of the learning platform. Recordings and programme materials are for personal learning only and must not be copied, shared, resold, or published."
         },
         {
-          "question": "How much time should I set aside each week?",
-          "answer": "Most learners should plan for live sessions, practical tasks, CV or LinkedIn work, and application preparation each week. The exact time depends on your current experience and how quickly you want to move."
+          "question": "What happens if I miss a live session?",
+          "answer": "You can use the recording to catch up and continue with the related task. Live attendance is encouraged because it gives you immediate discussion and feedback, but missing an occasional session does not automatically prevent you from continuing. You remain responsible for reviewing the material and completing required work."
+        },
+        {
+          "question": "How much time should I commit each week?",
+          "answer": "There is no single weekly number that suits everyone. Your commitment depends on your starting point, work and family responsibilities, project pace, and career goals. Plan for the live or recorded teaching plus regular time for project tasks, portfolio development, CV or LinkedIn work, applications, and feedback."
+        },
+        {
+          "question": "How large is each cohort?",
+          "answer": "Cohorts are intentionally kept small to support useful discussion, efficient collaboration, mentor attention, and practical feedback. The exact number may vary by intake, but Anderseed limits places when necessary to protect the quality of the learning experience."
+        },
+        {
+          "question": "Will I receive a certificate?",
+          "answer": "Yes. Learners who complete the programme and required project work receive an Anderseed certificate of completion. The certificate confirms participation and completion; it is not a regulated qualification, professional licence, or guarantee of employment."
         }
       ]
     },
     {
-      "id": "career-support",
-      "label": "Career Support",
-      "title": "CV, LinkedIn, applications, and interviews",
-      "intro": "Anderseed supports both the learning journey and the job-readiness work needed to speak confidently to recruiters and hiring managers.",
+      "id": "projects-portfolio",
+      "label": "Projects & Portfolio",
+      "title": "The practical work you will build",
+      "intro": "The mentorship is designed to give learners credible, guided project evidence they can explain clearly in applications and interviews.",
       "items": [
         {
-          "question": "Is the programme focused on the UK Business Analyst job market?",
-          "answer": "Yes. The positioning, CV guidance, LinkedIn review, job application support, salary context, and recruiter guidance are focused on Business Analysis roles in the UK market."
+          "question": "What practical experience and portfolio work will I build?",
+          "answer": "You will work through an end-to-end business case and create artefacts such as stakeholder analysis, a RACI matrix, a power-interest grid, AS-IS and TO-BE process maps, BPMN diagrams, requirements, user stories, acceptance criteria, a BRD, and a prototype walkthrough. The emphasis is on understanding why each artefact is needed and being able to explain your decisions."
         },
         {
-          "question": "Do you help with CV and LinkedIn?",
-          "answer": "Yes. The mentorship includes ATS-proof CV and LinkedIn framework support, expert reviews, and guidance on how to present transferable experience in Business Analysis language."
+          "question": "What types of business cases can I work on?",
+          "answer": "The portfolio section currently presents CRM, HCM, and ERP-style business cases. These can include sales process and reporting work, employee onboarding and access, or procurement and approval processes, giving learners a realistic business-system context rather than isolated classroom exercises."
         },
         {
-          "question": "Do you help with job applications and interviews?",
-          "answer": "Yes. Learners receive a job application playbook, interview preparation, mock interview support, and guidance on how to explain Business Analysis value clearly."
+          "question": "Does the project count as real Business Analysis experience?",
+          "answer": "It provides realistic, guided project experience that helps you practise the work, language, judgement, and deliverables expected from a Business Analyst. It is not the same as paid employment or an undisclosed client role, so you should present it honestly as a mentorship project or portfolio case study while explaining the practical work you completed."
         },
         {
-          "question": "Do you give access to recruiters or hiring contacts?",
-          "answer": "The premium bundle includes access to BA recruiter and hiring contact guidance. Learners are still responsible for applying, networking, and following up professionally."
+          "question": "Will the project help me speak more confidently in interviews?",
+          "answer": "That is one of its main purposes. You will have a structured business problem, stakeholders, evidence, decisions, processes, requirements, and outputs to discuss. Mentor feedback helps you turn the work into a clear interview story without claiming experience you do not have."
         },
         {
-          "question": "What support do I get after the cohort?",
-          "answer": "Learners receive ongoing support through the alumni community, career check-ins, job-search encouragement, and 6 months of support once they are in the role."
+          "question": "Do I need to know how to code?",
+          "answer": "No. Business Analysis focuses on understanding needs, stakeholders, processes, requirements, value, and change. You may work with business and delivery tools, but software development or programming experience is not a prerequisite for joining."
+        },
+        {
+          "question": "Will I receive feedback on my project and portfolio?",
+          "answer": "Yes. Feedback and refinement are central to the mentorship. You will be expected to review comments, improve your artefacts, correct unclear thinking, and practise presenting your work as a Business Analyst rather than submitting a document once and moving on."
+        },
+        {
+          "question": "Can I use the finished project in my portfolio?",
+          "answer": "Yes, you can use your own completed work as a portfolio case study and discuss it in applications and interviews. You must protect personal information, respect any confidentiality instructions, credit templates appropriately, and avoid sharing restricted programme materials or other learners' work."
         }
       ]
     },
     {
-      "id": "community",
-      "label": "Roadmap & Community",
-      "title": "Free support before premium mentorship",
-      "intro": "The free roadmap and Telegram community are designed to help people build clarity before deciding on premium support.",
+      "id": "career-outcomes",
+      "label": "Career Outcomes",
+      "title": "Job-readiness and realistic expectations",
+      "intro": "Anderseed strengthens your skills, evidence, positioning, and support, while being transparent about the parts of hiring no training provider can control.",
       "items": [
         {
-          "question": "What is the free Telegram community for?",
-          "answer": "The free Telegram community gives prospective learners access to Business Analysis tips, job-search guidance, support, live session updates, and cohort announcements."
+          "question": "Does the 90-day journey or six-month support guarantee a job?",
+          "answer": "No. The journey shown on the website is a realistic happy-path illustration, not a promise that every learner will be hired within 90 days or six months. Employment outcomes depend on your effort, prior experience, location, market conditions, application consistency, interview performance, right-to-work position, and employer decisions."
         },
         {
-          "question": "What happens after I download the free roadmap?",
-          "answer": "You can use the roadmap to understand the path, join the free community, read practical blog content, or apply for premium mentorship when ready."
+          "question": "What does Business Analyst-ready mean?",
+          "answer": "It means being better prepared to understand BA responsibilities, produce and explain core artefacts, discuss an end-to-end project, present transferable experience, and approach applications and interviews with a clear strategy. It does not mean that learning stops after the programme or that an employer must offer you a role."
         },
         {
-          "question": "Can I stay connected if I am not ready to pay yet?",
-          "answer": "Yes. You can download the roadmap, join the free community, read the blog, and follow Anderseed social channels until the premium mentorship feels like the right next step."
+          "question": "Is the career support useful outside the UK?",
+          "answer": "Yes. Core BA skills, stakeholder thinking, requirements, process analysis, documentation, and interview storytelling are internationally transferable. The programme uses UK-style industry experience and recruitment practice, so learners applying elsewhere should also adapt their CV, terminology, salary expectations, and job-search approach to their local market."
+        },
+        {
+          "question": "Do you help with CV, LinkedIn, applications, and interviews?",
+          "answer": "Yes. The mentorship includes CV and LinkedIn frameworks and review, job application guidance, mock interviews, career coaching, and support explaining transferable and project experience clearly. Learners must still implement the feedback and submit their own applications."
+        },
+        {
+          "question": "What does access to 50+ BA recruiter and hiring contacts mean?",
+          "answer": "It means access to a curated set of relevant recruiter and hiring contacts plus guidance on professional outreach, networking, follow-up, and positioning. It does not guarantee a personal introduction, response, interview, vacancy, or job offer from any contact."
+        },
+        {
+          "question": "Does Anderseed apply for jobs or attend interviews for me?",
+          "answer": "No. Anderseed provides tools, feedback, preparation, and accountability, but you are responsible for searching, networking, applying, responding to recruiters, preparing properly, and attending interviews. This keeps your applications truthful and helps you build the independence needed for a long-term career."
+        },
+        {
+          "question": "What salary can I expect after the programme?",
+          "answer": "No salary is guaranteed. Any salary or contract-rate information on the website is an indicative market snapshot and can vary by country, location, industry, role scope, prior experience, market conditions, and employer. Always check current vacancies and local salary sources before making a financial decision."
+        },
+        {
+          "question": "What support continues after the live cohort?",
+          "answer": "Learners retain access to the alumni community for ongoing peer support, encouragement, career discussion, and relevant updates. Once you secure a role, Anderseed also provides six months of reasonable workplace guidance, including help thinking through unfamiliar BA tasks and professional situations; it does not replace your employer's training, management, or accountability."
         }
       ]
     },
     {
-      "id": "payments",
-      "label": "Payments",
-      "title": "Pricing and payment options",
-      "intro": "Payment options are designed to make the checkout step clear, with flexible routes where available.",
+      "id": "payments-refunds",
+      "label": "Payments & Refunds",
+      "title": "Pricing, payment, cancellation, and changes",
+      "intro": "Review the current pricing page and terms before paying. The answers below summarise the main arrangements and do not remove your legal rights.",
       "items": [
+        {
+          "question": "What is included in the programme price?",
+          "answer": "The programme price covers the bundle shown in the pricing section, including the live cohort, recordings, guided project work, portfolio development, career materials and review, interview preparation, recruiter outreach guidance, post-hire support, and alumni community access. Check the current pricing section before purchase because inclusions and cohort availability may be updated."
+        },
         {
           "question": "Can I buy individual services without joining the full programme?",
-          "answer": "Yes. Individual services such as CV writing, CV review, job application guidance, interview preparation, and LinkedIn review can be purchased separately where available."
+          "answer": "Yes, where availability is shown. Services such as CV support, LinkedIn review, job application guidance, career counselling, or interview preparation may be purchased separately. The programme bundle is priced to combine training, project work, and career support at a lower total than purchasing all listed services individually."
         },
         {
-          "question": "Can I pay in instalments?",
-          "answer": "Yes. Payment options include card payment, Klarna Pay in 3 where available, and bank transfer. Payment details are shown during the checkout process."
+          "question": "What payment methods are available?",
+          "answer": "The checkout currently supports secure card payment through Stripe, Klarna Pay in 3 where the learner and transaction are eligible, and bank transfer. Klarna approval and terms are controlled by Klarna, and a cohort place is not confirmed until payment or an approved payment arrangement has been verified."
         },
         {
-          "question": "How does bank transfer work?",
-          "answer": "Choose bank transfer on the checkout page to view the payment details. Use your full name and BA Mentorship as the payment reference so your payment can be matched correctly."
+          "question": "What are the payment, cancellation and refund options?",
+          "answer": "You can pay by the methods displayed at checkout. For an online purchase, the current terms provide a 14-day cancellation period. If you ask Anderseed to begin providing services during that period and then cancel, a proportionate amount may be retained for services already supplied; after the cancellation period, fees are generally non-refundable except where the law or your statutory rights require otherwise."
+        },
+        {
+          "question": "What happens if I request a refund after the programme has started?",
+          "answer": "Your request will be assessed under the terms, the timing of purchase, the services already delivered, and applicable consumer law. After the 14-day cancellation period, programme fees are generally non-refundable. Missing sessions or deciding not to continue does not automatically create a refund because recordings and programme access remain available."
+        },
+        {
+          "question": "Can I move my place to a future cohort?",
+          "answer": "One transfer to a future cohort may be allowed when requested before the original programme starts, subject to available places and written confirmation from Anderseed. A transfer is not automatic after teaching or personalised services have begun, and any exceptional request will be considered fairly against the programme terms."
+        },
+        {
+          "question": "What happens if Anderseed postpones or cancels a cohort?",
+          "answer": "If Anderseed cancels a cohort and cannot provide a suitable replacement, affected learners can choose a full refund for the undelivered programme or transfer to an available future cohort. If a session is rescheduled, Anderseed will provide reasonable notice and, where possible, a recording or replacement session."
         }
       ]
     },
     {
-      "id": "outcomes",
-      "label": "Job Outcomes",
-      "title": "Honest expectations",
-      "intro": "The goal is to improve readiness, positioning, and confidence while staying realistic about hiring outcomes.",
+      "id": "community-support",
+      "label": "Community & Support",
+      "title": "Free community, alumni access, and learner conduct",
+      "intro": "Anderseed provides different levels of support before, during, and after the premium programme.",
       "items": [
         {
-          "question": "Is there a job guarantee?",
-          "answer": "No. Anderseed Consulting does not guarantee jobs, interviews, or salary outcomes. The programme focuses on practical skills, positioning, confidence, feedback, and support."
+          "question": "What is the difference between the free Telegram community and the alumni community?",
+          "answer": "The free Telegram community is open to prospective learners and shares BA tips, encouragement, events, and cohort updates. The alumni community is part of the premium programme and is intended for deeper peer connection, continued career discussion, and support after completion."
         },
         {
-          "question": "What salary can Business Analysts expect in the UK?",
-          "answer": "Salary ranges vary by industry, experience, location, and hiring market. The website gives an indicative UK Business Analysis salary snapshot only."
+          "question": "What does lifetime alumni community access mean?",
+          "answer": "It means continued access after your cohort for as long as Anderseed operates the community and you follow its rules. The platform, format, schedule, and activities may change over time so the community can remain useful and sustainable."
         },
         {
-          "question": "Does Anderseed apply to jobs for me?",
-          "answer": "No. The programme gives guidance, resources, positioning support, and job-search strategy, but learners are responsible for applying, networking, preparing, and attending interviews."
+          "question": "What behaviour is expected in sessions and community spaces?",
+          "answer": "Learners must communicate respectfully, protect other people's personal information and work, avoid harassment or discrimination, and use programme resources responsibly. Serious or repeated harmful behaviour may lead to restricted or removed access under the programme terms."
+        },
+        {
+          "question": "Can I stay connected if I am not ready for premium mentorship?",
+          "answer": "Yes. You can download the free roadmap, join the free Telegram community, follow Anderseed content, and read the blog without joining the paid cohort. These resources can help you build clarity until you are ready for structured mentorship."
         }
       ]
     },
     {
-      "id": "trust",
-      "label": "Terms & Privacy",
-      "title": "Trust and compliance",
-      "intro": "Legal and privacy information is kept on dedicated pages so it is easy to find and update.",
+      "id": "privacy-data",
+      "label": "Privacy & Recordings",
+      "title": "How personal information is handled",
+      "intro": "The FAQ gives a plain-English summary. The dedicated privacy notice explains the applicable purposes, rights, and contact route in more detail.",
       "items": [
         {
-          "question": "Where can I read the terms and privacy notice?",
-          "answer": "The detailed legal and trust information lives on dedicated pages: Terms and Privacy Notice."
+          "question": "What personal information does Anderseed collect?",
+          "answer": "Depending on how you interact with Anderseed, information may include your name, email address, phone number, referral source, application details, payment-related records, messages, feedback, and participation information. If you join a recorded session using your microphone, camera, display name, chat, or shared screen, those details may also appear in the recording."
         },
         {
-          "question": "Will my details be sold to third parties?",
-          "answer": "No. Your details should be handled in line with the privacy notice and are not sold to third parties."
+          "question": "Why is my personal information used?",
+          "answer": "Information is used to deliver requested resources, respond to enquiries, process applications and payments, provide programme access and support, administer recordings and community spaces, meet legal or accounting obligations, improve services, and send marketing where there is an appropriate lawful basis. The privacy notice provides the fuller explanation."
+        },
+        {
+          "question": "Do I have to appear on camera in recorded sessions?",
+          "answer": "No. Cameras are optional. Learners are told that teaching sessions are recorded and can keep their camera off or limit personal information shared on screen. Private 1:1 or sensitive conversations should not be included in a group recording unless the people involved have been clearly informed and the recording is appropriate."
+        },
+        {
+          "question": "Who can view programme recordings?",
+          "answer": "Recordings are restricted to authorised Anderseed personnel and enrolled learners who need access for the programme. Learners must not download, publish, forward, resell, or share recordings with anyone outside the authorised cohort. Access is normally removed after the stated 12-month period or earlier where required for safety, privacy, or compliance."
+        },
+        {
+          "question": "Is my information sold or shared with third parties?",
+          "answer": "Anderseed does not sell personal information. Information may be processed by trusted providers needed for services such as hosting, email, forms, payments, analytics, video sessions, recordings, or customer administration, and may be disclosed where legally required. Those arrangements should be governed by appropriate privacy and security terms."
+        },
+        {
+          "question": "Can I unsubscribe from marketing or exercise my data rights?",
+          "answer": "Yes. You can unsubscribe from marketing communications at any time without losing access to a resource or service you have already purchased. Subject to applicable law, you may also request access, correction, deletion, restriction, or objection relating to your personal information, and you can raise a concern with Anderseed or the UK Information Commissioner's Office."
+        },
+        {
+          "question": "How long is my information kept?",
+          "answer": "Information is kept only for as long as reasonably needed for the purpose it was collected, programme delivery, learner support, legal or accounting obligations, dispute handling, and legitimate business records. Programme recordings are normally available to enrolled learners for 12 months; other retention periods depend on the type of record and applicable requirements described in the privacy notice."
+        }
+      ]
+    },
+    {
+      "id": "help-accessibility",
+      "label": "Help & Accessibility",
+      "title": "Questions, adjustments, and concerns",
+      "intro": "Contact Anderseed early if you need clarification or reasonable support to take part effectively.",
+      "items": [
+        {
+          "question": "Can I request an accessibility adjustment?",
+          "answer": "Yes. Contact Anderseed before enrolment or as soon as a need becomes clear, explain the barrier you are experiencing, and request a reasonable adjustment. Anderseed will discuss what can practically be provided for live sessions, recordings, documents, communication, or task submission."
+        },
+        {
+          "question": "What should I do if I have a technical access problem?",
+          "answer": "Report the issue promptly with enough information to identify the problem, while avoiding passwords or sensitive payment details. Anderseed will help with programme access it controls, but learners remain responsible for a suitable device, internet connection, email access, and any third-party account required for participation."
+        },
+        {
+          "question": "How can I ask a question or make a complaint?",
+          "answer": "Use the Contact Us section or email Anderseed with your name, the programme or service involved, and a clear description of the question or concern. Complaints will be reviewed fairly, with relevant records and programme terms considered, and privacy concerns can also be raised through the contact route in the privacy notice."
         }
       ]
     }

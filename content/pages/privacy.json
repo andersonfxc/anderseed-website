@@ -1,0 +1,115 @@
+{
+  "seoTitle": "Privacy Notice | Anderseed Consulting",
+  "seoDescription": "Privacy notice for Anderseed Consulting website visitors, roadmap subscribers, applicants, and mentorship learners.",
+  "eyebrow": "Privacy",
+  "headline": "Privacy notice",
+  "intro": "A plain-English privacy page for people who use the Anderseed website, request free resources, join community links, apply for mentorship, or contact the business.",
+  "lastUpdated": "August 2026",
+  "reviewNotice": "This is a practical website privacy notice and should be professionally reviewed before launch.",
+  "sections": [
+    {
+      "title": "Who we are",
+      "paragraphs": [
+        "Anderseed Consulting Ltd provides Business Analysis career education, mentorship, resources, and community support."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "What we collect",
+      "paragraphs": [
+        "We may collect your name, email address, phone number, referral source, application answers, payment-related records, messages, feedback, and programme participation information. If you use your microphone, camera, display name, chat, or screen sharing during a recorded session, those details may appear in the recording."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "How we use your details",
+      "paragraphs": [],
+      "bullets": [
+        "To send requested resources such as the free BA Career Roadmap.",
+        "To respond to enquiries and mentorship applications.",
+        "To provide programme updates, onboarding information, and learner support.",
+        "To deliver live teaching, recordings, project feedback, and community access.",
+        "To send email guidance and marketing where we have a lawful basis to do so.",
+        "To meet legal, accounting, safeguarding, security, and dispute-handling obligations.",
+        "To understand website performance when analytics tools are added."
+      ],
+      "links": []
+    },
+    {
+      "title": "Lawful bases",
+      "paragraphs": [
+        "Depending on the activity, we may process personal information because it is needed to provide a requested resource or service, comply with a legal obligation, pursue a legitimate business interest that does not override your rights, or because you have given consent. Where processing relies on consent, you may withdraw it at any time."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "Recorded teaching sessions",
+      "paragraphs": [
+        "Teaching sessions are recorded so enrolled learners can revisit or catch up on programme content. Cameras are optional, and learners should avoid sharing unnecessary personal or confidential information. Recordings are restricted to authorised Anderseed personnel and enrolled learners, are normally available for 12 months, and must not be shared outside the authorised cohort."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "Marketing and unsubscribe",
+      "paragraphs": [
+        "You can unsubscribe from marketing emails at any time. We do not sell your personal details to third parties."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "Service providers",
+      "paragraphs": [
+        "We may use trusted providers for email marketing, payment processing, analytics, website hosting, forms, video sessions, recordings, learning access, and customer management. These providers process data so the website and business can operate. Where information is processed outside the UK, appropriate contractual or legal safeguards should be used where required."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "How long we keep information",
+      "paragraphs": [
+        "We keep personal information only for as long as reasonably needed for the purpose it was collected, programme delivery, learner support, legal or accounting obligations, security, and dispute handling. Programme recordings are normally available to enrolled learners for 12 months. Other retention periods depend on the record and applicable requirements, after which information should be deleted or anonymised where appropriate."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "Cookies",
+      "paragraphs": [
+        "The current website is mostly static. If analytics, advertising pixels, or similar technologies are added, the website should use a cookie notice and consent controls where required."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "Your rights",
+      "paragraphs": [
+        "Subject to applicable law, you may ask to access, correct, delete, restrict, transfer, or object to the use of your personal data. You may also withdraw consent where consent is the lawful basis. If you remain concerned after contacting us, you may complain to the UK Information Commissioner's Office."
+      ],
+      "bullets": [],
+      "links": [
+        {
+          "label": "Visit the Information Commissioner's Office",
+          "href": "https://ico.org.uk/make-a-complaint/"
+        }
+      ]
+    },
+    {
+      "title": "Contact",
+      "paragraphs": [
+        "For privacy questions, contact us by email."
+      ],
+      "bullets": [],
+      "links": [
+        {
+          "label": "hello@anderseedconsulting.com",
+          "href": "mailto:hello@anderseedconsulting.com"
+        }
+      ]
+    }
+  ]
+}
