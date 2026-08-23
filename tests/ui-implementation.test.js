@@ -30,6 +30,35 @@ function between(source, startMarker, endMarker) {
   return source.slice(start, end);
 }
 
+test("PostHog base tracking is installed once in every generated public page head", () => {
+  const publicPages = [
+    "dist/index.html",
+    "dist/about/index.html",
+    "dist/assessment/index.html",
+    "dist/blog/index.html",
+    "dist/blog/ba-interview-questions/index.html",
+    "dist/blog/business-analyst-cv-recruiters/index.html",
+    "dist/blog/how-to-become-a-business-analyst-with-no-it-experience/index.html",
+    "dist/blog/requirements-gathering-new-business-analysts/index.html",
+    "dist/checkout/index.html",
+    "dist/faq/index.html",
+    "dist/privacy/index.html",
+    "dist/roadmap/index.html",
+    "dist/terms/index.html",
+  ];
+
+  for (const page of publicPages) {
+    const html = read(page);
+    const head = between(html, "<head>", "</head>");
+    assert.equal((head.match(/posthog\.init\(/g) || []).length, 1, `${page} should initialise PostHog once`);
+    assert.match(head, /phc_xPv9uMsaKk5fSBsVeJjUByT6hzhskg5Lrj9AcyK2rsmf/);
+    assert.match(head, /api_host:\s*'https:\/\/eu\.i\.posthog\.com'/);
+    assert.match(head, /defaults:\s*'2026-05-30'/);
+    assert.match(head, /person_profiles:\s*'identified_only'/);
+    assert.doesNotMatch(html, /posthog\.capture\s*\(/);
+  }
+});
+
 test("the generated assessment uses the V2 positioning and exact eight-question configuration", () => {
   const html = read("dist/assessment/index.html");
   const content = JSON.parse(read("content/pages/assessment.json"));
