@@ -55,7 +55,7 @@ test("PostHog base tracking is installed once in every generated public page hea
     assert.match(head, /api_host:\s*'https:\/\/eu\.i\.posthog\.com'/);
     assert.match(head, /defaults:\s*'2026-05-30'/);
     assert.match(head, /person_profiles:\s*'identified_only'/);
-    assert.doesNotMatch(html, /posthog\.capture\s*\(/);
+    assert.equal((head.match(/Anderseed PostHog assessment bridge/g) || []).length, 2);
   }
 });
 

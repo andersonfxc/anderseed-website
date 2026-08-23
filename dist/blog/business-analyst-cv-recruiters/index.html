@@ -21,6 +21,39 @@
         defaults: '2026-05-30',
         person_profiles: 'identified_only',
     })
+    /* Anderseed PostHog assessment bridge */
+    !function(){
+        if(window.__anderseedPostHogAssessmentBridgeInstalled)return;
+        window.__anderseedPostHogAssessmentBridgeInstalled=!0;
+        var sentEventIds=new Set();
+        var hostname=String(window.location&&window.location.hostname||"").toLowerCase();
+        var environment=!hostname||hostname==="localhost"||hostname==="127.0.0.1"||hostname==="0.0.0.0"||hostname==="::1"||hostname.endsWith(".local")||hostname.endsWith(".test")?"development":hostname.includes("deploy-preview")||hostname.includes("--")||hostname.includes("preview")||hostname.includes("staging")?"test":"production";
+        window.addEventListener("anderseed:analytics",function(event){
+            try{
+                var detail=event&&event.detail;
+                if(!detail||typeof detail.eventName!=="string"||!detail.eventName||!window.posthog||typeof window.posthog.capture!=="function")return;
+                var eventId=typeof detail.eventId==="string"?detail.eventId:"";
+                if(eventId&&sentEventIds.has(eventId))return;
+                var properties={environment:environment};
+                var allowedProperties={
+                    event_id:eventId,
+                    assessment_version:detail.schemaVersion,
+                    scoring_version:detail.scoringVersion,
+                    analytics_session_id:detail.analyticsSessionId,
+                    question_id:detail.questionId,
+                    question_number:detail.questionNumber,
+                    client_timestamp:detail.clientTimestamp
+                };
+                Object.keys(allowedProperties).forEach(function(key){
+                    var value=allowedProperties[key];
+                    if(value!==null&&value!==undefined&&value!=="")properties[key]=value;
+                });
+                window.posthog.capture(detail.eventName,properties);
+                if(eventId)sentEventIds.add(eventId);
+            }catch(_error){}
+        });
+    }();
+    /* End Anderseed PostHog assessment bridge */
 </script>
 </head>
 <body>

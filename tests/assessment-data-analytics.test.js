@@ -138,6 +138,82 @@ test("the actual analytics payload excludes identity, answers and contact consen
   ]);
 });
 
+test("the central PostHog bridge forwards each assessment event once with only approved non-PII properties", () => {
+  const homepage = read("dist/index.html");
+  const match = homepage.match(/\/\* Anderseed PostHog assessment bridge \*\/([\s\S]*?)\/\* End Anderseed PostHog assessment bridge \*\//);
+  assert.ok(match, "the generated site must include the central PostHog assessment bridge");
+
+  const runBridge = (hostname, captureImpl) => {
+    const listeners = new Map();
+    const captures = [];
+    const window = {
+      location: { hostname },
+      posthog: {
+        capture: (...args) => {
+          captures.push(args);
+          if (captureImpl) captureImpl(...args);
+        },
+      },
+      addEventListener: (name, listener) => {
+        assert.equal(name, "anderseed:analytics");
+        assert.equal(listeners.has(name), false, "the bridge must install only one listener");
+        listeners.set(name, listener);
+      },
+    };
+    const context = vm.createContext({ window, Set, Object, String });
+    vm.runInContext(match[1], context);
+    vm.runInContext(match[1], context);
+    return { captures, listener: listeners.get("anderseed:analytics") };
+  };
+
+  const production = runBridge("singular-cendol-c4edc0.netlify.app");
+  const detail = {
+    eventId: "a8a7ab56-1d30-4f45-b5e9-a9a8adc96f9a",
+    analyticsSessionId: "a5bb2e3d-9d2a-48b4-8b41-3055116df8c2",
+    eventName: "assessment_question_viewed",
+    schemaVersion: "ba-readiness-mvp-v2",
+    scoringVersion: "2026-08-22-v1",
+    questionId: "handlingAmbiguity",
+    questionNumber: 2,
+    clientTimestamp: "2026-08-23T12:00:00.000Z",
+    firstName: "Must not reach PostHog",
+    email: "private@example.com",
+    marketingOptIn: true,
+    answers: { handlingAmbiguity: "clarify_need" },
+    readinessScore: 82,
+    personalisedResult: { stage: "Established" },
+  };
+
+  production.listener({ detail });
+  production.listener({ detail });
+  assert.equal(production.captures.length, 1, "the same assessment eventId must not be captured twice");
+  assert.deepEqual(JSON.parse(JSON.stringify(production.captures[0])), [
+    "assessment_question_viewed",
+    {
+      environment: "production",
+      event_id: detail.eventId,
+      assessment_version: detail.schemaVersion,
+      scoring_version: detail.scoringVersion,
+      analytics_session_id: detail.analyticsSessionId,
+      question_id: detail.questionId,
+      question_number: detail.questionNumber,
+      client_timestamp: detail.clientTimestamp,
+    },
+  ]);
+  assert.doesNotMatch(JSON.stringify(production.captures), /private@example|Must not reach|clarify_need|marketingOptIn|readinessScore|Established/i);
+
+  const development = runBridge("localhost");
+  development.listener({ detail: { ...detail, eventId: "b56b00c2-510f-43ca-bd17-1cb118323d6b" } });
+  assert.equal(development.captures[0][1].environment, "development");
+
+  const testTraffic = runBridge("deploy-preview-42--anderseed.netlify.app");
+  testTraffic.listener({ detail: { ...detail, eventId: "35655f27-d3e4-4f98-b2aa-a4a7f7fb5df8" } });
+  assert.equal(testTraffic.captures[0][1].environment, "test");
+
+  const resilient = runBridge("localhost", () => { throw new Error("PostHog unavailable"); });
+  assert.doesNotThrow(() => resilient.listener({ detail: { ...detail, eventId: "e4aeb370-f4ab-4efb-bf1d-664f28d962cc" } }));
+});
+
 test("assessment, contact, consent and analytics data are structurally separated", () => {
   const migration = read("netlify/database/migrations/20260822090000_create_assessment_mvp.sql");
   const runs = tableDefinition(migration, "assessment_runs");
