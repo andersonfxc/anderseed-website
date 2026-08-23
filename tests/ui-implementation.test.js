@@ -30,7 +30,7 @@ function between(source, startMarker, endMarker) {
   return source.slice(start, end);
 }
 
-test("PostHog base tracking is installed once in every generated public page head", () => {
+test("optional analytics require an explicit choice on every generated public page", () => {
   const publicPages = [
     "dist/index.html",
     "dist/about/index.html",
@@ -50,13 +50,54 @@ test("PostHog base tracking is installed once in every generated public page hea
   for (const page of publicPages) {
     const html = read(page);
     const head = between(html, "<head>", "</head>");
+    const posthogLoader = between(head, "function loadPostHog()", "function activatePostHog()");
     assert.equal((head.match(/posthog\.init\(/g) || []).length, 1, `${page} should initialise PostHog once`);
+    assert.match(posthogLoader, /posthog\.init\(/, `${page} should keep PostHog inside the deferred loader`);
+    assert.match(head, /if\(readChoice\(\)===accepted\)activatePostHog\(\)/, `${page} should load persisted opt-in choices only`);
+    assert.match(head, /window\.localStorage\.setItem\(consentKey,choice\)/);
+    assert.match(head, /window\.posthog\.opt_out_capturing\(\)/);
     assert.match(head, /phc_xPv9uMsaKk5fSBsVeJjUByT6hzhskg5Lrj9AcyK2rsmf/);
     assert.match(head, /api_host:\s*'https:\/\/eu\.i\.posthog\.com'/);
     assert.match(head, /defaults:\s*'2026-05-30'/);
     assert.match(head, /person_profiles:\s*'identified_only'/);
     assert.equal((head.match(/Anderseed PostHog assessment bridge/g) || []).length, 2);
+    assert.equal((html.match(/<aside class="analytics-consent"/g) || []).length, 1, `${page} should show one consent gate`);
+    assert.equal((html.match(/<button class="analytics-settings"/g) || []).length, 1, `${page} should provide one preferences control`);
+    assert.match(html, /<aside class="analytics-consent"[^>]*role="dialog"[^>]*aria-modal="true"/);
+    assert.match(html, /aria-describedby="analyticsConsentDescription"/);
+    assert.match(html, /<div class="analytics-consent-card">/);
+    assert.match(head, /html\.analytics-consent-required,html\.analytics-consent-required body\{overflow:hidden!important\}/);
+    assert.match(head, /setPageLocked\(!isDecided\(initialChoice\)\)/);
+    assert.match(head, /document\.querySelector\("aside\[data-analytics-consent\]"\)/);
+    assert.match(head, /querySelector\('\[data-consent-choice="accepted"\]'\)/);
+    assert.match(head, /event\.key==="Escape"/);
+    assert.match(head, /event\.key!=="Tab"/);
+    assert.match(head, /document\.querySelector\("footer \.footer-links"\)\|\|document\.querySelector\("footer"\)/);
+    assert.match(head, /footerDestination\.appendChild\(settingsButton\)/);
+    assert.match(head, /restorePageFocus\(focusTarget\)/);
+    assert.doesNotMatch(head, /\.analytics-settings\{position:fixed/);
+    assert.match(html, /data-consent-choice="rejected">Reject non-essential</);
+    assert.match(html, /data-consent-choice="accepted">Accept analytics</);
+    const consentGate = between(html, '<aside class="analytics-consent"', "</aside>");
+    assert.ok(
+      consentGate.indexOf('data-consent-choice="accepted"') < consentGate.indexOf('data-consent-choice="rejected"'),
+      `${page} should present Accept analytics as the primary action before Reject non-essential`
+    );
+    assert.doesNotMatch(html, /data-consent-close/);
   }
+});
+
+test("the deployed assessment CSP permits PostHog scripts and event delivery", () => {
+  const netlify = read("netlify.toml");
+  const assessmentHeaders = between(
+    netlify,
+    '[[headers]]\n  for = "/assessment/*"',
+    '    X-Frame-Options = "DENY"'
+  );
+
+  assert.match(assessmentHeaders, /script-src[^\n"]*https:\/\/\*\.posthog\.com/);
+  assert.match(assessmentHeaders, /connect-src[^\n"]*https:\/\/\*\.posthog\.com/);
+  assert.match(assessmentHeaders, /worker-src[^\n"]*blob:[^\n"]*data:/);
 });
 
 test("the generated assessment uses the V2 positioning and exact eight-question configuration", () => {
@@ -64,16 +105,20 @@ test("the generated assessment uses the V2 positioning and exact eight-question 
   const content = JSON.parse(read("content/pages/assessment.json"));
   const scoring = JSON.parse(read("content/assessment-scoring.json"));
   const config = embeddedAssessmentConfig(html);
+  const landingView = between(html, '<section class="assessment-view" data-assessment-landing hidden>', '<section class="assessment-view" data-question-view');
 
-  assert.match(html, /How close are you to a career in <span>Business Analysis<\/span>\?/i);
-  assert.match(html, /data-start-assessment>Get My BA Score \+ Free Roadmap/i);
-  assert.match(html, /discover your BA readiness score and receive a free BA transition roadmap/i);
-  assert.match(html, /No BA knowledge required/);
-  assert.match(html, /No specific career background required/);
-  assert.match(html, /Free BA transition roadmap included/);
-  assert.match(html, /8 questions · Approximately 2–3 minutes/);
-  assert.match(html, /Immediate personalised result/);
-  assert.match(html, /Your Free BA Transition Roadmap/);
+  assert.match(landingView, /Discover how ready you are for <span>Business Analysis<\/span>/i);
+  assert.match(landingView, /data-start-assessment>Start My Assessment/i);
+  assert.match(landingView, /Answer 8 questions in 2–3 minutes to receive your BA Readiness Stage, Score and FREE BA Career Roadmap by email\./i);
+  assert.match(landingView, /No BA knowledge needed/);
+  assert.match(landingView, /Immediate result/);
+  assert.match(landingView, /Free career roadmap/);
+  assert.match(landingView, /8 questions · 2–3 minutes/);
+  assert.match(landingView, /class="assessment-start-card"/);
+  assert.doesNotMatch(landingView, /assessment-profile-plate|Growth Profile includes|strength \+ growth diagnosis/i);
+  assert.match(html, /data-completion-view/);
+  assert.match(html, /Assessment Complete!/);
+  assert.match(html, /Your FREE BA Career Roadmap by email/);
 
   assert.equal(config.schemaVersion, "ba-readiness-mvp-v2");
   assert.equal(config.questions.length, 8);
@@ -116,26 +161,34 @@ test("plant growth communicates progress without revealing the four result class
   assert.match(client, /microReveal\.textContent = state\.pendingReveal/);
 });
 
-test("contact details are requested only after completion and unlock an immediate on-screen result", () => {
+test("the approved post-survey journey pauses at completion and reveals a tailored result", () => {
   const html = read("dist/assessment/index.html");
   const client = read("dist/assets/assessment.js");
+  const completion = between(html, '<section class="assessment-view" data-completion-view', '<section class="assessment-view" data-gate-view');
   const gate = between(html, '<section class="assessment-view" data-gate-view', '<section class="assessment-view" data-result-view');
   const result = between(html, '<section class="assessment-view" data-result-view', "<noscript>");
-  const completeFlow = between(client, "async function completeAssessment()", "function advance()");
+  const completeFlow = between(client, "async function completeAssessment()", "function continueFromCompletion()");
+  const completionFlow = between(client, "function continueFromCompletion()", "function advance()");
   const contactFlow = between(client, "async function submitLead(event)", "function restart()");
+  const renderFlow = between(client, "function renderResult()", "async function submitLead(event)");
   const inputs = [...gate.matchAll(/<input\b[^>]*>/g)].map(([input]) => input);
 
+  assert.match(completion, /Assessment Complete!/i);
+  assert.match(completion, /Great work! You’ve answered all 8 questions\./i);
+  assert.match(completion, /Your Anderseed Growth Profile is ready\./i);
+  assert.match(completion, /data-completion-status/);
+  assert.match(completion, /data-completion-continue disabled/);
+  assert.match(completion, /Preparing Your Result…/);
   assert.match(gate, /Your Anderseed Growth Profile is ready\./i);
-  for (const lockedOutput of [
+  assert.match(gate, /Enter your details to reveal your BA Readiness result and get your FREE BA Career Roadmap by email\./i);
+  for (const valueItem of [
     "Your BA Readiness Stage",
     "Your BA Readiness Score",
-    "Your strongest area",
-    "Your primary growth area",
-    "Your recommended next move",
-    "Your Free BA Transition Roadmap",
+    "Your FREE BA Career Roadmap by email",
   ]) {
-    assert.match(gate, new RegExp(lockedOutput, "i"));
+    assert.match(gate, new RegExp(valueItem, "i"));
   }
+  assert.doesNotMatch(gate, /strongest area|primary growth area|recommended next move|supporting scores/i);
 
   assert.equal(inputs.length, 3, "the gate should ask only for first name, email and optional marketing consent");
   assert.match(inputs[0], /name="firstName"/);
@@ -148,11 +201,23 @@ test("contact details are requested only after completion and unlock an immediat
   assert.match(inputs[2], /name="marketingOptIn"/);
   assert.match(inputs[2], /type="checkbox"/);
   assert.doesNotMatch(inputs[2], /\brequired\b|aria-required|\bchecked\b/);
-  assert.match(gate, /This is optional\./);
+  assert.match(gate, /Yes — email me practical BA career tips, portfolio advice, Anderseed programme updates and occasional offers\. Unsubscribe anytime\./);
+  assert.match(gate, /Privacy Notice/);
+  assert.match(gate, /See My Result &amp; Get My Free Roadmap →/);
+  assert.match(gate, /See your result/);
   assert.doesNotMatch(gate, /phone|salary|company|LinkedIn|budget/i);
 
   assert.ok(completeFlow.indexOf("validateAnswers") < completeFlow.indexOf("postJson(config.endpoints.complete"));
-  assert.ok(completeFlow.indexOf("postJson(config.endpoints.complete") < completeFlow.indexOf("show(gateView)"));
+  assert.ok(completeFlow.indexOf('trackEvent("assessment_completed")') < completeFlow.indexOf("show(completionView)"));
+  assert.doesNotMatch(completeFlow, /show\(gateView\)|setTimeout\([^)]*1600|completionMoment|trackEvent\("email_gate_viewed"\)/);
+  assert.match(completeFlow, /Next, enter your details to see your score and receive your free roadmap\./);
+  assert.match(completeFlow, /completionContinueButton\.textContent = "See My Result →"/);
+  assert.match(completeFlow, /completionContinueButton\.disabled = false/);
+  assert.match(completionFlow, /show\(gateView\)/);
+  assert.match(completionFlow, /trackEvent\("email_gate_viewed"\)/);
+  assert.equal((completionFlow.match(/trackEvent\("email_gate_viewed"\)/g) || []).length, 1);
+  assert.match(client, /completionContinueButton\.addEventListener\("click", continueFromCompletion\)/);
+  assert.doesNotMatch(completion + gate + client, /\bunlock\b/i);
   assert.doesNotMatch(completeFlow, /FormData|formData\.get\("(?:firstName|email)"\)/);
   assert.match(contactFlow, /postJson\(config\.endpoints\.contact/);
   assert.ok(contactFlow.indexOf("postJson(config.endpoints.contact") < contactFlow.indexOf("show(resultView)"));
@@ -161,15 +226,38 @@ test("contact details are requested only after completion and unlock an immediat
   assert.match(result, /data-result-stage/);
   assert.match(result, /data-result-score/);
   assert.match(result, />\/100</);
+  assert.match(result, /data-result-title/);
+  assert.match(result, /data-result-explanation/);
+  assert.match(result, /data-result-strength-label/);
   assert.match(result, /data-result-strength/);
   assert.match(result, /data-result-growth-label/);
-  assert.match(result, /data-result-priorities/);
-  assert.match(result, /Your Supporting Scores/);
-  assert.match(result, /Why Anderseed is relevant/);
-  assert.match(result, /data-programme-cta/);
-  assert.match(client, /result\.topPriorities\.forEach/);
-  assert.match(client, /Object\.entries\(config\.scoring\.dimensionLabels\)/);
-  assert.match(client, /result\.programmeRecommendation\.text/);
+  assert.match(result, /data-result-gap/);
+  assert.match(result, /data-result-dimensions/);
+  assert.match(result, /Strongest Area/);
+  assert.match(result, /Primary Growth Area/);
+  assert.match(result, /Your BA Readiness Breakdown/);
+  assert.match(result, /Your next move/);
+  assert.match(result, /Use your FREE BA Career Roadmap\./);
+  assert.match(result, /It will be sent to the email address you provided/);
+  assert.doesNotMatch(result, /has been sent|data-result-priorities|Your 3 Recommended Next Moves/i);
+  assert.doesNotMatch(result, /data-roadmap-cta|\.pdf\b|\bdownload\b/i);
+  assert.match(result, /How Anderseed Supports Your Journey/);
+  assert.match(result, /8-Week Live Mentorship Cohort/);
+  assert.match(result, /4-Week Guided Portfolio Project/);
+  assert.match(result, /12-Week Anderseed BA Career Journey/);
+  for (const stage of ["DISCOVERY", "REQUIREMENTS", "DESIGN", "TEST", "DEPLOY"]) {
+    assert.match(result, new RegExp(stage, "i"));
+  }
+  for (const outcome of ["Portfolio", "CV", "Applications", "Interviews"]) {
+    assert.match(result, new RegExp(outcome));
+  }
+  assert.match(result, /href="https:\/\/anderseedconsulting\.co\.uk\/#pricing"[^>]*data-programme-cta/);
+  assert.match(result, /href="https:\/\/t\.me\/anderseedconsulting"/);
+  assert.match(result, /Explore The Programme &amp; Pricing →/);
+  assert.match(result, /Join the Free BA Community →/);
+  assert.match(renderFlow, /strongestArea|primaryGrowthArea|dimensionStatuses|dimensions/);
+  assert.doesNotMatch(renderFlow, /topPriorities|recommendedNextMove|programmeRecommendation/);
+  assert.match(client, /trackEvent\("roadmap_cta_clicked"\)/);
 });
 
 test("mobile, keyboard and reduced-motion requirements are explicit", () => {
@@ -211,8 +299,9 @@ test("anonymous progress is temporary, restorable and cleared after a successful
   assert.match(persistence, /state\.answers = saved\.answers/);
   assert.match(persistence, /state\.completedQuestions = new Set/);
   assert.doesNotMatch(persistence, /firstName|email|marketingOptIn/);
-  assert.match(client, /renderResult\(firstName\);\s*clearDraft\(\);\s*show\(resultView\)/);
-  assert.match(client, /const restoredDraft = restoreDraft\(\);\s*if \(restoredDraft\)\s*\{[\s\S]*?show\(questionView\);\s*renderQuestion\(\)/);
+  assert.match(client, /renderResult\(\);\s*clearDraft\(\);\s*show\(resultView\)/);
+  assert.match(client, /function resumeRestoredAssessment\(\)[\s\S]*?show\(questionView\);\s*renderQuestion\(\)/);
+  assert.match(client, /const restoredDraft = restoreDraft\(\);\s*if \(restoredDraft\)[\s\S]*?resumeRestoredAssessment\(\)/);
   assert.doesNotMatch(client, /document\.cookie|indexedDB/);
 });
 
@@ -249,28 +338,65 @@ test("landing-page logos return home and unfinished assessments guard exits with
   assert.doesNotMatch(confirmExit, /clearDraft|localStorage\.removeItem/);
 });
 
+test("checkout shows flexible payment choices without allowing payment before approval", () => {
+  const checkout = read("dist/checkout/index.html");
+  const homepage = read("dist/index.html");
+  const faq = read("dist/faq/index.html");
+
+  assert.match(checkout, /<title>Apply for Mentorship \| Anderseed Consulting<\/title>/);
+  assert.match(checkout, /Mentorship application/);
+  assert.match(checkout, /Apply for review/);
+  assert.match(checkout, /Submit application for review/);
+  assert.match(checkout, /No payment is taken on this page/);
+  assert.match(checkout, /Flexible payment options/);
+  assert.equal((checkout.match(/<article class="payment-method">/g) || []).length, 4);
+  assert.match(checkout, /Card payment[\s\S]*£800 in full by debit or credit card[\s\S]*Stripe/);
+  assert.match(checkout, /Klarna Pay in 3[\s\S]*£266\.67 × 3 instalments/);
+  assert.match(checkout, /Clearpay Pay in 4[\s\S]*£200 × 4 instalments over 6 weeks/);
+  assert.match(checkout, /Bank transfer[\s\S]*£800 in full after approval/);
+  assert.match(checkout, /Apply[\s\S]*Approval[\s\S]*Choose &amp; pay/);
+  assert.match(checkout, /Your place is confirmed only after approval and verified payment/);
+  assert.match(checkout, /Klarna and Clearpay are subject to provider eligibility and terms/);
+  assert.doesNotMatch(checkout, /YOUR-STRIPE-CHECKOUT-LINK|YOUR-KLARNA-CHECKOUT-LINK/);
+  assert.doesNotMatch(checkout, /Continue to Stripe checkout|Continue with Klarna/);
+  assert.doesNotMatch(checkout, /role="tablist"|role="tabpanel"|activatePaymentMethod/);
+
+  assert.match(homepage, /Flexible payment options:[\s\S]*Clearpay Pay in 4/);
+  assert.match(homepage, />Apply for a place<\/a>/);
+  assert.match(faq, /Card, Klarna Pay in 3, Clearpay Pay in 4, and bank-transfer options/);
+  assert.match(faq, /No payment is taken with the application/);
+});
+
 test("saved assessment progress resumes at the exact phase and expires after 24 hours", () => {
   const html = read("dist/assessment/index.html");
   const client = read("dist/assets/assessment.js");
   const config = embeddedAssessmentConfig(html);
   const persistence = between(client, "function persistDraft()", "function hasAnswer(question)");
+  const resumeFlow = between(client, "function resumeRestoredAssessment()", "function startAssessmentFromLanding()");
   const initialization = client.slice(client.lastIndexOf('trackEvent("assessment_page_viewed")'));
   const privacy = read("dist/privacy/index.html");
 
   assert.equal(config.progressTtlHours, 24);
-  assert.match(persistence, /phase: state\.phase === "gate" \? "gate" : "question"/);
-  assert.match(persistence, /completionToken: state\.phase === "gate" \? state\.completionToken : null/);
+  assert.match(persistence, /const resultReady = Boolean\(state\.completionToken\)/);
+  assert.match(persistence, /state\.phase === "completion" \|\| state\.phase === "gate"/);
+  assert.match(persistence, /phase: resultReady \? "gate" : "question"/);
+  assert.match(persistence, /completionToken: resultReady \? state\.completionToken : null/);
   assert.match(persistence, /state\.phase = saved\.phase === "gate" \? "gate" : "question"/);
   assert.match(persistence, /state\.completionToken = state\.phase === "gate"/);
-  assert.match(initialization, /const resumeAtGate = state\.phase === "gate"/);
-  assert.match(initialization, /Welcome back — your progress has been restored at Question/);
-  assert.match(initialization, /if \(resumeAtGate && state\.completionToken\)[\s\S]*?show\(gateView\)/);
-  assert.match(initialization, /if \(resumeAtGate && !state\.completionToken\)[\s\S]*?completeAssessment\(\)/);
+  assert.match(resumeFlow, /const resumeAtGate = state\.phase === "gate"/);
+  assert.match(resumeFlow, /Welcome back — your progress has been restored at Question/);
+  assert.match(resumeFlow, /if \(resumeAtGate && state\.completionToken\)[\s\S]*?show\(gateView\)/);
+  assert.match(resumeFlow, /if \(resumeAtGate && !state\.completionToken\)[\s\S]*?completeAssessment\(\)/);
+  assert.match(initialization, /if \(forceIntroduction\)[\s\S]*?resumeFromIntroduction = true[\s\S]*?show\(landing\)/);
   assert.match(initialization, /draftRestoreStatus === "expired"[\s\S]*?started a fresh assessment/);
   assert.match(client, /Return within that time to continue where you stopped; after that, your saved progress expires\./);
   assert.match(client, /This browser couldn’t save your progress, so leaving now means starting again next time\./);
   assert.match(privacy, /opaque continuation token/i);
   assert.match(privacy, /does not include your name or email address/i);
+  assert.match(privacy, /PostHog is optional and is not loaded until you choose ‘Accept analytics’/i);
+  assert.match(privacy, /If you choose ‘Reject non-essential’, PostHog is not loaded/i);
+  assert.match(privacy, /using the ‘Privacy choices’ control/i);
+  assert.doesNotMatch(privacy, /No advertising pixels or third-party marketing cookies are configured/i);
   assert.doesNotMatch(persistence, /firstName|email|marketingOptIn/);
 });
 
@@ -283,17 +409,35 @@ test("assessment start is emitted before Q1 is viewed", () => {
   );
 });
 
-test("the homepage CTA bypasses the duplicate assessment introduction", () => {
+test("the direct-start parameter remains available for the embedded homepage assessment CTA", () => {
   const html = read("dist/assessment/index.html");
   const client = read("dist/assets/assessment.js");
   const initialization = client.slice(client.lastIndexOf('trackEvent("assessment_page_viewed")'));
 
   assert.match(html, /<section class="assessment-view" data-assessment-landing hidden>/);
   assert.match(initialization, /const restoredDraft = restoreDraft\(\)/);
-  assert.match(initialization, /new URLSearchParams\(window\.location\.search\)\.get\("start"\) === "1"/);
-  assert.ok(initialization.indexOf("restoreDraft()") < initialization.indexOf("URLSearchParams"));
-  assert.match(initialization, /else if \(new URLSearchParams\(window\.location\.search\)\.get\("start"\) === "1"\) \{\s*beginAssessment\(\)/);
+  assert.match(initialization, /const routeParameters = new URLSearchParams\(window\.location\.search\)/);
+  assert.match(initialization, /const forceIntroduction = routeParameters\.get\("intro"\) === "1"/);
+  assert.match(initialization, /if \(forceIntroduction\) \{[\s\S]*?Continue My Assessment[\s\S]*?show\(landing\)/);
+  assert.match(initialization, /else if \(routeParameters\.get\("start"\) === "1"\) \{\s*beginAssessment\(\)/);
   assert.match(client, /function restart\(\)[\s\S]*?beginAssessment\(\);/);
+  assert.match(client, /function startAssessmentFromLanding\(\)[\s\S]*?resumeRestoredAssessment\(\)[\s\S]*?beginAssessment\(\)/);
+});
+
+test("secondary assessment entry points open the brief introduction instead of skipping to Question 1", () => {
+  const secondaryPages = [
+    "dist/about/index.html",
+    "dist/blog/index.html",
+    "dist/blog/ba-interview-questions/index.html",
+    "dist/faq/index.html",
+    "dist/roadmap/index.html",
+  ];
+
+  for (const page of secondaryPages) {
+    const html = read(page);
+    assert.doesNotMatch(html, /assessment\/index\.html\?start=1/, `${page} must not bypass the introduction`);
+    assert.match(html, /assessment\/index\.html\?intro=1/, `${page} should explicitly open the assessment introduction`);
+  }
 });
 
 test("the ID fallback remains a UUID v4 when crypto.randomUUID is unavailable", () => {
@@ -336,6 +480,7 @@ test("the homepage keeps the assessment dominant and presents a Salesforce-first
   assert.match(hero, /From zero to BA/i);
   assert.match(hero, /No IT experience needed/i);
   assert.match(hero, /class="hero-visual"/);
+  assert.match(hero, /href="#assessment"[^>]*>Discover My BA Readiness<\/a>/);
   assert.doesNotMatch(hero, /class="home-assessment-front"/);
   assert.match(assessmentSection, /class="home-assessment-front"/);
   assert.match(assessmentSection, /See how ready you already are for <span>Business Analysis<\/span>\./i);
@@ -343,8 +488,9 @@ test("the homepage keeps the assessment dominant and presents a Salesforce-first
   assert.match(assessmentSection, /btn btn-primary[^>]+assessment\/index\.html\?start=1[^>]*>Discover My BA Readiness/);
   assert.doesNotMatch(homepage, /class="assessment-teaser"/);
   assert.ok(homepage.indexOf('class="home-assessment-section"') < homepage.indexOf('id="portfolio"'));
-  assert.match(assessmentSection, /Your BA readiness score/i);
-  assert.match(assessmentSection, /Free BA transition roadmap/i);
+  assert.match(assessmentSection, /Your BA readiness stage \+ score/i);
+  assert.match(assessmentSection, /FREE BA Career Roadmap by email/i);
+  assert.doesNotMatch(assessmentSection, /strongest transferable strength/i);
   assert.doesNotMatch(assessmentSection, /assessment-assurances|assessment-delivery-note/);
   assert.doesNotMatch(assessmentSection, /Your name and email unlock your result after question 8/i);
   assert.match(assessmentCss, /\.home-assessment-section \.assessment-landing-copy\{/);
@@ -354,7 +500,8 @@ test("the homepage keeps the assessment dominant and presents a Salesforce-first
   assert.match(assessmentCss, /\.home-assessment-section \.assessment-meta\{/);
   assert.match(assessmentCss, /\.home-assessment-section \.assessment-landing-copy>\.btn\{[^}]*background:#1f6b52/);
   assert.ok(assessmentLinks.length >= 4, "the homepage should retain its assessment entry points");
-  assert.ok(assessmentLinks.every((href) => href.endsWith("assessment/index.html?start=1")));
+  assert.equal(assessmentLinks.filter((href) => href.endsWith("assessment/index.html?start=1")).length, 1);
+  assert.ok(assessmentLinks.some((href) => href === "assessment/index.html?intro=1"));
 
   assert.match(homepage, /Build BA experience across a real delivery lifecycle\./);
   assert.match(homepage, /FLAGSHIP CONTINUOUS PROJECT/);

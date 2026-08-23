@@ -26,6 +26,7 @@
     "contactEndpoint": "/api/v1/assessment/contact",
     "eventEndpoint": "/api/v1/assessment/events",
     "reportEndpoint": "/api/v1/admin/assessment-funnel",
+    "programmeUrl": "https://anderseedconsulting.co.uk/#pricing",
     "progressTtlHours": 24,
     "marketingConsentTextVersion": "assessment-marketing-2026-08-v2",
     "requiresResultEmail": true,

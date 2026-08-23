@@ -1,35 +1,32 @@
 {
   "schemaVersion": "ba-readiness-mvp-v2",
   "seoTitle": "BA Readiness Assessment | Anderseed Consulting",
-  "seoDescription": "Discover your BA readiness score and receive a free personalised BA transition roadmap showing what to focus on next.",
+  "seoDescription": "Take the free 8-question Anderseed BA Readiness Assessment to discover your stage and score, then receive a free BA Career Roadmap by email.",
   "eyebrow": "Free BA Readiness Assessment",
-  "headline": "How close are you to a career in Business Analysis?",
-  "intro": "Answer 8 questions to discover your BA readiness score and receive a free BA transition roadmap built around your strengths and next move.",
-  "primaryButtonLabel": "Get My BA Score + Free Roadmap",
-  "timeLabel": "8 questions · Approximately 2–3 minutes",
+  "headline": "Discover how ready you are for Business Analysis",
+  "intro": "Answer 8 questions in 2–3 minutes to receive your BA Readiness Stage, Score and FREE BA Career Roadmap by email.",
+  "primaryButtonLabel": "Start My Assessment",
+  "timeLabel": "8 questions · 2–3 minutes",
   "assurances": [
-    "No BA knowledge required",
-    "No specific career background required",
-    "Free BA transition roadmap included"
+    "No BA knowledge needed",
+    "Immediate result",
+    "Free career roadmap"
   ],
   "home": {
     "label": "Free BA Readiness Assessment",
     "title": "See how ready you already are for Business Analysis.",
-    "intro": "Answer 8 quick questions to uncover the strengths you already have and the next move for your transition.",
+    "intro": "Answer 8 quick questions to reveal your BA Readiness Stage and Score, then receive your FREE BA Career Roadmap by email.",
     "buttonLabel": "Discover My BA Readiness",
     "proof": "8 questions · 2–3 minutes · No BA knowledge required · Personalised result"
   },
   "gate": {
     "heading": "Your Anderseed Growth Profile is ready.",
-    "intro": "We’ve connected your career position, natural strengths, BA exposure and biggest growth opportunity. Enter your details to reveal what we found.",
-    "buttonLabel": "Reveal My Personalised Results",
+    "intro": "Enter your details to reveal your BA Readiness result and get your FREE BA Career Roadmap by email.",
+    "buttonLabel": "See My Result & Get My Free Roadmap →",
     "lockedOutputs": [
       "Your BA Readiness Stage",
       "Your BA Readiness Score",
-      "Your strongest area",
-      "Your primary growth area",
-      "Your recommended next move",
-      "Your Free BA Transition Roadmap"
+      "Your FREE BA Career Roadmap by email"
     ]
   },
   "questions": [

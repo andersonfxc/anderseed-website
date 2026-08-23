@@ -179,7 +179,7 @@
         },
         {
           "question": "What payment methods are available?",
-          "answer": "The checkout supports secure card payment through Stripe and Klarna Pay in 3 where the learner and transaction are eligible. Bank transfer is available after application approval, with verified payment instructions sent directly to the approved applicant. Klarna approval and terms are controlled by Klarna, and a cohort place is not confirmed until payment or an approved payment arrangement has been verified."
+          "answer": "Before applying, you can review the available Card, Klarna Pay in 3, Clearpay Pay in 4, and bank-transfer options on the checkout page. No payment is taken with the application. If your place is approved, Anderseed sends secure payment instructions so you can choose the method that suits you. Klarna and Clearpay are subject to provider eligibility and terms, and a cohort place is not confirmed until payment or an approved payment arrangement has been verified."
         },
         {
           "question": "What are the payment, cancellation and refund options?",

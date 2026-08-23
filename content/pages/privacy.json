@@ -27,7 +27,7 @@
     {
       "title": "How the assessment uses your information",
       "paragraphs": [
-        "While you work through the assessment, your answers and progress are saved in first-party browser storage for up to 24 hours so you can continue if the page is refreshed. At the result-unlock step, the temporary draft also holds an opaque continuation token so the completed assessment can resume securely without processing the answers again. The draft does not include your name or email address, and you can remove it sooner by clearing this site's browser data.",
+        "While you work through the assessment, your answers and progress are saved in first-party browser storage for up to 24 hours so you can continue if the page is refreshed. At the result-delivery step, the temporary draft also holds an opaque continuation token so the completed assessment can resume securely without processing the answers again. The draft does not include your name or email address, and you can remove it sooner by clearing this site's browser data.",
         "When you complete all eight questions, your answers and calculated result are stored in Anderseed's structured assessment database. We ask for your first name and an email address as part of the result-delivery step; after submission, the personalised result is shown immediately on screen. Automated result emails are not included in this MVP.",
         "Providing an email address for your requested result is not marketing consent. The marketing checkbox is separate and optional, and leaving it unticked does not prevent you from seeing your result."
       ],
@@ -78,7 +78,7 @@
     {
       "title": "Service providers",
       "paragraphs": [
-        "The assessment uses first-party application storage operated for Anderseed through its website hosting and database infrastructure. We may also use trusted providers for payment processing, forms, video sessions, recordings, learning access, analytics, email services, and customer management. These providers process data so the website and business can operate. Where information is processed outside the UK, appropriate contractual or legal safeguards should be used where required.",
+        "The assessment uses first-party application storage operated for Anderseed through its website hosting and database infrastructure. PostHog provides optional website and assessment-funnel analytics through its EU service endpoint, and is loaded only after you accept analytics. We may also use trusted providers for payment processing, forms, video sessions, recordings, learning access, email services, and customer management. These providers process data so the website and business can operate. Where information is processed outside the UK, appropriate contractual or legal safeguards should be used where required.",
         "Brevo is not connected to the assessment in this MVP, so assessment contacts and consent records are not automatically transferred to Brevo at this stage."
       ],
       "bullets": [],
@@ -98,8 +98,8 @@
     {
       "title": "Cookies and browser storage",
       "paragraphs": [
-        "The assessment uses first-party local browser storage to remember an unfinished assessment for up to 24 hours and first-party session storage to create an anonymous analytics session for the current browser session. The anonymous funnel events record steps such as page view, assessment start, question progress, completion, result view, and call-to-action clicks; they do not include your name, email address, or assessment answers.",
-        "No advertising pixels or third-party marketing cookies are configured as part of this MVP. If third-party analytics, advertising technologies, or other non-essential storage are added later, the cookie notice and consent controls should be updated and professionally reviewed before activation."
+        "The assessment uses first-party local browser storage to remember an unfinished assessment for up to 24 hours and first-party session storage to create an anonymous analytics session for the current browser session. The anonymous funnel events record steps such as page view, assessment start, question progress, completion, result view, and call-to-action clicks; they do not include your name, email address, assessment answers, score, or personalised result. We also store your analytics preference so the website can remember whether you accepted or rejected optional analytics.",
+        "PostHog is optional and is not loaded until you choose ‘Accept analytics’. If accepted, PostHog may use cookies and local browser storage to measure page visits and approved non-identifying assessment-funnel events. If you choose ‘Reject non-essential’, PostHog is not loaded. You can revisit or withdraw your choice at any time using the ‘Privacy choices’ control on the website."
       ],
       "bullets": [],
       "links": []

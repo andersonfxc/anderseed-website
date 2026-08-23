@@ -35,6 +35,7 @@
 
   const landing = app.querySelector("[data-assessment-landing]");
   const questionView = app.querySelector("[data-question-view]");
+  const completionView = app.querySelector("[data-completion-view]");
   const gateView = app.querySelector("[data-gate-view]");
   const resultView = app.querySelector("[data-result-view]");
   const questionHost = app.querySelector("[data-question-host]");
@@ -45,6 +46,8 @@
   const microReveal = app.querySelector("[data-micro-reveal]");
   const resumeStatus = app.querySelector("[data-resume-status]");
   const assessmentStatus = app.querySelector("[data-assessment-status]");
+  const completionStatus = app.querySelector("[data-completion-status]");
+  const completionContinueButton = app.querySelector("[data-completion-continue]");
   const nextButton = app.querySelector("[data-next]");
   const backButton = app.querySelector("[data-back]");
   const gateBackButton = app.querySelector("[data-gate-back]");
@@ -52,6 +55,7 @@
   const storageStatus = app.querySelector("[data-storage-status]");
   const gateResumeStatus = app.querySelector("[data-gate-resume-status]");
   const landingTitle = app.querySelector("#assessmentLandingTitle");
+  const completionTitle = app.querySelector("#assessmentCompletionTitle");
   const resultTitle = app.querySelector("#assessmentResultTitle");
   const exitDialog = app.querySelector("[data-exit-dialog]");
   const exitTitle = app.querySelector("[data-exit-title]");
@@ -80,6 +84,7 @@
   let allowExit = false;
   let beforeUnloadAttached = false;
   let draftRestoreStatus = "none";
+  let resumeFromIntroduction = false;
 
   function focusViewHeading(element) {
     window.requestAnimationFrame(() => element?.focus({ preventScroll: true }));
@@ -177,7 +182,7 @@
   function shouldProtectExit() {
     return !allowExit
       && state.step >= 0
-      && (state.phase === "question" || state.phase === "gate");
+      && (state.phase === "question" || state.phase === "completion" || state.phase === "gate");
   }
 
   function handleBeforeUnload(event) {
@@ -200,10 +205,11 @@
 
   function show(view) {
     if (view === gateView) arrangeGateForViewport();
-    [landing, questionView, gateView, resultView].forEach((item) => {
+    [landing, questionView, completionView, gateView, resultView].forEach((item) => {
       item.hidden = item !== view;
     });
     if (view === questionView) state.phase = "question";
+    else if (view === completionView) state.phase = "completion";
     else if (view === gateView) state.phase = "gate";
     else if (view === resultView) state.phase = "result";
     else state.phase = "landing";
@@ -221,12 +227,14 @@
     if (state.step < 0) return false;
     try {
       const ttl = Math.max(1, Number(config.progressTtlHours || 24)) * 60 * 60 * 1000;
+      const resultReady = Boolean(state.completionToken)
+        && (state.phase === "completion" || state.phase === "gate");
       window.localStorage.setItem(draftKey, JSON.stringify({
         schemaVersion: config.schemaVersion,
         assessmentId: state.assessmentId,
         step: state.step,
-        phase: state.phase === "gate" ? "gate" : "question",
-        completionToken: state.phase === "gate" ? state.completionToken : null,
+        phase: resultReady ? "gate" : "question",
+        completionToken: resultReady ? state.completionToken : null,
         answers: state.answers,
         completedQuestions: [...state.completedQuestions],
         expiresAt: Date.now() + ttl,
@@ -407,6 +415,12 @@
     nextButton.disabled = true;
     nextButton.textContent = "Preparing Your Growth Profile…";
     setStatus(assessmentStatus, "Securely preparing your personalised result…");
+    completionContinueButton.disabled = true;
+    completionContinueButton.dataset.action = "waiting";
+    completionContinueButton.textContent = "Preparing Your Result…";
+    setStatus(completionStatus, "Preparing your secure result…");
+    show(completionView);
+    focusViewHeading(completionTitle);
     try {
       const outcome = await postJson(config.endpoints.complete, {
         assessmentId: state.assessmentId,
@@ -418,15 +432,30 @@
       state.result = outcome.result;
       setStatus(assessmentStatus, "");
       setStatus(gateResumeStatus, "");
-      show(gateView);
+      setStatus(completionStatus, "Next, enter your details to see your score and receive your free roadmap.");
+      completionContinueButton.dataset.action = "continue";
+      completionContinueButton.textContent = "See My Result →";
+      completionContinueButton.disabled = false;
       persistDraft();
-      trackEvent("email_gate_viewed");
-      leadForm.querySelector("#assessmentFirstName")?.focus();
     } catch (error) {
-      nextButton.disabled = false;
-      nextButton.textContent = "Try Preparing My Result Again";
-      setStatus(assessmentStatus, error.message);
+      completionContinueButton.dataset.action = "retry";
+      completionContinueButton.textContent = "Try Preparing My Result Again";
+      completionContinueButton.disabled = false;
+      setStatus(completionStatus, error.message);
     }
+  }
+
+  function continueFromCompletion() {
+    if (completionContinueButton.dataset.action === "retry") {
+      completeAssessment();
+      return;
+    }
+    if (!state.completionToken) return;
+    setStatus(gateResumeStatus, "");
+    show(gateView);
+    persistDraft();
+    trackEvent("email_gate_viewed");
+    leadForm.querySelector("#assessmentFirstName")?.focus();
   }
 
   function advance() {
@@ -453,16 +482,18 @@
     const totalQuestions = config.questions.length;
     const ttlHours = Math.max(1, Number(config.progressTtlHours || 24));
     const ttlLabel = `${ttlHours} ${ttlHours === 1 ? "hour" : "hours"}`;
+    const atCompletion = state.phase === "completion";
     const atGate = state.phase === "gate";
+    const resultReady = atCompletion || atGate;
     return {
       title: "Leave before seeing your result?",
-      message: atGate
+      message: resultReady
         ? "Your answers are complete. If you leave now, you won’t see your personalised BA Readiness Score and free BA Transition Roadmap yet."
         : `You’re on Question ${questionNumber} of ${totalQuestions}. If you leave now, you won’t see your personalised BA Readiness Score and free BA Transition Roadmap yet.`,
       storage: saved
         ? `We’ll save your place and answers on this device for ${ttlLabel}. Return within that time to continue where you stopped; after that, your saved progress expires.`
         : "This browser couldn’t save your progress, so leaving now means starting again next time.",
-      continueLabel: atGate ? "Continue to Unlock My Results" : "Continue My Assessment",
+      continueLabel: atCompletion ? "Stay and See My Result" : atGate ? "Continue to See My Result" : "Continue My Assessment",
       leaveLabel: saved ? "Leave & Save My Progress" : "Leave Assessment",
     };
   }
@@ -479,11 +510,14 @@
   }
 
   function continueAssessmentFromDialog() {
+    const atCompletion = state.phase === "completion";
     const atGate = state.phase === "gate";
     trackEvent("exit_cancelled");
-    closeExitDialog(!atGate);
+    closeExitDialog(!atGate && !atCompletion);
     if (atGate) {
       window.requestAnimationFrame(() => leadForm.querySelector("#assessmentFirstName")?.focus());
+    } else if (atCompletion) {
+      window.requestAnimationFrame(() => completionContinueButton?.focus());
     }
   }
 
@@ -570,52 +604,57 @@
     }
   }
 
-  function renderResult(firstName) {
+  function renderResult() {
     const result = state.result;
     resultView.dataset.stage = result.readinessProfile;
-    resultView.querySelector("[data-result-stage-icon]").textContent = result.readinessStageIcon;
     resultView.querySelector("[data-result-stage]").textContent = result.readinessStage;
-    resultView.querySelector("[data-result-title]").textContent = result.resultTitle;
-    resultView.querySelector("[data-result-greeting]").textContent = `${firstName}, your strongest signal is ${result.strongestArea.label}. Your clearest opportunity is ${result.primaryGrowthArea}.`;
-    resultView.querySelector("[data-result-explanation]").textContent = result.explanation;
     resultView.querySelector("[data-result-score]").textContent = result.readinessScore;
     const scoreWrap = resultView.querySelector("[data-result-score-wrap]");
     scoreWrap.style.setProperty("--score", String(result.readinessScore));
     scoreWrap.setAttribute("aria-label", `BA Readiness Score ${result.readinessScore} out of 100`);
+
+    resultView.querySelector("[data-result-title]").textContent = result.resultTitle;
+    resultView.querySelector("[data-result-explanation]").textContent = result.explanation;
     resultView.querySelector("[data-result-strength-label]").textContent = result.strongestArea.label;
     resultView.querySelector("[data-result-strength]").textContent = result.strength;
     resultView.querySelector("[data-result-growth-label]").textContent = result.primaryGrowthArea;
     resultView.querySelector("[data-result-gap]").textContent = result.biggestGap;
 
-    const priorityHost = resultView.querySelector("[data-result-priorities]");
-    priorityHost.replaceChildren();
-    result.topPriorities.forEach((priority, index) => {
-      const item = document.createElement("li");
-      item.className = "result-priority";
-      item.innerHTML = `<span>${index + 1}</span><div><h3></h3><p></p></div>`;
-      item.querySelector("h3").textContent = priority.title;
-      item.querySelector("p").textContent = priority.text;
-      priorityHost.appendChild(item);
-    });
-
-    const dimensionHost = resultView.querySelector("[data-result-dimensions]");
-    dimensionHost.replaceChildren();
-    Object.entries(config.scoring.dimensionLabels).forEach(([key, label]) => {
-      const score = result.dimensions[key];
+    const dimensionAccents = {
+      analyticalProblemSolving: "#c8a55a",
+      transferableExperience: "#7ed4a0",
+      baDevelopment: "#4ba8a2",
+      marketReadiness: "#dc806f",
+    };
+    const dimensions = resultView.querySelector("[data-result-dimensions]");
+    const dimensionCards = Object.entries(result.dimensions).map(([key, score]) => {
       const card = document.createElement("article");
-      card.className = "result-dimension";
-      card.innerHTML = `<div><span></span><strong></strong></div><div class="result-dimension-track" aria-hidden="true"><i></i></div><small></small>`;
-      card.querySelector("span").textContent = label;
-      card.querySelector("strong").textContent = `${score}/100`;
-      card.querySelector("i").style.width = `${score}%`;
-      card.querySelector("small").textContent = result.dimensionStatuses[key];
-      card.setAttribute("aria-label", `${label}: ${score} out of 100, ${result.dimensionStatuses[key]}`);
-      dimensionHost.appendChild(card);
-    });
+      card.className = "result-dimension-card";
+      card.dataset.dimension = key;
+      card.style.setProperty("--dimension-accent", dimensionAccents[key] || "#1f6b52");
 
-    resultView.querySelector("[data-programme-heading]").textContent = result.programmeRecommendation.heading;
-    resultView.querySelector("[data-programme-text]").textContent = result.programmeRecommendation.text;
-    resultView.querySelector("[data-programme-cta]").textContent = result.programmeRecommendation.cta;
+      const heading = document.createElement("div");
+      const label = document.createElement("span");
+      label.textContent = config.scoring.dimensionLabels[key] || key;
+      const value = document.createElement("strong");
+      value.textContent = String(score);
+      const maximum = document.createElement("small");
+      maximum.textContent = "/100";
+      value.appendChild(maximum);
+      heading.append(label, value);
+
+      const status = document.createElement("p");
+      status.textContent = result.dimensionStatuses[key];
+      const track = document.createElement("div");
+      track.className = "result-dimension-bar";
+      track.setAttribute("aria-hidden", "true");
+      const fill = document.createElement("i");
+      fill.style.width = `${score}%`;
+      track.appendChild(fill);
+      card.append(heading, status, track);
+      return card;
+    });
+    dimensions.replaceChildren(...dimensionCards);
   }
 
   async function submitLead(event) {
@@ -627,7 +666,7 @@
     const marketingOptIn = formData.get("marketingOptIn") === "yes";
     const submitButton = leadForm.querySelector("button[type='submit']");
     submitButton.disabled = true;
-    submitButton.textContent = "Securely Saving Your Result…";
+    submitButton.textContent = "Revealing Your Result…";
     setStatus(storageStatus, "");
     try {
       const outcome = await postJson(config.endpoints.contact, {
@@ -639,7 +678,7 @@
         marketingConsentTextVersion: config.marketingConsentTextVersion,
       });
       state.result = outcome.result;
-      renderResult(firstName);
+      renderResult();
       clearDraft();
       show(resultView);
       focusViewHeading(resultTitle);
@@ -674,26 +713,53 @@
     leadForm.reset();
     const submitButton = leadForm.querySelector("button[type='submit']");
     submitButton.disabled = false;
-    submitButton.textContent = "Reveal My Personalised Results →";
+    submitButton.textContent = "See My Result & Get My Free Roadmap →";
     setStatus(storageStatus, "");
     beginAssessment();
   }
 
-  app.querySelectorAll("[data-start-assessment]").forEach((button) => button.addEventListener("click", beginAssessment));
+  function resumeRestoredAssessment() {
+    const resumeAtGate = state.phase === "gate";
+    if (resumeAtGate && state.completionToken) {
+      state.result = scoring.scoreAssessment(state.answers, config.scoring);
+      show(gateView);
+      persistDraft();
+      setStatus(gateResumeStatus, "Welcome back — your completed answers are ready. Continue to see your personalised result.");
+      leadForm.querySelector("#assessmentFirstName")?.focus();
+    } else {
+      show(questionView);
+      renderQuestion();
+    }
+    if (resumeAtGate && !state.completionToken) {
+      state.assessmentCompleted = false;
+      trackRestoredAssessmentStart();
+      setStatus(resumeStatus, "Welcome back — your answers have been restored. We’re preparing your result again now.");
+      completeAssessment();
+    } else if (!resumeAtGate) {
+      setStatus(resumeStatus, `Welcome back — your progress has been restored at Question ${state.step + 1} of ${config.questions.length}.`);
+    }
+  }
+
+  function startAssessmentFromLanding() {
+    if (resumeFromIntroduction) {
+      resumeFromIntroduction = false;
+      resumeRestoredAssessment();
+      return;
+    }
+    beginAssessment();
+  }
+
+  app.querySelectorAll("[data-start-assessment]").forEach((button) => button.addEventListener("click", startAssessmentFromLanding));
   nextButton.addEventListener("click", advance);
   backButton.addEventListener("click", goBack);
+  completionContinueButton.addEventListener("click", continueFromCompletion);
   gateBackButton.addEventListener("click", () => {
     show(questionView);
     renderQuestion();
   });
   leadForm.addEventListener("submit", submitLead);
-  app.querySelector("[data-roadmap-cta]").addEventListener("click", () => {
-    trackEvent("roadmap_cta_clicked");
-    const roadmap = resultView.querySelector("#result-roadmap");
-    if (!roadmap) return;
-    roadmap.tabIndex = -1;
-    window.requestAnimationFrame(() => roadmap.focus({ preventScroll: true }));
-  });
+  const roadmapCta = app.querySelector("[data-roadmap-cta]");
+  roadmapCta?.addEventListener("click", () => trackEvent("roadmap_cta_clicked"));
   app.querySelector("[data-programme-cta]").addEventListener("click", () => trackEvent("anderseed_programme_cta_clicked"));
   app.querySelector("[data-restart]").addEventListener("click", restart);
   exitContinueButton?.addEventListener("click", continueAssessmentFromDialog);
@@ -712,12 +778,12 @@
   exitDialog?.addEventListener("keydown", keepFocusInsideExitDialog);
   document.addEventListener("click", handleProtectedLinkClick);
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden" && state.step >= 0 && (state.phase === "question" || state.phase === "gate")) {
+    if (document.visibilityState === "hidden" && state.step >= 0 && (state.phase === "question" || state.phase === "completion" || state.phase === "gate")) {
       persistDraft();
     }
   });
   window.addEventListener("pagehide", () => {
-    if (state.step >= 0 && (state.phase === "question" || state.phase === "gate")) persistDraft();
+    if (state.step >= 0 && (state.phase === "question" || state.phase === "completion" || state.phase === "gate")) persistDraft();
   });
 
   if (typeof mobileGateQuery.addEventListener === "function") {
@@ -727,33 +793,30 @@
   }
 
   trackEvent("assessment_page_viewed");
+  const routeParameters = new URLSearchParams(window.location.search);
+  const forceIntroduction = routeParameters.get("intro") === "1";
   const restoredDraft = restoreDraft();
   if (restoredDraft) {
     trackEvent("assessment_restored");
-    const resumeAtGate = state.phase === "gate";
-    if (resumeAtGate && state.completionToken) {
-      state.result = scoring.scoreAssessment(state.answers, config.scoring);
-      show(gateView);
-      persistDraft();
-      setStatus(gateResumeStatus, "Welcome back — your completed answers are ready. Continue to unlock your personalised result.");
-      leadForm.querySelector("#assessmentFirstName")?.focus();
+    if (forceIntroduction) {
+      resumeFromIntroduction = true;
+      app.querySelectorAll("[data-start-assessment]").forEach((button) => {
+        button.innerHTML = 'Continue My Assessment <span aria-hidden="true">→</span>';
+      });
+      show(landing);
+      focusViewHeading(landingTitle);
     } else {
-      show(questionView);
-      renderQuestion();
+      resumeRestoredAssessment();
     }
-    if (resumeAtGate && !state.completionToken) {
-      state.assessmentCompleted = false;
-      trackRestoredAssessmentStart();
-      setStatus(resumeStatus, "Welcome back — your answers have been restored. We’re preparing your result again now.");
-      completeAssessment();
-    } else if (!resumeAtGate) {
-      setStatus(resumeStatus, `Welcome back — your progress has been restored at Question ${state.step + 1} of ${config.questions.length}.`);
-    }
+  } else if (forceIntroduction) {
+    if (draftRestoreStatus === "expired") trackEvent("draft_expired");
+    show(landing);
+    focusViewHeading(landingTitle);
   } else if (draftRestoreStatus === "expired") {
     trackEvent("draft_expired");
     beginAssessment();
     setStatus(resumeStatus, `Your saved progress expired after ${Math.max(1, Number(config.progressTtlHours || 24))} hours, so we’ve started a fresh assessment.`);
-  } else if (new URLSearchParams(window.location.search).get("start") === "1") {
+  } else if (routeParameters.get("start") === "1") {
     beginAssessment();
   } else {
     show(landing);
