@@ -14,7 +14,27 @@
 <meta name="twitter:title" content="Anderseed Consulting — From zero to BA" />
 <meta name="twitter:description" content="Practical BA mentorship for career changers, graduates and newcomers to the UK market." />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231F6B52'/%3E%3Cpath d='M32 46 L32 24 M32 33 C24 26 20 18 26 13 C30 19 31 26 32 33 Z M32 29 C40 21 46 15 43 8 C37 14 34 21 32 29 Z' stroke='white' stroke-width='2.5' fill='white'/%3E%3C/svg%3E" />
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(() => {
+  if (window.location.hash) document.documentElement.classList.add("initial-hash-navigation");
+  const identityToken = /(?:^#|[&#])(?:invite_token|recovery_token|confirmation_token|email_change_token)=/;
+  if (!identityToken.test(window.location.hash)) return;
+
+  window.__anderseedBindIdentityRedirect = () => {
+    if (!window.netlifyIdentity || window.__anderseedIdentityRedirectBound) return;
+    window.__anderseedIdentityRedirectBound = true;
+    window.netlifyIdentity.on("login", () => {
+      window.location.assign("/admin/");
+    });
+  };
+
+  const script = document.createElement("script");
+  script.src = "https://identity.netlify.com/v1/netlify-identity-widget.js";
+  script.async = true;
+  script.addEventListener("load", window.__anderseedBindIdentityRedirect, { once: true });
+  document.head.appendChild(script);
+})();
+</script>
 <!-- GA4: replace G-XXXXXXXXXX with your Measurement ID, then uncomment
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
@@ -116,6 +136,7 @@
 html{scroll-behavior:smooth;scroll-padding-top:100px}
 body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink);line-height:1.6}
 body.menu-open{overflow:hidden}
+@supports(content-visibility:auto){main>section:not(.hero){content-visibility:auto;contain-intrinsic-size:auto 760px}.portfolio-experience-section{contain-intrinsic-size:auto 2600px}html.initial-hash-navigation main>section{content-visibility:visible}}
 a{color:inherit;text-decoration:none}
 button,input,select{font:inherit}
 img{max-width:100%;display:block}
@@ -495,7 +516,8 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 </style>
 <link rel="stylesheet" href="assets/assessment.css" />
-<link rel="stylesheet" href="assets/portfolio-experience.css" />
+<link rel="preload" href="assets/portfolio-experience.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="assets/portfolio-experience.css" /></noscript>
 <style id="anderseed-analytics-consent-styles">
   .analytics-consent[hidden],.analytics-settings[hidden]{display:none!important}
   html.analytics-consent-required,html.analytics-consent-required body{overflow:hidden!important}
@@ -694,7 +716,10 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
 <header class="nav">
   <div class="nav-inner">
     <a class="logo" href="#home" aria-label="Anderseed Consulting home">
-      <img src="assets/anderseed-logo-header.png" alt="Anderseed Consulting" width="642" height="220" />
+      <picture>
+        <source type="image/webp" srcset="assets/anderseed-logo-header-232.webp 232w, assets/anderseed-logo-header-322.webp 322w, assets/anderseed-logo-header-464.webp 464w, assets/anderseed-logo-header-642.webp 642w" sizes="(max-width: 680px) 184px, 232px" />
+        <img src="assets/anderseed-logo-header.png" alt="Anderseed Consulting" width="642" height="220" decoding="async" />
+      </picture>
     </a>
     <nav class="nav-links" aria-label="Primary navigation">
       <a class="active" href="#home" aria-current="location">Home</a>
@@ -1338,15 +1363,7 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
   <span class="tg-button" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M27.6 5.1 3.9 14.2c-1.6.6-1.6 1.5-.3 1.9l6.1 1.9 2.3 7.1c.3.9.2 1.3 1 1.3.7 0 1-.3 1.4-.7l3.4-3.3 7 5.2c1.3.7 2.2.3 2.5-1.2L31.8 7c.5-1.8-.7-2.6-2.1-2Zm-3.8 5.5L12.4 20.8l-.4 4.1-2.3-7.1 14.6-9.2c.6-.4 1.1-.2.5.4Z"/></svg></span>
 </a>
 <script>
-if(window.netlifyIdentity){
-  window.netlifyIdentity.on("init",function(user){
-    if(!user){
-      window.netlifyIdentity.on("login",function(){
-        document.location.href="/admin/";
-      });
-    }
-  });
-}
+if(window.__anderseedBindIdentityRedirect) window.__anderseedBindIdentityRedirect();
 const menuButton=document.querySelector(".menu-toggle");
 const mobilePanel=document.querySelector(".mobile-panel");
 const mobileLinks=document.querySelectorAll(".mobile-panel a");
@@ -1417,22 +1434,40 @@ if(testimonialCards.length>1){
 }
 const navLinks=[...document.querySelectorAll(".nav-links a[href^='#'],.mobile-panel a[href^='#']")];
 const sections=[...document.querySelectorAll("main>section[id]")];
-const syncSectionNavigation=()=>{
-  const marker=window.innerHeight*.475;
-  const current=sections.find(section=>{
-    const bounds=section.getBoundingClientRect();
-    return bounds.top<=marker&&bounds.bottom>=marker;
-  });
+const setActiveSectionNavigation=sectionId=>{
   navLinks.forEach(link=>{
-    const active=Boolean(current)&&link.getAttribute("href")==="#"+current.id;
+    const active=Boolean(sectionId)&&link.hash==="#"+sectionId;
     link.classList.toggle("active",active);
     if(active) link.setAttribute("aria-current","location");
     else link.removeAttribute("aria-current");
   });
 };
-window.addEventListener("scroll",syncSectionNavigation,{passive:true});
-window.addEventListener("resize",syncSectionNavigation);
-window.addEventListener("hashchange",syncSectionNavigation);
+const syncSectionNavigation=sectionId=>{
+  if(sectionId){setActiveSectionNavigation(sectionId);return}
+  const hashId=window.location.hash.slice(1);
+  setActiveSectionNavigation(hashId||sections[0]?.id||"");
+};
+if("IntersectionObserver" in window){
+  const sectionObserver=new IntersectionObserver(entries=>{
+    const current=entries.find(entry=>entry.isIntersecting);
+    if(current) setActiveSectionNavigation(current.target.id);
+  },{rootMargin:"-46% 0px -53% 0px",threshold:0});
+  sections.forEach(section=>sectionObserver.observe(section));
+}else{
+  let navigationFrame=0;
+  const checkVisibleSection=()=>{
+    navigationFrame=0;
+    const marker=window.innerHeight*.475;
+    const current=sections.find(section=>section.offsetTop<=window.scrollY+marker&&section.offsetTop+section.offsetHeight>=window.scrollY+marker);
+    if(current) setActiveSectionNavigation(current.id);
+  };
+  window.addEventListener("scroll",()=>{
+    if(!navigationFrame) navigationFrame=window.requestAnimationFrame(checkVisibleSection);
+  },{passive:true});
+  window.addEventListener("resize",checkVisibleSection);
+  checkVisibleSection();
+}
+window.addEventListener("hashchange",()=>syncSectionNavigation());
 syncSectionNavigation();
 const alignInitialHashTarget=()=>{
   if(!window.location.hash) return;
@@ -1443,7 +1478,7 @@ const alignInitialHashTarget=()=>{
   document.documentElement.style.scrollBehavior="auto";
   target.scrollIntoView({block:"start"});
   document.documentElement.style.scrollBehavior=previousScrollBehavior;
-  syncSectionNavigation();
+  syncSectionNavigation(target.id);
 };
 if(window.location.hash){
   const scheduleInitialHashAlignment=()=>window.setTimeout(alignInitialHashTarget,80);
@@ -1451,7 +1486,7 @@ if(window.location.hash){
   else window.addEventListener("load",scheduleInitialHashAlignment,{once:true});
 }
 </script>
-<script src="assets/portfolio-experience.js"></script>
+<script src="assets/portfolio-experience.js" defer></script>
 <aside class="analytics-consent" data-analytics-consent role="dialog" aria-modal="true" aria-labelledby="analyticsConsentTitle" aria-describedby="analyticsConsentDescription" hidden>
   <div class="analytics-consent-card">
     <div class="analytics-consent-brand" aria-hidden="true"><span class="analytics-consent-brand-mark"></span>Anderseed Consulting</div>

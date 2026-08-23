@@ -313,8 +313,12 @@ function flattenFaqs(faqs) {
   return faqs.categories.flatMap((category) => category.items);
 }
 
+function logoImage(base = "") {
+  return `<picture><source type="image/webp" srcset="${base}assets/anderseed-logo-header-232.webp 232w, ${base}assets/anderseed-logo-header-322.webp 322w, ${base}assets/anderseed-logo-header-464.webp 464w, ${base}assets/anderseed-logo-header-642.webp 642w" sizes="(max-width: 680px) 184px, 232px" /><img src="${base}assets/anderseed-logo-header.png" alt="Anderseed Consulting" width="642" height="220" decoding="async" /></picture>`;
+}
+
 function logo(base = "") {
-  return `<a class="logo" href="${base}index.html" aria-label="Anderseed Consulting home"><img src="${base}assets/anderseed-logo-header.png" alt="Anderseed Consulting" width="642" height="220" /></a>`;
+  return `<a class="logo" href="${base}index.html" aria-label="Anderseed Consulting home">${logoImage(base)}</a>`;
 }
 
 function navigationItems(base = "") {
@@ -453,7 +457,7 @@ function pageShell({ title, description, canonical, base, active, body, schema =
   const pageHeader = focused
     ? `<header class="nav conversion-nav">
   <div class="nav-inner">
-    <a class="logo conversion-logo" href="${base}index.html" aria-label="Anderseed Consulting home"><img src="${base}assets/anderseed-logo-header.png" alt="Anderseed Consulting" width="642" height="220" /></a>
+    <a class="logo conversion-logo" href="${base}index.html" aria-label="Anderseed Consulting home">${logoImage(base)}</a>
     <div class="conversion-context" aria-label="Assessment details"><span>BA Readiness Profile</span><small>8 questions · 2–3 minutes</small></div>
   </div>
 </header>`
@@ -1383,10 +1387,10 @@ function updateHomepage(settings, home, pricing, testimonials, faqs, assessment)
     html = html.replace('</head>', '<link rel="stylesheet" href="assets/assessment.css" />\n</head>');
   }
   if (!html.includes('assets/portfolio-experience.css')) {
-    html = html.replace('</head>', '<link rel="stylesheet" href="assets/portfolio-experience.css" />\n</head>');
+    html = html.replace('</head>', '<link rel="preload" href="assets/portfolio-experience.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'" />\n<noscript><link rel="stylesheet" href="assets/portfolio-experience.css" /></noscript>\n</head>');
   }
   if (!html.includes('assets/portfolio-experience.js')) {
-    html = html.replace('</body>', '<script src="assets/portfolio-experience.js"></script>\n</body>');
+    html = html.replace('</body>', '<script src="assets/portfolio-experience.js" defer></script>\n</body>');
   }
   html = html.replace(
     /\n\/\* Compact interactive portfolio lab \*\/[\s\S]*?\n@media\(max-width:360px\)/,

@@ -468,6 +468,34 @@ test("the ID fallback remains a UUID v4 when crypto.randomUUID is unavailable", 
   }
 });
 
+test("the public homepage defers CMS-only work and expensive below-the-fold rendering", () => {
+  const homepage = read("dist/index.html");
+  const admin = read("dist/admin/index.html");
+  const portfolioJs = read("dist/assets/portfolio-experience.js");
+  const originalLogoSize = fs.statSync(path.join(root, "dist/assets/anderseed-logo-header.png")).size;
+  const responsiveLogoSize = fs.statSync(path.join(root, "dist/assets/anderseed-logo-header-464.webp")).size;
+
+  assert.doesNotMatch(homepage, /<script src="https:\/\/identity\.netlify\.com\/v1\/netlify-identity-widget\.js"><\/script>/);
+  assert.match(homepage, /invite_token\|recovery_token\|confirmation_token\|email_change_token/);
+  assert.match(homepage, /document\.createElement\("script"\)/);
+  assert.match(admin, /<script src="https:\/\/identity\.netlify\.com\/v1\/netlify-identity-widget\.js"><\/script>/);
+
+  assert.match(homepage, /anderseed-logo-header-232\.webp 232w/);
+  assert.match(homepage, /anderseed-logo-header-322\.webp 322w/);
+  assert.match(homepage, /anderseed-logo-header-464\.webp 464w/);
+  assert.match(homepage, /anderseed-logo-header-642\.webp 642w/);
+  assert.ok(responsiveLogoSize < originalLogoSize, "the responsive WebP logo should be lighter than the PNG fallback");
+
+  assert.match(homepage, /@supports\(content-visibility:auto\)/);
+  assert.match(homepage, /initial-hash-navigation main>section\{content-visibility:visible\}/);
+  assert.match(homepage, /const sectionObserver=new IntersectionObserver/);
+  assert.doesNotMatch(homepage, /window\.addEventListener\("scroll",syncSectionNavigation/);
+  assert.match(homepage, /rel="preload" href="assets\/portfolio-experience\.css" as="style"/);
+  assert.match(homepage, /<script src="assets\/portfolio-experience\.js" defer><\/script>/);
+  assert.match(portfolioJs, /rootMargin: "600px 0px"/);
+  assert.match(portfolioJs, /initialisationObserver\.unobserve\(entry\.target\)/);
+});
+
 test("the homepage keeps the assessment dominant and presents a Salesforce-first portfolio experience", () => {
   const homepage = read("dist/index.html");
   const assessmentCss = read("dist/assets/assessment.css");

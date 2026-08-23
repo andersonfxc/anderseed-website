@@ -11,7 +11,9 @@
     }
   }
 
-  document.querySelectorAll(".portfolio-experience-section").forEach((section) => {
+  function initialisePortfolioSection(section) {
+    if (section.dataset.portfolioInitialised === "true") return;
+    section.dataset.portfolioInitialised = "true";
     const version = section.dataset.portfolioVersion || "v1.0";
     const lifecycle = section.querySelector(".px-lifecycle");
     const lifecycleScroll = section.querySelector(".px-lifecycle-scroll");
@@ -178,5 +180,19 @@
     }
 
     if (stageTabs[0]) selectStage(stageTabs[0], { announce: false, track: false });
-  });
+  }
+
+  const portfolioSections = [...document.querySelectorAll(".portfolio-experience-section")];
+  if ("IntersectionObserver" in window) {
+    const initialisationObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        initialisePortfolioSection(entry.target);
+        initialisationObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "600px 0px" });
+    portfolioSections.forEach((section) => initialisationObserver.observe(section));
+  } else {
+    portfolioSections.forEach(initialisePortfolioSection);
+  }
 })();
