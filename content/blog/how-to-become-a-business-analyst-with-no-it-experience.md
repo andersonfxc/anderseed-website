@@ -30,4 +30,4 @@ Reading about Business Analysis is not enough. You need to practise stakeholder 
 
 ## Next step
 
-Download the free roadmap to see the beginner-friendly route from interest to job-ready Business Analysis positioning.
+Take the free BA Readiness Assessment to discover your current stage, recognise the strengths you already have and identify the growth priority that can move your transition forward.

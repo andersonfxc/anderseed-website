@@ -21,6 +21,24 @@
     "stripeCheckoutUrl": "https://YOUR-STRIPE-CHECKOUT-LINK",
     "klarnaCheckoutUrl": "https://YOUR-KLARNA-CHECKOUT-LINK"
   },
+  "assessment": {
+    "completionEndpoint": "/api/v1/assessment/complete",
+    "contactEndpoint": "/api/v1/assessment/contact",
+    "eventEndpoint": "/api/v1/assessment/events",
+    "reportEndpoint": "/api/v1/admin/assessment-funnel",
+    "progressTtlHours": 24,
+    "marketingConsentTextVersion": "assessment-marketing-2026-08-v2",
+    "requiresResultEmail": true,
+    "marketingConsentRequired": false,
+    "resultDeliveryMode": "onscreen-mvp",
+    "marketingAutomationEnabled": false,
+    "unclaimedAssessmentRetentionDays": 7,
+    "rawEventRetentionDays": 7,
+    "namedLeadRetentionMonths": 12
+  },
+  "analytics": {
+    "googleMeasurementId": ""
+  },
   "bank": {
     "payeeName": "Anderseed Consulting Ltd",
     "bankName": "Mettle Business Account",

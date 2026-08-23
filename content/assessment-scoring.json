@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "ba-readiness-mvp-v2",
+  "scoringVersion": "2026-08-22-v1",
+  "readiness": {
+    "dimensionWeights": {
+      "analyticalProblemSolving": 0.3,
+      "transferableExperience": 0.25,
+      "baDevelopment": 0.25,
+      "marketReadiness": 0.2
+    },
+    "analyticalQuestionWeights": {
+      "analyticalProblemSolving": 0.35,
+      "handlingAmbiguity": 0.3,
+      "problemFraming": 0.35
+    },
+    "developmentWeights": {
+      "baExposure": 0.75,
+      "careerPosition": 0.25
+    },
+    "stageThresholds": [
+      { "key": "seed", "label": "Seed", "icon": "🌰", "min": 0, "max": 29 },
+      { "key": "sprout", "label": "Sprout", "icon": "🌱", "min": 30, "max": 59 },
+      { "key": "growing", "label": "Growing", "icon": "🌿", "min": 60, "max": 79 },
+      { "key": "established", "label": "Established", "icon": "🌳", "min": 80, "max": 100 }
+    ]
+  },
+  "leadIntent": {
+    "weights": {
+      "urgency": 0.45,
+      "careerActivity": 0.3,
+      "priorCommitment": 0.15,
+      "pain": 0.1
+    },
+    "temperatureThresholds": [
+      { "key": "cold", "label": "Cold", "min": 0, "max": 34 },
+      { "key": "warm", "label": "Warm", "min": 35, "max": 69 },
+      { "key": "hot", "label": "Hot", "min": 70, "max": 100 }
+    ]
+  },
+  "answerScores": {
+    "analyticalProblemSolving": {
+      "root_cause": 100,
+      "people_impact": 75,
+      "quick_fix": 35,
+      "escalate": 10
+    },
+    "handlingAmbiguity": {
+      "clarify_need": 100,
+      "assume_and_start": 45,
+      "copy_existing": 25,
+      "wait": 5
+    },
+    "transferableExperience": {
+      "improve_process": 15,
+      "understand_needs": 14,
+      "data_reporting": 13,
+      "explain_complex": 12,
+      "solve_recurring": 15,
+      "conflicting_priorities": 10,
+      "structured_docs": 10,
+      "coordinate_teams": 11,
+      "none": 0
+    },
+    "problemFraming": {
+      "investigate_problem": 100,
+      "clarify_impact": 75,
+      "compare_systems": 40,
+      "accept_solution": 5
+    },
+    "careerPosition": {
+      "exploring": { "development": 0, "market": 0, "leadActivity": 0 },
+      "starting_learning": { "development": 25, "market": 10, "leadActivity": 20 },
+      "trained_not_ready": { "development": 60, "market": 35, "leadActivity": 55 },
+      "applying_no_response": { "development": 70, "market": 70, "leadActivity": 80 },
+      "interviewing_no_offer": { "development": 80, "market": 90, "leadActivity": 95 },
+      "ba_like_work": { "development": 90, "market": 65, "leadActivity": 60 }
+    },
+    "baExposure": {
+      "none": { "development": 0, "leadCommitment": 0 },
+      "informal": { "development": 25, "leadCommitment": 25 },
+      "structured": { "development": 55, "leadCommitment": 60 },
+      "multiple_courses": { "development": 70, "leadCommitment": 80 },
+      "workplace": { "development": 100, "leadCommitment": 70 }
+    },
+    "primaryBarrier": {
+      "clarity": { "growthArea": "conditional_clarity", "leadPain": 50 },
+      "translate_experience": { "growthArea": "transferableEvidence", "leadPain": 65 },
+      "practical_experience": { "growthArea": "appliedExperience", "leadPain": 85 },
+      "cv_positioning": { "growthArea": "marketPositioning", "leadPain": 80 },
+      "interview_confidence": { "growthArea": "interviewReadiness", "leadPain": 90 },
+      "no_barrier": { "growthArea": "diagnostic_fallback", "leadPain": 0 }
+    },
+    "transitionTimeline": {
+      "asap": 100,
+      "one_to_three": 80,
+      "three_to_six": 55,
+      "six_to_twelve": 25,
+      "exploring": 0
+    }
+  },
+  "dimensionLabels": {
+    "analyticalProblemSolving": "Analytical Instinct",
+    "transferableExperience": "Transferable Experience",
+    "baDevelopment": "BA Development",
+    "marketReadiness": "Market Readiness"
+  },
+  "stageContent": {
+    "seed": {
+      "title": "Your potential is taking root.",
+      "explanation": "You are in the early exploration and foundation-building stage. Your result is not saying you lack potential—it shows where to create clarity and begin turning existing experience into BA capability.",
+      "focus": "Create Clarity and Recognise Your Starting Point"
+    },
+    "sprout": {
+      "title": "Your BA foundation is beginning to show.",
+      "explanation": "You already demonstrate some relevant thinking, experience or development. Your next move is to strengthen the right foundations and apply them consistently in a Business Analysis context.",
+      "focus": "Strengthen Your BA Foundation"
+    },
+    "growing": {
+      "title": "You have meaningful capability to build on.",
+      "explanation": "You have a credible combination of analytical behaviour, transferable experience and BA development. A focused gap is preventing that capability from becoming fully job-ready evidence.",
+      "focus": "Turn Capability Into Credible Evidence"
+    },
+    "established": {
+      "title": "Your BA readiness is well established.",
+      "explanation": "You already show strong readiness across several signals. Your opportunity is targeted: sharpen how you evidence, position or communicate that capability for the roles and outcomes you want.",
+      "focus": "Sharpen and Position Your Evidence"
+    }
+  },
+  "growthAreas": {
+    "careerClarity": {
+      "label": "Career Clarity",
+      "explanation": "Your strongest next move is understanding how Business Analysts work in practice and choosing a focused entry route.",
+      "nextSteps": [
+        { "title": "See the BA role in context", "text": "Learn how BAs investigate problems, work with stakeholders and support change from start to finish." },
+        { "title": "Map your current experience", "text": "Identify examples where you already clarified needs, solved problems or improved how work was done." },
+        { "title": "Try one realistic BA task", "text": "Use a simple business scenario to practise asking questions, framing the problem and documenting what you find." }
+      ],
+      "programmeHeading": "Get a clear, supported route into Business Analysis.",
+      "programmeText": "Anderseed’s career mentoring and guided BA journey can help you replace uncertainty with a clear role picture, focused learning plan and first practical evidence.",
+      "cta": "Show Me a Clear Route Into BA"
+    },
+    "baFoundations": {
+      "label": "BA Foundations",
+      "explanation": "You need a more focused command of the core BA techniques that connect analysis, people, processes and requirements.",
+      "nextSteps": [
+        { "title": "Focus on essential BA techniques", "text": "Prioritise problem framing, stakeholder analysis, process mapping and requirements over collecting disconnected theory." },
+        { "title": "Use each technique in context", "text": "Practise on one realistic business problem so the techniques become decisions rather than definitions." },
+        { "title": "Build a deliberate development plan", "text": "Sequence what to learn, practise and evidence so every activity moves you closer to job readiness." }
+      ],
+      "programmeHeading": "Build the foundations employers expect to see in action.",
+      "programmeText": "Anderseed’s live mentorship helps you understand the essential BA techniques, then apply them within one connected project journey.",
+      "cta": "Help Me Build Strong BA Foundations"
+    },
+    "appliedExperience": {
+      "label": "Applied Experience",
+      "explanation": "Your main opportunity is turning knowledge into practical BA work and evidence you can confidently show and explain.",
+      "nextSteps": [
+        { "title": "Work through one realistic business case", "text": "Investigate a complete problem instead of practising isolated BA templates." },
+        { "title": "Create portfolio-ready artefacts", "text": "Produce stakeholder, process, requirements and solution evidence that shows how you think." },
+        { "title": "Practise explaining your decisions", "text": "Turn each artefact into a clear story about the problem, your analysis and the value of your recommendation." }
+      ],
+      "programmeHeading": "Turn BA learning into evidence employers can trust.",
+      "programmeText": "Anderseed’s guided portfolio project gives you realistic BA work, feedback and connected artefacts—not another theory-only course.",
+      "cta": "Help Me Build Practical BA Evidence"
+    },
+    "transferableEvidence": {
+      "label": "Transferable Evidence",
+      "explanation": "You already have relevant experience, but its Business Analysis value is not yet visible or persuasive enough.",
+      "nextSteps": [
+        { "title": "Mine your experience for BA behaviours", "text": "Find specific examples of understanding needs, solving problems, improving processes and coordinating people." },
+        { "title": "Translate examples into BA language", "text": "Describe the decisions, evidence, stakeholders and outcomes behind what you did." },
+        { "title": "Use the strongest evidence consistently", "text": "Carry the same credible examples through your portfolio, CV, LinkedIn and interview stories." }
+      ],
+      "programmeHeading": "Make the BA value in your experience impossible to miss.",
+      "programmeText": "Anderseed combines career mentoring, CV and LinkedIn support with practical project evidence so your existing value and new capability reinforce each other.",
+      "cta": "Help Me Translate My Experience"
+    },
+    "marketPositioning": {
+      "label": "Market Positioning",
+      "explanation": "Your capability needs to be positioned more clearly for the roles, recruiters and application decisions you are targeting.",
+      "nextSteps": [
+        { "title": "Target the right BA opportunities", "text": "Focus on roles where your domain experience, evidence and current development create a credible match." },
+        { "title": "Reframe your professional story", "text": "Lead with relevant outcomes and BA evidence across your CV, LinkedIn and applications." },
+        { "title": "Use application feedback as evidence", "text": "Track responses and refine the positioning that is not creating enough recruiter interest." }
+      ],
+      "programmeHeading": "Position your evidence for the opportunities you want.",
+      "programmeText": "Anderseed’s CV, LinkedIn and application support helps you connect your capability to recruiter expectations without restarting your BA journey.",
+      "cta": "Strengthen My BA Positioning"
+    },
+    "interviewReadiness": {
+      "label": "Interview / Communication Readiness",
+      "explanation": "You are reaching an important point in the market; the next opportunity is communicating your BA thinking and evidence with greater structure and confidence.",
+      "nextSteps": [
+        { "title": "Build a focused BA story bank", "text": "Prepare examples covering stakeholders, processes, requirements, ambiguity and problem solving." },
+        { "title": "Explain your reasoning, not just activity", "text": "Show how you investigated, made decisions, managed trade-offs and created value." },
+        { "title": "Practise under realistic interview pressure", "text": "Use mock questions and feedback to make strong examples easier to recall and communicate." }
+      ],
+      "programmeHeading": "Turn interview opportunities into stronger conversations.",
+      "programmeText": "Anderseed’s interview preparation and mentor feedback helps you communicate your evidence with the structure, confidence and relevance employers need.",
+      "cta": "Strengthen My BA Interview Performance"
+    }
+  }
+}

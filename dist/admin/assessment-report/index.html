@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>BA Assessment Funnel | Anderseed</title>
+  <link rel="stylesheet" href="report.css" />
+</head>
+<body>
+  <main class="report-shell">
+    <header class="report-header">
+      <div>
+        <span class="eyebrow">Anderseed internal reporting</span>
+        <h1>BA Assessment Funnel</h1>
+        <p>Anonymous reach, conversion and abandonment across the assessment journey.</p>
+      </div>
+      <span class="privacy-pill">No contact details or answers</span>
+    </header>
+
+    <section class="access-panel" aria-labelledby="report-controls-heading">
+      <h2 id="report-controls-heading">Report access</h2>
+      <form data-report-form>
+        <label>
+          Start date
+          <input type="date" name="start" required />
+        </label>
+        <label>
+          End date
+          <input type="date" name="end" required />
+        </label>
+        <label class="token-field">
+          Admin access token
+          <input type="password" name="token" autocomplete="current-password" required />
+        </label>
+        <button type="submit">Load funnel report</button>
+      </form>
+      <p class="access-note">The token is sent in the authorisation header and is not saved in browser storage.</p>
+      <p class="status" data-report-status role="status" aria-live="polite"></p>
+    </section>
+
+    <div data-report-content hidden>
+      <section class="summary-grid" aria-label="Funnel summary">
+        <article><span>Page views</span><strong data-summary="assessmentPageViews">0</strong></article>
+        <article><span>Started</span><strong data-summary="assessmentsStarted">0</strong></article>
+        <article><span>Completed</span><strong data-summary="assessmentsCompleted">0</strong></article>
+        <article><span>Contacts submitted</span><strong data-summary="contactsSubmitted">0</strong></article>
+        <article><span>Results viewed</span><strong data-summary="resultsViewed">0</strong></article>
+      </section>
+
+      <section class="abandonment-grid" aria-label="Abandonment summary">
+        <article>
+          <span>Assessment abandonment</span>
+          <strong data-abandonment="assessment">0%</strong>
+          <p data-abandonment-copy="assessment"></p>
+        </article>
+        <article>
+          <span>Lead-capture abandonment</span>
+          <strong data-abandonment="leadCapture">0%</strong>
+          <p data-abandonment-copy="leadCapture"></p>
+        </article>
+      </section>
+
+      <section class="funnel-panel">
+        <div class="section-heading">
+          <div><span class="eyebrow">Step by step</span><h2>Conversion and exits</h2></div>
+          <p data-report-range></p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Step</th><th scope="col">Reach</th><th scope="col">From previous</th><th scope="col">Exits</th><th scope="col">Drop-off</th></tr>
+            </thead>
+            <tbody data-funnel-rows></tbody>
+          </table>
+        </div>
+        <p class="metric-note" data-metric-note></p>
+      </section>
+
+      <footer class="report-footer"><span data-freshness></span><span>Raw anonymous events retained for 7 days.</span></footer>
+    </div>
+  </main>
+  <script src="report.js" defer></script>
+</body>
+</html>

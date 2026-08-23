@@ -1,9 +1,9 @@
 {
   "seoTitle": "Privacy Notice | Anderseed Consulting",
-  "seoDescription": "Privacy notice for Anderseed Consulting website visitors, roadmap subscribers, applicants, and mentorship learners.",
+  "seoDescription": "Privacy notice for Anderseed Consulting website visitors, assessment users, applicants, and mentorship learners.",
   "eyebrow": "Privacy",
   "headline": "Privacy notice",
-  "intro": "A plain-English privacy page for people who use the Anderseed website, request free resources, join community links, apply for mentorship, or contact the business.",
+  "intro": "A plain-English privacy page for people who use the Anderseed website, complete the BA Readiness Assessment, request resources, apply for mentorship, join community links, or contact the business.",
   "lastUpdated": "August 2026",
   "reviewNotice": "This is a practical website privacy notice and should be professionally reviewed before launch.",
   "sections": [
@@ -18,7 +18,18 @@
     {
       "title": "What we collect",
       "paragraphs": [
-        "We may collect your name, email address, phone number, referral source, application answers, payment-related records, messages, feedback, and programme participation information. If you use your microphone, camera, display name, chat, or screen sharing during a recorded session, those details may appear in the recording."
+        "For the BA Readiness Assessment, we collect your eight assessment answers, calculated readiness score, stage, supporting dimension scores, strongest area, primary growth area, recommended next steps, and technical identifiers used to save the assessment securely. At the result-delivery step, we also collect your first name and email address. If you choose the separate marketing option, we record that choice and the wording shown when you made it.",
+        "Depending on how else you interact with Anderseed, we may also collect your phone number, referral source, application answers, payment-related records, messages, feedback, and programme participation information. If you use your microphone, camera, display name, chat, or screen sharing during a recorded session, those details may appear in the recording."
+      ],
+      "bullets": [],
+      "links": []
+    },
+    {
+      "title": "How the assessment uses your information",
+      "paragraphs": [
+        "While you work through the assessment, your answers and progress are saved in first-party browser storage for up to 24 hours so you can continue if the page is refreshed. At the result-unlock step, the temporary draft also holds an opaque continuation token so the completed assessment can resume securely without processing the answers again. The draft does not include your name or email address, and you can remove it sooner by clearing this site's browser data.",
+        "When you complete all eight questions, your answers and calculated result are stored in Anderseed's structured assessment database. We ask for your first name and an email address as part of the result-delivery step; after submission, the personalised result is shown immediately on screen. Automated result emails are not included in this MVP.",
+        "Providing an email address for your requested result is not marketing consent. The marketing checkbox is separate and optional, and leaving it unticked does not prevent you from seeing your result."
       ],
       "bullets": [],
       "links": []
@@ -27,13 +38,15 @@
       "title": "How we use your details",
       "paragraphs": [],
       "bullets": [
-        "To send requested resources such as the free BA Career Roadmap.",
+        "To calculate, securely store and display the BA Readiness Assessment result you requested.",
+        "To remember an unfinished assessment for up to 24 hours on your device.",
+        "To measure the anonymous assessment journey and identify where people stop, using aggregate funnel reporting.",
         "To respond to enquiries and mentorship applications.",
         "To provide programme updates, onboarding information, and learner support.",
         "To deliver live teaching, recordings, project feedback, and community access.",
-        "To send email guidance and marketing where we have a lawful basis to do so.",
+        "To send BA career guidance and Anderseed programme marketing only where you have separately chosen to receive it or another lawful basis applies.",
         "To meet legal, accounting, safeguarding, security, and dispute-handling obligations.",
-        "To understand website performance when analytics tools are added."
+        "To understand website performance and improve the assessment experience."
       ],
       "links": []
     },
@@ -56,7 +69,8 @@
     {
       "title": "Marketing and unsubscribe",
       "paragraphs": [
-        "You can unsubscribe from marketing emails at any time. We do not sell your personal details to third parties."
+        "Marketing permission is requested separately from the name and email details needed for the assessment result. It is optional, is not pre-selected, and does not affect access to your result. You can withdraw marketing consent or unsubscribe at any time. We do not sell your personal details to third parties.",
+        "Brevo and automated nurture emails are not connected to this MVP. A later email-marketing integration must use only contacts for whom Anderseed has an appropriate lawful basis and must be covered by suitable privacy and provider arrangements before it is activated."
       ],
       "bullets": [],
       "links": []
@@ -64,7 +78,8 @@
     {
       "title": "Service providers",
       "paragraphs": [
-        "We may use trusted providers for email marketing, payment processing, analytics, website hosting, forms, video sessions, recordings, learning access, and customer management. These providers process data so the website and business can operate. Where information is processed outside the UK, appropriate contractual or legal safeguards should be used where required."
+        "The assessment uses first-party application storage operated for Anderseed through its website hosting and database infrastructure. We may also use trusted providers for payment processing, forms, video sessions, recordings, learning access, analytics, email services, and customer management. These providers process data so the website and business can operate. Where information is processed outside the UK, appropriate contractual or legal safeguards should be used where required.",
+        "Brevo is not connected to the assessment in this MVP, so assessment contacts and consent records are not automatically transferred to Brevo at this stage."
       ],
       "bullets": [],
       "links": []
@@ -72,15 +87,19 @@
     {
       "title": "How long we keep information",
       "paragraphs": [
-        "We keep personal information only for as long as reasonably needed for the purpose it was collected, programme delivery, learner support, legal or accounting obligations, security, and dispute handling. Programme recordings are normally available to enrolled learners for 12 months. Other retention periods depend on the record and applicable requirements, after which information should be deleted or anonymised where appropriate."
+        "An unfinished assessment draft is kept in your browser for up to 24 hours. A completed assessment that is not linked to submitted contact details is kept for up to 7 days so the secure result step can work.",
+        "When you submit your name and email at the result-delivery step, the named assessment record, contact details, and recorded marketing choice are initially kept for up to 12 months. Anderseed should then delete, anonymise, or retain the record only where there is a documented continuing purpose or legal requirement.",
+        "Anonymous raw assessment-funnel events are kept for up to 7 days, then deleted after they have been converted into aggregate counts. Aggregate funnel statistics do not contain names, email addresses, assessment answers, or a link to a named lead and may be kept longer to compare performance over time.",
+        "Other personal information is kept only for as long as reasonably needed for the purpose it was collected, programme delivery, learner support, legal or accounting obligations, security, and dispute handling. Programme recordings are normally available to enrolled learners for 12 months."
       ],
       "bullets": [],
       "links": []
     },
     {
-      "title": "Cookies",
+      "title": "Cookies and browser storage",
       "paragraphs": [
-        "The current website is mostly static. If analytics, advertising pixels, or similar technologies are added, the website should use a cookie notice and consent controls where required."
+        "The assessment uses first-party local browser storage to remember an unfinished assessment for up to 24 hours and first-party session storage to create an anonymous analytics session for the current browser session. The anonymous funnel events record steps such as page view, assessment start, question progress, completion, result view, and call-to-action clicks; they do not include your name, email address, or assessment answers.",
+        "No advertising pixels or third-party marketing cookies are configured as part of this MVP. If third-party analytics, advertising technologies, or other non-essential storage are added later, the cookie notice and consent controls should be updated and professionally reviewed before activation."
       ],
       "bullets": [],
       "links": []

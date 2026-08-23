@@ -26,4 +26,4 @@ Use simple headings, clear dates, strong bullet points, and language that matche
 
 ## Next step
 
-Use the roadmap and mentorship support to strengthen your CV, LinkedIn, application strategy, and interview confidence.
+Use your personalised priorities and mentorship support to strengthen your CV, LinkedIn, application strategy, and interview confidence.

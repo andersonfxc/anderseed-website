@@ -38,7 +38,7 @@ collections:
             name: "forms"
             widget: "object"
             fields:
-              - { label: "Roadmap form endpoint", name: "roadmapEndpoint", widget: "string" }
+              - { label: "Assessment form endpoint", name: "roadmapEndpoint", widget: "string" }
               - { label: "Application form endpoint", name: "applicationEndpoint", widget: "string" }
               - { label: "Stripe checkout URL", name: "stripeCheckoutUrl", widget: "string" }
               - { label: "Klarna checkout URL", name: "klarnaCheckoutUrl", widget: "string" }
@@ -95,47 +95,116 @@ collections:
               - { label: "Text", name: "text", widget: "text" }
               - { label: "Icon type", name: "type", widget: "select", options: ["cv", "guide", "counselling", "interview", "linkedin", "community"] }
               - { label: "Wide card", name: "wide", widget: "boolean", required: false, default: false }
-          - label: "Portfolio artefacts"
+          - label: "Portfolio experience"
             name: "artefacts"
             widget: "object"
             fields:
               - { label: "Label", name: "label", widget: "string" }
               - { label: "Headline", name: "headline", widget: "string" }
-              - { label: "Headline highlight", name: "headlineHighlight", widget: "string" }
               - { label: "Intro", name: "intro", widget: "text" }
-              - { label: "Case selector label", name: "caseLabel", widget: "string" }
-              - { label: "Journey banner", name: "journeyLabel", widget: "string" }
-              - { label: "Trust line", name: "trustText", widget: "string" }
-              - label: "Proof steps"
-                name: "items"
-                widget: "list"
-                fields:
-                  - { label: "Stage label", name: "stage", widget: "string", required: false }
-                  - { label: "Title", name: "title", widget: "string" }
-                  - { label: "Text", name: "text", widget: "text" }
-                  - { label: "Icon type", name: "type", widget: "select", options: ["stakeholder", "process", "stories", "prototype", "requirements"] }
-                  - { label: "Output tags", name: "tags", widget: "list", required: false, field: { label: "Tag", name: "tag", widget: "string" } }
-              - label: "Business case choices"
-                name: "project"
+              - { label: "Portfolio version", name: "portfolioVersion", widget: "string", default: "v1.0" }
+              - label: "Salesforce flagship"
+                name: "flagship"
                 widget: "object"
                 fields:
-                  - label: "System examples"
-                    name: "systems"
+                  - { label: "Flagship label", name: "label", widget: "string" }
+                  - { label: "Project title", name: "title", widget: "string" }
+                  - { label: "Project scenario", name: "scenario", widget: "text" }
+                  - { label: "Learner role", name: "role", widget: "string" }
+                  - { label: "Role note", name: "roleNote", widget: "text" }
+                  - label: "Project metadata"
+                    name: "metadata"
                     widget: "list"
                     fields:
                       - { label: "Label", name: "label", widget: "string" }
-                      - { label: "Number", name: "number", widget: "string", required: false }
+                      - { label: "Value", name: "value", widget: "string" }
+                  - label: "Connected lifecycle"
+                    name: "lifecycle"
+                    widget: "list"
+                    fields:
+                      - { label: "Stage ID", name: "id", widget: "select", options: ["discovery", "requirements", "design", "test", "deploy"] }
+                      - { label: "Number", name: "number", widget: "string" }
                       - { label: "Title", name: "title", widget: "string" }
-                      - { label: "Text", name: "text", widget: "string" }
-                      - { label: "System type", name: "type", widget: "select", options: ["crm", "hcm", "erp"] }
-              - label: "Outcome strip"
-                name: "outcome"
-                widget: "object"
+                      - { label: "Description", name: "description", widget: "text" }
+                      - { label: "Continuity note", name: "continuity", widget: "text" }
+                      - { label: "Potential outputs", name: "outputs", widget: "list", field: { label: "Output", name: "output", widget: "string" } }
+                      - label: "Artefact previews"
+                        name: "artefacts"
+                        widget: "list"
+                        fields:
+                          - { label: "Preview type", name: "kind", widget: "select", options: ["stakeholder-map", "process-flow", "requirements-table", "user-story", "data-mapping", "traceability", "test-table", "defect-log", "readiness-checklist", "validation-table"] }
+                          - { label: "Title", name: "title", widget: "string" }
+                          - { label: "Caption", name: "caption", widget: "text" }
+                          - label: "Preview data"
+                            name: "preview"
+                            widget: "object"
+                            fields:
+                              - { label: "Story key", name: "key", widget: "string", required: false }
+                              - { label: "Story", name: "story", widget: "text", required: false }
+                              - { label: "Process finding", name: "exception", widget: "string", required: false }
+                              - { label: "Process nodes", name: "nodes", widget: "list", required: false, field: { label: "Node", name: "node", widget: "string" } }
+                              - { label: "Acceptance criteria", name: "criteria", widget: "list", required: false, field: { label: "Criterion", name: "criterion", widget: "string" } }
+                              - label: "Stakeholder points"
+                                name: "points"
+                                widget: "list"
+                                required: false
+                                fields:
+                                  - { label: "Name", name: "name", widget: "string" }
+                                  - { label: "Position", name: "position", widget: "select", options: ["high-high", "mid-high", "high-mid", "low-mid"] }
+                              - label: "Table rows"
+                                name: "rows"
+                                widget: "list"
+                                required: false
+                                fields:
+                                  - { label: "ID", name: "id", widget: "string", required: false }
+                                  - { label: "Requirement", name: "requirement", widget: "string", required: false }
+                                  - { label: "Priority", name: "priority", widget: "string", required: false }
+                                  - { label: "Source", name: "source", widget: "string", required: false }
+                                  - { label: "Target", name: "target", widget: "string", required: false }
+                                  - { label: "Business rule", name: "rule", widget: "string", required: false }
+                                  - { label: "Design decision", name: "decision", widget: "string", required: false }
+                                  - { label: "Coverage", name: "coverage", widget: "string", required: false }
+                                  - { label: "Scenario", name: "scenario", widget: "string", required: false }
+                                  - { label: "Expected outcome", name: "expected", widget: "string", required: false }
+                                  - { label: "Issue", name: "issue", widget: "string", required: false }
+                                  - { label: "Severity", name: "severity", widget: "string", required: false }
+                                  - { label: "Check", name: "check", widget: "string", required: false }
+                                  - { label: "Owner", name: "owner", widget: "string", required: false }
+                                  - { label: "Status", name: "status", widget: "string", required: false }
+                              - label: "Checklist items"
+                                name: "items"
+                                widget: "list"
+                                required: false
+                                fields:
+                                  - { label: "Task", name: "task", widget: "string" }
+                                  - { label: "Status", name: "status", widget: "string" }
+              - label: "Delivery model"
+                name: "delivery"
+                widget: "list"
                 fields:
                   - { label: "Title", name: "title", widget: "string" }
-                  - { label: "Benefits", name: "benefits", widget: "list", field: { label: "Benefit", name: "benefit", widget: "string" } }
-              - { label: "Footer text", name: "footerText", widget: "string" }
-              - { label: "Footer highlight", name: "footerHighlight", widget: "string" }
+                  - { label: "Text", name: "text", widget: "text" }
+              - label: "Secondary projects"
+                name: "secondary"
+                widget: "object"
+                fields:
+                  - { label: "Heading", name: "heading", widget: "string" }
+                  - label: "Projects"
+                    name: "projects"
+                    widget: "list"
+                    fields:
+                      - { label: "Project ID", name: "id", widget: "select", options: ["hcm", "erp"] }
+                      - { label: "Project label", name: "label", widget: "string" }
+                      - { label: "Project title", name: "title", widget: "string" }
+                      - { label: "Description", name: "description", widget: "text" }
+                      - { label: "Reveal text", name: "reveal", widget: "text" }
+              - label: "Portfolio CTA"
+                name: "cta"
+                widget: "object"
+                fields:
+                  - { label: "Heading", name: "title", widget: "string" }
+                  - { label: "Button label", name: "label", widget: "string" }
+                  - { label: "Destination", name: "url", widget: "string" }
           - label: "Process"
             name: "process"
             widget: "object"
@@ -185,7 +254,7 @@ collections:
               - { label: "Intro", name: "intro", widget: "text" }
               - { label: "Primary button label", name: "primaryButtonLabel", widget: "string" }
               - { label: "Secondary button label", name: "secondaryButtonLabel", widget: "string" }
-              - { label: "Roadmap button label", name: "roadmapButtonLabel", widget: "string" }
+              - { label: "Assessment button label", name: "roadmapButtonLabel", widget: "string" }
       - label: "Pricing"
         name: "pricing"
         file: "content/pages/pricing.json"
@@ -343,7 +412,7 @@ collections:
                 fields:
                   - { label: "Label", name: "label", widget: "string" }
                   - { label: "URL", name: "href", widget: "string" }
-      - label: "Homepage roadmap section"
+      - label: "Homepage assessment section"
         name: "roadmap"
         file: "content/pages/roadmap.json"
         format: "json"
@@ -359,7 +428,7 @@ collections:
           - { label: "Homepage title", name: "homeTitle", widget: "string" }
           - { label: "Homepage title highlight", name: "homeTitleHighlight", widget: "string" }
           - { label: "Homepage intro", name: "homeIntro", widget: "text" }
-          - label: "Homepage roadmap cards"
+          - label: "Homepage assessment cards"
             name: "homeCards"
             widget: "list"
             fields:

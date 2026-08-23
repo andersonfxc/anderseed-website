@@ -1,21 +1,21 @@
 {
   "hero": {
     "headlineHighlight": "No IT experience needed",
-    "primaryButtonLabel": "Join Premium",
+    "primaryButtonLabel": "Discover My BA Readiness",
     "body": "This mentorship programme was built around one goal: making you employable, not just knowledgeable. Through practical projects, expert mentorship, and real-world experience, you'll develop the skills employers hire for.",
     "journeyButtonLabel": "See journey",
     "headlinePrefix": "From zero to BA -",
-    "secondaryButtonUrl": "#steps",
+    "secondaryButtonUrl": "#portfolio",
     "eyebrowHighlight": "90 days",
-    "secondaryButtonLabel": "See the BA Journey",
+    "secondaryButtonLabel": "See What You’ll Build",
     "subline": "Every successful Business Analyst started exactly where you are today.",
     "eyebrowText": "Become Business Analyst-ready in",
     "communityButtonLabel": "Join Free BA Community",
-    "primaryButtonUrl": "#pricing"
+    "primaryButtonUrl": "assessment/index.html?start=1"
   },
   "programme": {
     "label": "The programme",
-    "title": "Everything you need to become BA ready",
+    "title": "Everything you need to become BA-ready",
     "intro": "More than a course, this is a structured mentorship programme designed to bridge the gap between learning Business Analysis and becoming a Business Analyst.",
     "featuredTitle": "8-Week Live Mentorship Cohort",
     "featuredBadge": "Join premium",
@@ -40,7 +40,7 @@
     },
     {
       "title": "Interview Preparation",
-      "text": "Mock BA interviews with feedback so you walk in confident",
+      "text": "Mock BA interviews with feedback so you walk in with confidence.",
       "type": "interview"
     },
     {
@@ -50,92 +50,227 @@
     },
     {
       "title": "Lifetime Community",
-      "text": "Your support network doesn't end after programme.",
+      "text": "Your support network doesn’t end when the programme does.",
       "type": "community"
     }
   ],
   "artefacts": {
-    "label": "Portfolio projects",
-    "headline": "Turn one business case into a portfolio",
-    "headlineHighlight": "employers can trust.",
-    "intro": "You don't just watch lessons. You build a complete project pack around a realistic business-system scenario, end to end.",
-    "caseLabel": "Choose your business case",
-    "journeyLabel": "A guided journey. Four steps. Real artefacts.",
-    "trustText": "Realistic scenarios. Practical outcomes. Portfolio-ready.",
-    "items": [
-      {
-        "stage": "Analyse",
-        "title": "Understand the business problem.",
-        "text": "Stakeholders, pain points, assumptions and evidence.",
-        "type": "stakeholder",
-        "tags": [
-          "Stakeholder map"
-        ]
-      },
-      {
-        "stage": "Map",
-        "title": "Show the process clearly.",
-        "text": "AS-IS and TO-BE flows using BPMN logic.",
-        "type": "process",
-        "tags": [
-          "BPMN diagram"
-        ]
-      },
-      {
-        "stage": "Specify",
-        "title": "Write the delivery artefacts.",
-        "text": "Requirements, stories, acceptance criteria and BRD.",
-        "type": "requirements",
-        "tags": [
-          "User stories",
-          "BRD"
-        ]
-      },
-      {
-        "stage": "Present",
-        "title": "Explain it like a Business Analyst.",
-        "text": "Prototype walkthrough and interview-ready portfolio story.",
-        "type": "prototype",
-        "tags": [
-          "Prototype walkthrough"
-        ]
-      }
-    ],
-    "project": {
-      "systems": [
+    "label": "PORTFOLIO EXPERIENCE",
+    "headline": "Build BA experience across a real delivery lifecycle.",
+    "intro": "Work through a realistic Salesforce CRM implementation from discovery to deployment, create professional BA artefacts, and build practical experience you can confidently talk about in interviews.",
+    "portfolioVersion": "v1.0",
+    "flagship": {
+      "label": "FLAGSHIP CONTINUOUS PROJECT",
+      "title": "Salesforce CRM Implementation",
+      "scenario": "A growing organisation needs to improve how leads are captured, qualified, converted and reported through Salesforce.",
+      "role": "Business Analyst",
+      "roleNote": "Shape, validate and communicate the change from end to end.",
+      "metadata": [
+        {"label": "Project", "value": "Continuous CRM implementation"},
+        {"label": "Business Area", "value": "Sales / CRM"},
+        {"label": "Learner Role", "value": "Business Analyst"},
+        {"label": "Platform Exposure", "value": "Salesforce + Trailhead"},
+        {"label": "Delivery Style", "value": "Simulation + Mentor Guidance"}
+      ],
+      "lifecycle": [
         {
-          "label": "CRM",
+          "id": "discovery",
           "number": "01",
-          "title": "Salesforce CRM implementation",
-          "text": "Lead-to-opportunity pipeline + sales reporting",
-          "type": "crm"
+          "title": "Discovery",
+          "description": "Understand the business problem and stakeholder needs.",
+          "continuity": "The evidence you uncover here becomes the foundation for the requirements that follow.",
+          "outputs": ["Stakeholder Analysis", "AS-IS Process", "Discovery Findings", "Problem Statement"],
+          "artefacts": [
+            {
+              "kind": "stakeholder-map",
+              "title": "Stakeholder Analysis",
+              "caption": "Influence and interest shape the engagement approach.",
+              "preview": {
+                "points": [
+                  {"name": "Sales Director", "position": "high-high"},
+                  {"name": "Sales Operations", "position": "mid-high"},
+                  {"name": "Sales Reps", "position": "high-mid"},
+                  {"name": "CRM Support", "position": "low-mid"}
+                ]
+              }
+            },
+            {
+              "kind": "process-flow",
+              "title": "AS-IS Lead Process",
+              "caption": "Current hand-offs reveal where leads lose momentum.",
+              "preview": {
+                "nodes": ["Lead submitted", "Inbox review", "Spreadsheet update", "Sales follow-up"],
+                "exception": "No shared qualification rule"
+              }
+            }
+          ]
         },
         {
-          "label": "HCM",
+          "id": "requirements",
           "number": "02",
-          "title": "Recruitment & onboarding HCM",
-          "text": "Candidate journey + employee access workflow",
-          "type": "hcm"
+          "title": "Requirements",
+          "description": "Turn findings into clear, prioritised requirements.",
+          "continuity": "Discovery findings are translated into agreed needs, rules and measurable outcomes.",
+          "outputs": ["Requirements Catalogue", "User Stories", "Acceptance Criteria", "MoSCoW Prioritisation", "Business Rules"],
+          "artefacts": [
+            {
+              "kind": "requirements-table",
+              "title": "Requirements Catalogue",
+              "caption": "Prioritised needs stay clear and traceable.",
+              "preview": {
+                "rows": [
+                  {"id": "REQ-01", "requirement": "Capture lead source", "priority": "Must", "status": "Agreed"},
+                  {"id": "REQ-04", "requirement": "Apply qualification criteria", "priority": "Must", "status": "Agreed"},
+                  {"id": "REQ-08", "requirement": "Report conversion by source", "priority": "Should", "status": "Review"}
+                ]
+              }
+            },
+            {
+              "kind": "user-story",
+              "title": "Jira-style User Story",
+              "caption": "A business need expressed with testable acceptance criteria.",
+              "preview": {
+                "key": "CRM-014",
+                "story": "As a sales representative, I want each new lead assigned an agreed status so I know the next action to take.",
+                "criteria": ["A status is required before save", "Only agreed status values are available", "Status changes retain an audit trail"]
+              }
+            }
+          ]
         },
         {
-          "label": "ERP",
+          "id": "design",
           "number": "03",
-          "title": "Dynamics 365 ERP procurement",
-          "text": "Purchase approvals + finance controls",
-          "type": "erp"
+          "title": "Design",
+          "description": "Shape and validate how the solution should work.",
+          "continuity": "You review solution choices against the agreed requirements and keep decisions traceable.",
+          "outputs": ["TO-BE Process", "Solution Review", "Data Mapping", "Wireframes", "Requirement-to-Design Traceability"],
+          "artefacts": [
+            {
+              "kind": "data-mapping",
+              "title": "Data Mapping",
+              "caption": "Business meaning and validation rules remain explicit.",
+              "preview": {
+                "rows": [
+                  {"source": "Lead source", "target": "Lead.Source", "rule": "Approved value list"},
+                  {"source": "Company", "target": "Lead.Company", "rule": "Required for business leads"},
+                  {"source": "Owner", "target": "Lead.Owner", "rule": "Assigned by territory"}
+                ]
+              }
+            },
+            {
+              "kind": "traceability",
+              "title": "Requirement-to-Design Traceability",
+              "caption": "The BA validates design coverage without configuring Salesforce.",
+              "preview": {
+                "rows": [
+                  {"requirement": "REQ-01", "decision": "Controlled source field", "coverage": "Covered"},
+                  {"requirement": "REQ-04", "decision": "Qualification path", "coverage": "Covered"},
+                  {"requirement": "REQ-08", "decision": "Conversion report", "coverage": "Review"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "test",
+          "number": "04",
+          "title": "Test",
+          "description": "Validate the solution and identify what needs fixing.",
+          "continuity": "Each scenario traces back to an agreed requirement before the change can move towards release.",
+          "outputs": ["Test Scenarios", "UAT Scenarios", "Defect Log", "Regression Testing Evidence", "Requirements Traceability"],
+          "artefacts": [
+            {
+              "kind": "test-table",
+              "title": "UAT Scenario Table",
+              "caption": "Business outcomes are tested against expected behaviour.",
+              "preview": {
+                "rows": [
+                  {"id": "UAT-03", "scenario": "Qualify a complete lead", "expected": "Opportunity option available", "status": "Pass"},
+                  {"id": "UAT-06", "scenario": "Save without status", "expected": "Validation message shown", "status": "Pass"},
+                  {"id": "UAT-09", "scenario": "View source report", "expected": "Totals match records", "status": "Retest"}
+                ]
+              }
+            },
+            {
+              "kind": "defect-log",
+              "title": "Defect Log",
+              "caption": "Issues are recorded with business impact and ownership.",
+              "preview": {
+                "rows": [
+                  {"id": "DEF-07", "issue": "Converted total excludes web leads", "severity": "High", "status": "In fix"},
+                  {"id": "DEF-11", "issue": "Status label differs from agreed wording", "severity": "Low", "status": "Open"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "deploy",
+          "number": "05",
+          "title": "Deploy",
+          "description": "Support go-live and confirm the change works as intended.",
+          "continuity": "The same requirements and test evidence now inform readiness, release support and post-go-live checks.",
+          "outputs": ["Readiness Checklist", "Change / Training Considerations", "Release Support", "Go-Live Validation", "Post-Deployment Checks"],
+          "artefacts": [
+            {
+              "kind": "readiness-checklist",
+              "title": "Go-Live Readiness Checklist",
+              "caption": "Business, people and process readiness are considered together.",
+              "preview": {
+                "items": [
+                  {"task": "Priority UAT scenarios signed off", "status": "Ready"},
+                  {"task": "Sales guidance shared", "status": "Ready"},
+                  {"task": "Support owner confirmed", "status": "Ready"},
+                  {"task": "Conversion report validation", "status": "Final check"}
+                ]
+              }
+            },
+            {
+              "kind": "validation-table",
+              "title": "Post-Deployment Checks",
+              "caption": "The BA confirms that the change works as intended.",
+              "preview": {
+                "rows": [
+                  {"check": "New leads enter the agreed flow", "owner": "Sales Ops", "status": "Confirmed"},
+                  {"check": "Qualification rules behave as agreed", "owner": "BA", "status": "Confirmed"},
+                  {"check": "Conversion report totals reconcile", "owner": "Reporting", "status": "Monitor"}
+                ]
+              }
+            }
+          ]
         }
       ]
     },
-    "outcome": {
-      "title": "From business problem to portfolio-ready project pack.",
-      "benefits": [
-        "Structured thinking",
-        "Industry-relevant scenarios",
-        "Mentor feedback at every step"
+    "delivery": [
+      {"title": "SIMULATION", "text": "Work through realistic business scenarios and project information."},
+      {"title": "REAL PLATFORMS", "text": "Gain guided exposure to platforms such as Salesforce and Trailhead."},
+      {"title": "MENTOR GUIDANCE", "text": "Receive feedback and support throughout the project."},
+      {"title": "PORTFOLIO EVIDENCE", "text": "Finish with professional BA work you can confidently showcase and explain."}
+    ],
+    "secondary": {
+      "heading": "Then apply your skills in new business contexts.",
+      "projects": [
+        {
+          "id": "hcm",
+          "label": "INDEPENDENT CHALLENGE",
+          "title": "HCM Transformation",
+          "description": "Apply your BA approach to a candidate-to-new-starter and onboarding transformation.",
+          "reveal": "Use the approach developed in the flagship project with greater independence."
+        },
+        {
+          "id": "erp",
+          "label": "OPTIONAL CAPSTONE",
+          "title": "ERP Transformation",
+          "description": "Explore requisition-to-purchase-order, approvals and finance controls.",
+          "reveal": "Demonstrate additional breadth after completing the flagship experience."
+        }
       ]
     },
-    "footerText": "Build. Review. Refine. Repeat.",
-    "footerHighlight": "That's how you become the BA businesses want."
+    "cta": {
+      "title": "Ready to build experience you can actually talk about?",
+      "label": "Start Building My BA Experience",
+      "url": "checkout/index.html"
+    }
   },
   "process": {
     "label": "How it works",
@@ -158,7 +293,7 @@
       },
       {
         "marker": "Build",
-        "time": "Weeks 2-8",
+        "time": "Weeks 2–8",
         "title": "Learn and take action",
         "text": "Work through BA concepts, practical tasks, and live project scenarios that mirror real workplace expectations.",
         "style": "action"
@@ -189,20 +324,20 @@
   "salary": {
     "permanentNote": "Based on industry and experience",
     "contractLabel": "Contract roles",
-    "studentRange": "£41k-£55k average",
-    "contractNote": "Typical day-rate opportunity",
+    "studentRange": "£41k–£55k",
+    "contractNote": "Indicative day-rate range",
     "permanentLabel": "Permanent roles",
-    "contractRange": "£350-£600/day",
+    "contractRange": "£350–£600/day",
     "intro": "Indicative guide only. Ranges vary by industry, experience, location, and hiring market.",
-    "permanentRange": "£40k-£85k",
+    "permanentRange": "£40k–£85k",
     "label": "Career outlook",
     "title": "UK Business Analysis salary snapshot",
-    "studentLabel": "Anderseed students get hired around"
+    "studentLabel": "Illustrative first-role range"
   },
   "contact": {
     "label": "Contact us",
     "title": "Speak with Anderseed Consulting",
-    "intro": "Have a question about the mentorship, free roadmap, or the right next step for your BA journey? Reach out and we will point you in the right direction.",
+    "intro": "Have a question about the mentorship, free BA assessment, or the right next step for your BA journey? Reach out and we will point you in the right direction.",
     "socialTitle": "Stay connected with us",
     "socialIntro": "Follow Anderseed for BA tips, job-search guidance, live sessions, community support, and cohort updates."
   },
@@ -212,6 +347,6 @@
     "intro": "Come into the free community, follow the socials, and get practical BA career support before you commit to the full programme.",
     "primaryButtonLabel": "Join Telegram community",
     "secondaryButtonLabel": "View paid programme",
-    "roadmapButtonLabel": "Get Free Roadmap"
+    "roadmapButtonLabel": "Discover My BA Readiness"
   }
 }

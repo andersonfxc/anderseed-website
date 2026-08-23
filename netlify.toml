@@ -2,7 +2,34 @@
   command = "node scripts/build.js"
   publish = "dist"
 
+[functions]
+  included_files = ["content/pages/assessment.json", "content/assessment-scoring.json", "content/settings.json", "assets/assessment-scoring.js"]
+
+[[redirects]]
+  from = "/admin/assessment-report"
+  to = "/admin/assessment-report/"
+  status = 301
+
 [[redirects]]
   from = "/admin"
   to = "/admin/"
   status = 301
+
+[[headers]]
+  for = "/admin/assessment-report/*"
+  [headers.values]
+    Cache-Control = "no-store"
+    Content-Security-Policy = "default-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Referrer-Policy = "no-referrer"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/assessment/*"
+  [headers.values]
+    Cache-Control = "no-store"
+    Content-Security-Policy = "default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"

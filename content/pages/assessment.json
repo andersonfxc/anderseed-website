@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "ba-readiness-mvp-v2",
+  "seoTitle": "BA Readiness Assessment | Anderseed Consulting",
+  "seoDescription": "Discover your BA readiness score and receive a free personalised BA transition roadmap showing what to focus on next.",
+  "eyebrow": "Free BA Readiness Assessment",
+  "headline": "How close are you to a career in Business Analysis?",
+  "intro": "Answer 8 questions to discover your BA readiness score and receive a free BA transition roadmap built around your strengths and next move.",
+  "primaryButtonLabel": "Get My BA Score + Free Roadmap",
+  "timeLabel": "8 questions · Approximately 2–3 minutes",
+  "assurances": [
+    "No BA knowledge required",
+    "No specific career background required",
+    "Free BA transition roadmap included"
+  ],
+  "home": {
+    "label": "Free BA Readiness Assessment",
+    "title": "See how ready you already are for Business Analysis.",
+    "intro": "Answer 8 quick questions to uncover the strengths you already have and the next move for your transition.",
+    "buttonLabel": "Discover My BA Readiness",
+    "proof": "8 questions · 2–3 minutes · No BA knowledge required · Personalised result"
+  },
+  "gate": {
+    "heading": "Your Anderseed Growth Profile is ready.",
+    "intro": "We’ve connected your career position, natural strengths, BA exposure and biggest growth opportunity. Enter your details to reveal what we found.",
+    "buttonLabel": "Reveal My Personalised Results",
+    "lockedOutputs": [
+      "Your BA Readiness Stage",
+      "Your BA Readiness Score",
+      "Your strongest area",
+      "Your primary growth area",
+      "Your recommended next move",
+      "Your Free BA Transition Roadmap"
+    ]
+  },
+  "questions": [
+    {
+      "id": "analyticalProblemSolving",
+      "type": "single",
+      "question": "A problem at work keeps returning, even after several quick fixes. What would you naturally do first?",
+      "help": "Choose the response closest to how you would approach it—not what you think a Business Analyst should say.",
+      "options": [
+        { "value": "root_cause", "label": "Look for patterns, investigate why it keeps happening and identify who is affected" },
+        { "value": "people_impact", "label": "Speak to the people affected and understand how the problem is disrupting their work" },
+        { "value": "quick_fix", "label": "Apply the quickest workable solution so the team can keep moving" },
+        { "value": "escalate", "label": "Escalate it to someone more senior and wait for their direction" }
+      ]
+    },
+    {
+      "id": "handlingAmbiguity",
+      "type": "single",
+      "question": "You receive an unclear request: “Can you improve this process?” What would you do first?",
+      "help": "This looks at how you respond when the real need has not yet been explained.",
+      "revealAfter": "Interesting. The way you respond to unclear problems can reveal analytical capability you may already use every day.",
+      "options": [
+        { "value": "clarify_need", "label": "Clarify the underlying need, desired outcome, people involved and what success should look like" },
+        { "value": "assume_and_start", "label": "Make reasonable assumptions, begin the work and confirm the details later" },
+        { "value": "copy_existing", "label": "Find a similar process and copy the approach that was used before" },
+        { "value": "wait", "label": "Wait until someone provides clearer instructions" }
+      ]
+    },
+    {
+      "id": "transferableExperience",
+      "type": "multiple",
+      "question": "Which of these have you already done through work, study, volunteering or everyday responsibilities?",
+      "help": "Select every option that applies. You do not need previous BA experience for these to count.",
+      "revealAfter": "You may already have more transferable Business Analysis experience than your job title suggests.",
+      "options": [
+        { "value": "improve_process", "label": "Improved how a process or task was completed" },
+        { "value": "understand_needs", "label": "Worked with different people to understand what they needed" },
+        { "value": "data_reporting", "label": "Used data, reports or patterns to support a decision" },
+        { "value": "explain_complex", "label": "Explained complex information in a clearer way" },
+        { "value": "solve_recurring", "label": "Investigated or helped solve a recurring problem" },
+        { "value": "conflicting_priorities", "label": "Managed competing needs or conflicting priorities" },
+        { "value": "structured_docs", "label": "Created structured documents, instructions or records" },
+        { "value": "coordinate_teams", "label": "Coordinated work across people, teams or departments" },
+        { "value": "none", "label": "None of these yet", "exclusive": true }
+      ]
+    },
+    {
+      "id": "problemFraming",
+      "type": "single",
+      "question": "A stakeholder says, “This system is terrible—we need a new one.” What would you investigate before accepting that solution?",
+      "help": "Choose the response that best reflects your natural next step.",
+      "options": [
+        { "value": "investigate_problem", "label": "The evidence, current process, user needs, root problem, constraints and desired outcome" },
+        { "value": "clarify_impact", "label": "The main symptoms, people affected and impact on the business" },
+        { "value": "compare_systems", "label": "Which replacement systems are available and what features users want" },
+        { "value": "accept_solution", "label": "Nothing further—the stakeholder has already confirmed that a new system is required" }
+      ]
+    },
+    {
+      "id": "careerPosition",
+      "type": "single",
+      "question": "Where are you currently in your Business Analysis journey?",
+      "help": "This helps us place your strengths and next move in the right context.",
+      "options": [
+        { "value": "exploring", "label": "I’m exploring Business Analysis as a possible career move" },
+        { "value": "starting_learning", "label": "I’ve started learning about Business Analysis" },
+        { "value": "trained_not_ready", "label": "I’ve completed training but do not yet feel job-ready" },
+        { "value": "applying_no_response", "label": "I’m applying for BA roles but not receiving enough responses" },
+        { "value": "interviewing_no_offer", "label": "I’m reaching interviews but not securing offers" },
+        { "value": "ba_like_work", "label": "I already perform BA-like work, even if Business Analyst is not my title" }
+      ]
+    },
+    {
+      "id": "baExposure",
+      "type": "single",
+      "question": "What level of Business Analysis exposure have you had so far?",
+      "help": "This is not a BA knowledge test. Choose the option that most accurately describes your experience.",
+      "options": [
+        { "value": "none", "label": "None yet" },
+        { "value": "informal", "label": "Informal learning through free content, reading or observation" },
+        { "value": "structured", "label": "Structured BA training or one formal course" },
+        { "value": "multiple_courses", "label": "Multiple BA courses or certifications" },
+        { "value": "workplace", "label": "Real workplace experience using BA skills or responsibilities" }
+      ]
+    },
+    {
+      "id": "primaryBarrier",
+      "type": "single",
+      "question": "What is the biggest concern holding your BA transition back right now?",
+      "help": "Choose one priority. Your result will focus on this without overwhelming you with every possible gap.",
+      "revealAfter": "We’ve now identified a likely growth area and are connecting it with the strengths shown in your earlier answers.",
+      "options": [
+        { "value": "clarity", "label": "I need more clarity about the BA role or where to begin" },
+        { "value": "translate_experience", "label": "I struggle to translate my previous experience into BA value" },
+        { "value": "practical_experience", "label": "I need practical BA experience and evidence" },
+        { "value": "cv_positioning", "label": "My CV, LinkedIn or applications are not positioning me strongly enough" },
+        { "value": "interview_confidence", "label": "I need stronger interview confidence and BA examples" },
+        { "value": "no_barrier", "label": "I do not have a significant barrier right now" }
+      ]
+    },
+    {
+      "id": "transitionTimeline",
+      "type": "single",
+      "question": "When would you ideally like to make your transition into Business Analysis?",
+      "help": "This helps us understand urgency. It does not raise or lower your BA Readiness Score.",
+      "options": [
+        { "value": "asap", "label": "As soon as possible" },
+        { "value": "one_to_three", "label": "Within 1–3 months" },
+        { "value": "three_to_six", "label": "Within 3–6 months" },
+        { "value": "six_to_twelve", "label": "Within 6–12 months" },
+        { "value": "exploring", "label": "I’m exploring without a fixed timeline" }
+      ]
+    }
+  ]
+}

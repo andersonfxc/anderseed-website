@@ -2,20 +2,20 @@
   "points": [
     "Learn what to focus on first to get your foot in the door, and what to avoid wasting time on.",
     "Learn how your existing experience can become your biggest advantage.",
-    "Leave with a clear plan to become BA ready with confidence."
+    "Leave with three clear priorities to become BA ready with confidence."
   ],
   "nextStepsTitle": "Your first step into the Anderseed funnel",
-  "formIntro": "Enter your details and we will send the roadmap and starter CV template to your inbox.",
+  "formIntro": "Enter your details to unlock your personalised result and Top 3 Priorities.",
   "insideText": "This page is for visitors who are interested but not ready to pay yet. It gives them a useful first win and moves them into your email/community nurture journey.",
-  "eyebrow": "Free Business Analysis resource",
-  "intro": "Thinking about becoming a Business Analyst but not sure where to start? This free roadmap gives you a clear path to understand the role, build the right skills, and confidently take your first steps towards becoming BA ready.",
-  "headline": "Get the free Business Analyst Career Roadmap",
-  "heroPrimaryButtonLabel": "Download roadmap",
+  "eyebrow": "Free BA career assessment",
+  "intro": "Thinking about becoming a Business Analyst but not sure where to start? This free assessment recognises your strengths, identifies your biggest gap and gives you three focused priorities.",
+  "headline": "Discover Your Top 3 BA Priorities",
+  "heroPrimaryButtonLabel": "Check my BA readiness",
   "heroSecondaryButtonLabel": "Join free BA community",
-  "homeSectionLabel": "Free resource",
-  "homeTitle": "Download the free BA Career Roadmap",
-  "homeTitleHighlight": "BA Career Roadmap",
-  "homeIntro": "A focused starter guide for people who want to move into Business Analysis but do not know where to begin. Get the key steps, career direction, and practical next actions before you commit to paid support.",
+  "homeSectionLabel": "Free assessment",
+  "homeTitle": "Discover your Top 3 BA Priorities",
+  "homeTitleHighlight": "Top 3 BA Priorities",
+  "homeIntro": "A focused assessment for people who want to move into Business Analysis but do not know where to begin. Recognise your existing strengths and identify the practical actions that matter next.",
   "homeCards": [
     {
       "title": "Know the path",
@@ -30,11 +30,11 @@
       "text": "Leave with a simple plan for skills, CV, LinkedIn, and applications."
     }
   ],
-  "homeIncludesLabel": "What the free BA roadmap includes",
+  "homeIncludesLabel": "What your personalised result includes",
   "homeIncludes": [
     {
-      "title": "BA Career Roadmap",
-      "text": "Clear beginner-friendly stages from exploring BA to becoming interview-ready."
+      "title": "Top 3 Priorities",
+      "text": "Three focused actions based on your current BA readiness."
     },
     {
       "title": "Starter CV Template",
@@ -45,10 +45,10 @@
       "text": "Get access to updates, practical tips, live sessions, and cohort announcements."
     }
   ],
-  "insideLabel": "Inside the roadmap",
-  "formTitle": "Get instant access",
+  "insideLabel": "Inside your result",
+  "formTitle": "Unlock your results",
   "formLabel": "Instant access",
-  "nextStepsIntro": "After the roadmap, learners can join the free community, read practical blog articles, or move into the premium mentorship when they are ready.",
+  "nextStepsIntro": "After the assessment, learners can join the free community, read practical blog articles, or move into the premium mentorship when they are ready.",
   "firstNameLabel": "First name",
   "firstNamePlaceholder": "Your first name",
   "emailLabel": "Email address",
@@ -66,13 +66,13 @@
   "consentText": "I agree to the",
   "termsLinkLabel": "terms",
   "privacyLinkLabel": "privacy notice",
-  "submitButtonLabel": "Send me the free roadmap",
+  "submitButtonLabel": "Unlock my results",
   "requiredNote": "Required fields are marked with *.",
   "nextStepsLabel": "What happens next",
   "nextStepCards": [
     {
-      "title": "Read the roadmap",
-      "text": "Get a simple beginner-friendly view of what Business Analysts do and what to learn first."
+      "title": "Review your priorities",
+      "text": "Use your personalised result to understand what to focus on first."
     },
     {
       "title": "Join the community",
@@ -83,7 +83,7 @@
       "text": "When ready, move into live mentorship, project practice, CV support, and interview preparation."
     }
   ],
-  "seoTitle": "Free BA Career Roadmap | Anderseed Consulting",
+  "seoTitle": "Free BA Career Assessment | Anderseed Consulting",
   "insideTitle": "Clarity before commitment",
-  "seoDescription": "Download the free Anderseed BA Career Roadmap for beginners, career changers, graduates, and newcomers to the UK Business Analysis market."
+  "seoDescription": "Take the free Anderseed BA Career Assessment and receive your strongest transferable strength, biggest gap, Top 3 Priorities and personalised BA Transition Roadmap."
 }

@@ -38,8 +38,8 @@
           "answer": "Yes. The programme is designed to work around different schedules, and teaching sessions are recorded for enrolled learners. You will still need regular time for project tasks, feedback, portfolio work, and career preparation, but the amount can be adjusted around your responsibilities and chosen pace."
         },
         {
-          "question": "Can I use the free BA roadmap before deciding about premium mentorship?",
-          "answer": "Yes. The free BA Career Roadmap is a sensible starting point if you want to understand the journey before paying for guided support. You can also join the free Telegram community, read the blog, and return to the mentorship when the timing is right."
+          "question": "Can I use the free BA assessment before deciding about premium mentorship?",
+          "answer": "Yes. The free BA Readiness Assessment is a sensible starting point if you want to understand your current stage, recognise your strongest area and identify the growth priority that can move you forward before paying for guided support. You can also join the free Telegram community, read the blog, and return to the mentorship when the timing is right."
         }
       ]
     },
@@ -99,7 +99,7 @@
         },
         {
           "question": "What types of business cases can I work on?",
-          "answer": "The portfolio section currently presents CRM, HCM, and ERP-style business cases. These can include sales process and reporting work, employee onboarding and access, or procurement and approval processes, giving learners a realistic business-system context rather than isolated classroom exercises."
+          "answer": "The flagship experience is one continuous Salesforce CRM implementation, worked through from Discovery to Deployment. You can then apply the same Business Analysis approach more independently in an HCM transformation challenge, with an ERP procurement scenario available as an optional capstone."
         },
         {
           "question": "Does the project count as real Business Analysis experience?",
@@ -179,7 +179,7 @@
         },
         {
           "question": "What payment methods are available?",
-          "answer": "The checkout currently supports secure card payment through Stripe, Klarna Pay in 3 where the learner and transaction are eligible, and bank transfer. Klarna approval and terms are controlled by Klarna, and a cohort place is not confirmed until payment or an approved payment arrangement has been verified."
+          "answer": "The checkout supports secure card payment through Stripe and Klarna Pay in 3 where the learner and transaction are eligible. Bank transfer is available after application approval, with verified payment instructions sent directly to the approved applicant. Klarna approval and terms are controlled by Klarna, and a cohort place is not confirmed until payment or an approved payment arrangement has been verified."
         },
         {
           "question": "What are the payment, cancellation and refund options?",
@@ -219,7 +219,7 @@
         },
         {
           "question": "Can I stay connected if I am not ready for premium mentorship?",
-          "answer": "Yes. You can download the free roadmap, join the free Telegram community, follow Anderseed content, and read the blog without joining the paid cohort. These resources can help you build clarity until you are ready for structured mentorship."
+          "answer": "Yes. You can complete the free BA Readiness Assessment, join the free Telegram community, follow Anderseed content, and read the blog without joining the paid cohort. These resources can help you build clarity until you are ready for structured mentorship."
         }
       ]
     },
@@ -231,11 +231,11 @@
       "items": [
         {
           "question": "What personal information does Anderseed collect?",
-          "answer": "Depending on how you interact with Anderseed, information may include your name, email address, phone number, referral source, application details, payment-related records, messages, feedback, and participation information. If you join a recorded session using your microphone, camera, display name, chat, or shared screen, those details may also appear in the recording."
+          "answer": "For the BA Readiness Assessment, information includes your eight answers, calculated result, a secure technical identifier and, at the result-delivery step, your first name and email address. A separate optional marketing choice is recorded only when the result form is submitted. Depending on how else you interact with Anderseed, information may also include your phone number, referral source, application details, payment-related records, messages, feedback, and programme participation information."
         },
         {
           "question": "Why is my personal information used?",
-          "answer": "Information is used to deliver requested resources, respond to enquiries, process applications and payments, provide programme access and support, administer recordings and community spaces, meet legal or accounting obligations, improve services, and send marketing where there is an appropriate lawful basis. The privacy notice provides the fuller explanation."
+          "answer": "Assessment information is used to calculate, store and display the personalised result you requested. Anonymous step events are used to understand the assessment funnel. Other information is used to respond to enquiries, process applications and payments, provide programme access and support, administer recordings and community spaces, meet legal or accounting obligations, improve services, and send marketing only where there is an appropriate lawful basis."
         },
         {
           "question": "Do I have to appear on camera in recorded sessions?",
@@ -247,15 +247,15 @@
         },
         {
           "question": "Is my information sold or shared with third parties?",
-          "answer": "Anderseed does not sell personal information. Information may be processed by trusted providers needed for services such as hosting, email, forms, payments, analytics, video sessions, recordings, or customer administration, and may be disclosed where legally required. Those arrangements should be governed by appropriate privacy and security terms."
+          "answer": "Anderseed does not sell personal information. Assessment records use first-party application storage operated through Anderseed's hosting and database infrastructure. Trusted providers may process other information for hosting, forms, payments, analytics, video sessions, recordings, email services, or customer administration. Brevo is not connected to the assessment in this MVP, so assessment contacts are not automatically transferred to it at this stage."
         },
         {
           "question": "Can I unsubscribe from marketing or exercise my data rights?",
-          "answer": "Yes. You can unsubscribe from marketing communications at any time without losing access to a resource or service you have already purchased. Subject to applicable law, you may also request access, correction, deletion, restriction, or objection relating to your personal information, and you can raise a concern with Anderseed or the UK Information Commissioner's Office."
+          "answer": "Yes. The assessment marketing checkbox is separate and optional: your name and email are requested for the result-delivery step, but leaving the marketing box unticked does not prevent access to your result. If you opt in later, you can unsubscribe or withdraw consent at any time. Subject to applicable law, you may also request access, correction, deletion, restriction, or objection relating to your personal information."
         },
         {
           "question": "How long is my information kept?",
-          "answer": "Information is kept only for as long as reasonably needed for the purpose it was collected, programme delivery, learner support, legal or accounting obligations, dispute handling, and legitimate business records. Programme recordings are normally available to enrolled learners for 12 months; other retention periods depend on the type of record and applicable requirements described in the privacy notice."
+          "answer": "An unfinished assessment draft is kept in your browser for up to 24 hours. Anonymous raw funnel events are kept for up to 7 days before deletion after aggregation. A named assessment lead, including the contact and recorded marketing choice, is initially kept for up to 12 months and then reviewed for deletion, anonymisation, or a documented continuing need. Programme recordings are normally available to enrolled learners for 12 months; the privacy notice explains other records."
         }
       ]
     },

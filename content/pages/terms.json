@@ -1,19 +1,33 @@
 {
   "seoTitle": "Terms and Conditions | Anderseed Consulting",
-  "seoDescription": "Terms and conditions for Anderseed Consulting resources, mentorship services, payments, refunds, and programme participation.",
+  "seoDescription": "Terms and conditions for the Anderseed BA Readiness Assessment, resources, mentorship services, payments, refunds, and programme participation.",
   "eyebrow": "Terms",
   "headline": "Terms and conditions",
-  "intro": "Plain-English terms for Anderseed Consulting resources, mentorship applications, payment, refunds, and programme participation.",
+  "intro": "Plain-English terms for the Anderseed BA Readiness Assessment, resources, mentorship applications, payment, refunds, and programme participation.",
   "lastUpdated": "August 2026",
   "reviewNotice": "This page is a practical working draft and should be professionally reviewed before launch.",
   "sections": [
     {
       "title": "Services",
       "paragraphs": [
-        "Anderseed Consulting provides mentorship and career education relating to Business Analysis. Services may include live and recorded sessions, guided project work, portfolio development, resources, CV and LinkedIn support, interview preparation, community access, and career guidance."
+        "Anderseed Consulting provides a BA Readiness Assessment, mentorship, and career education relating to Business Analysis. Services may include live and recorded sessions, guided project work, portfolio development, resources, CV and LinkedIn support, interview preparation, community access, and career guidance."
       ],
       "bullets": [],
       "links": []
+    },
+    {
+      "title": "BA Readiness Assessment",
+      "paragraphs": [
+        "The assessment produces personalised career guidance from the answers you provide. Its readiness score, stage, strongest area, growth area, and recommended steps are directional tools, not a professional qualification, recruitment decision, or guarantee of employment.",
+        "A first name and email address are required at the result-delivery step before the personalised result is displayed on screen. Marketing permission is requested separately, is optional, and is not required to access the result. The privacy notice explains assessment storage, analytics, consent records, and retention."
+      ],
+      "bullets": [],
+      "links": [
+        {
+          "label": "Read the privacy notice",
+          "href": "../privacy/index.html"
+        }
+      ]
     },
     {
       "title": "No employment guarantee",

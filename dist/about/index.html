@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://YOUR-DOMAIN.com/about/" />
 <meta property="og:site_name" content="Anderseed Consulting" />
 <link rel="stylesheet" href="../assets/landing-pages.css" />
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23318A6E'/%3E%3Cpath d='M32 46 L32 24 M32 33 C24 26 20 18 26 13 C30 19 31 26 32 33 Z M32 29 C40 21 46 15 43 8 C37 14 34 21 32 29 Z' stroke='white' stroke-width='2.5' fill='white'/%3E%3C/svg%3E" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231F6B52'/%3E%3Cpath d='M32 46 L32 24 M32 33 C24 26 20 18 26 13 C30 19 31 26 32 33 Z M32 29 C40 21 46 15 43 8 C37 14 34 21 32 29 Z' stroke='white' stroke-width='2.5' fill='white'/%3E%3C/svg%3E" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"AboutPage","name":"About Anderseed Consulting","description":"Learn about Anderseed Consulting, a practical Business Analysis mentorship brand helping beginners, career changers, graduates, and newcomers to the UK market become BA-ready.","publisher":{"@type":"Organization","name":"Anderseed Consulting","url":"https://YOUR-DOMAIN.com"}}
 </script>
@@ -26,7 +26,7 @@
       <a href="../index.html">Home</a>
       <a class="active" aria-current="page" href="../about/index.html">About</a>
       <a href="../index.html#pricing">Pricing</a>
-      <a href="../index.html#roadmap-landing">Free Roadmap</a>
+      <a class="nav-assessment" href="../assessment/index.html?start=1">BA Assessment</a>
       <a href="../index.html#portfolio">Portfolio</a>
       <a href="../blog/index.html">Blog</a>
       <a href="../faq/index.html">FAQ</a>
@@ -37,7 +37,7 @@
     <a href="../index.html">Home</a>
     <a class="active" aria-current="page" href="../about/index.html">About</a>
     <a href="../index.html#pricing">Pricing</a>
-    <a href="../index.html#roadmap-landing">Free Roadmap</a>
+    <a class="nav-assessment" href="../assessment/index.html?start=1">BA Assessment</a>
     <a href="../index.html#portfolio">Portfolio</a>
     <a href="../blog/index.html">Blog</a>
     <a href="../faq/index.html">FAQ</a>
@@ -53,7 +53,7 @@
       <p class="hero-copy">Anderseed Consulting helps beginners, career changers, graduates, and newcomers to the UK market build the practical skills, language, confidence, and career positioning needed to move toward Business Analysis roles.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="../index.html#pricing">View premium mentorship</a>
-        <a class="btn btn-secondary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
+        <a class="btn btn-secondary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
       </div>
     </div>
   </section>
@@ -123,9 +123,9 @@
       <div class="dark-panel">
         <div class="section-label">Next step</div>
         <h2>Start with clarity.</h2>
-        <p>Download the free BA Career Roadmap, join the free Telegram community, or move straight into the premium mentorship when you are ready for deeper support.</p>
+        <p>Reveal the BA strengths already in your experience, join the free community, or move straight into the premium mentorship when you are ready for deeper support.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
+          <a class="btn btn-primary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
           <a class="btn btn-secondary" href="https://t.me/anderseedconsulting" target="_blank" rel="noopener">Join free community</a>
         </div>
       </div>
@@ -135,7 +135,7 @@
 <footer class="footer">
   <div class="footer-inner">
     <div><strong>Anderseed Consulting</strong><p>Career clarity. Skills. Confidence. Growth.</p></div>
-    <div class="footer-links"><a href="../about/index.html">About</a><a href="../blog/index.html">Blog</a><a href="../index.html#roadmap-landing">Free Roadmap</a><a href="../faq/index.html">FAQ</a><a href="../privacy/index.html">Privacy</a><a href="../terms/index.html">Terms</a></div>
+    <div class="footer-links"><a href="../about/index.html">About</a><a href="../blog/index.html">Blog</a><a href="../assessment/index.html?start=1">BA Assessment</a><a href="../faq/index.html">FAQ</a><a href="../privacy/index.html">Privacy</a><a href="../terms/index.html">Terms</a></div>
   </div>
 </footer>
 <a class="tg-float" href="https://t.me/anderseedconsulting" target="_blank" rel="noopener" aria-label="Join the free Anderseed Telegram community">
@@ -152,6 +152,7 @@
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     panel.hidden = !open;
+    if (open) window.requestAnimationFrame(() => panel.querySelector("a")?.focus());
   };
   button.addEventListener("click", () => setOpen(button.getAttribute("aria-expanded") !== "true"));
   panel.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
@@ -159,12 +160,35 @@
     if (event.key === "Escape" && button.getAttribute("aria-expanded") === "true") {
       setOpen(false);
       button.focus();
+      return;
+    }
+    if (event.key === "Tab" && button.getAttribute("aria-expanded") === "true") {
+      const focusable = [button, ...panel.querySelectorAll("a")];
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   });
   document.addEventListener("click", (event) => {
     if (button.getAttribute("aria-expanded") === "true" && !event.target.closest(".nav-inner")) setOpen(false);
   });
+  const desktopNavigation = window.matchMedia("(min-width: 921px)");
+  const resetForDesktop = (event) => {
+    if (event.matches && button.getAttribute("aria-expanded") === "true") setOpen(false);
+  };
+  if (typeof desktopNavigation.addEventListener === "function") {
+    desktopNavigation.addEventListener("change", resetForDesktop);
+  } else if (typeof desktopNavigation.addListener === "function") {
+    desktopNavigation.addListener(resetForDesktop);
+  }
 })();
 </script>
+
 </body>
 </html>

@@ -5,7 +5,7 @@ const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 
 const favicon =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23318A6E'/%3E%3Cpath d='M32 46 L32 24 M32 33 C24 26 20 18 26 13 C30 19 31 26 32 33 Z M32 29 C40 21 46 15 43 8 C37 14 34 21 32 29 Z' stroke='white' stroke-width='2.5' fill='white'/%3E%3C/svg%3E";
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231F6B52'/%3E%3Cpath d='M32 46 L32 24 M32 33 C24 26 20 18 26 13 C30 19 31 26 32 33 Z M32 29 C40 21 46 15 43 8 C37 14 34 21 32 29 Z' stroke='white' stroke-width='2.5' fill='white'/%3E%3C/svg%3E";
 
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
@@ -44,7 +44,7 @@ function copyDir(source, target) {
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     if (
       source === root &&
-      ["content", "dist", "roadmap", "scripts", "node_modules", ".git", "README.md", "package.json", "package-lock.json", "netlify.toml"].includes(entry.name)
+      ["content", "dist", "docs", "roadmap", "scripts", "tests", "node_modules", ".git", "README.md", "package.json", "package-lock.json", "netlify.toml"].includes(entry.name)
     ) {
       continue;
     }
@@ -99,7 +99,7 @@ function navigationItems(base = "") {
     ["Home", `${base}index.html`, "home"],
     ["About", `${base}about/index.html`, "about"],
     ["Pricing", `${base}index.html#pricing`, "pricing"],
-    ["Free Roadmap", `${base}index.html#roadmap-landing`, "roadmap"],
+    ["BA Assessment", `${base}assessment/index.html?start=1`, "assessment"],
     ["Portfolio", `${base}index.html#portfolio`, "portfolio"],
     ["Blog", `${base}blog/index.html`, "blog"],
     ["FAQ", `${base}faq/index.html`, "faq"],
@@ -109,7 +109,10 @@ function navigationItems(base = "") {
 
 function navigationLink(label, href, key, active) {
   const current = active === key;
-  return `<a${current ? ' class="active" aria-current="page"' : ""} href="${href}">${label}</a>`;
+  const classes = [];
+  if (key === "assessment") classes.push("nav-assessment");
+  if (current) classes.push("active");
+  return `<a${classes.length ? ` class="${classes.join(" ")}"` : ""}${current ? ' aria-current="page"' : ""} href="${href}">${label}</a>`;
 }
 
 function nav(base = "", active = "") {
@@ -138,6 +141,7 @@ function mobileNavScript() {
     button.setAttribute("aria-expanded", String(open));
     button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     panel.hidden = !open;
+    if (open) window.requestAnimationFrame(() => panel.querySelector("a")?.focus());
   };
   button.addEventListener("click", () => setOpen(button.getAttribute("aria-expanded") !== "true"));
   panel.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
@@ -145,11 +149,33 @@ function mobileNavScript() {
     if (event.key === "Escape" && button.getAttribute("aria-expanded") === "true") {
       setOpen(false);
       button.focus();
+      return;
+    }
+    if (event.key === "Tab" && button.getAttribute("aria-expanded") === "true") {
+      const focusable = [button, ...panel.querySelectorAll("a")];
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   });
   document.addEventListener("click", (event) => {
     if (button.getAttribute("aria-expanded") === "true" && !event.target.closest(".nav-inner")) setOpen(false);
   });
+  const desktopNavigation = window.matchMedia("(min-width: 921px)");
+  const resetForDesktop = (event) => {
+    if (event.matches && button.getAttribute("aria-expanded") === "true") setOpen(false);
+  };
+  if (typeof desktopNavigation.addEventListener === "function") {
+    desktopNavigation.addEventListener("change", resetForDesktop);
+  } else if (typeof desktopNavigation.addListener === "function") {
+    desktopNavigation.addListener(resetForDesktop);
+  }
 })();
 </script>`;
 }
@@ -158,7 +184,7 @@ function footer(base = "", settings) {
   return `<footer class="footer">
   <div class="footer-inner">
     <div><strong>${escapeHtml(settings.siteName)}</strong><p>${escapeHtml(settings.footerTagline)}</p></div>
-    <div class="footer-links"><a href="${base}about/index.html">About</a><a href="${base}blog/index.html">Blog</a><a href="${base}index.html#roadmap-landing">Free Roadmap</a><a href="${base}faq/index.html">FAQ</a><a href="${base}privacy/index.html">Privacy</a><a href="${base}terms/index.html">Terms</a></div>
+    <div class="footer-links"><a href="${base}about/index.html">About</a><a href="${base}blog/index.html">Blog</a><a href="${base}assessment/index.html?start=1">BA Assessment</a><a href="${base}faq/index.html">FAQ</a><a href="${base}privacy/index.html">Privacy</a><a href="${base}terms/index.html">Terms</a></div>
   </div>
 </footer>`;
 }
@@ -170,8 +196,37 @@ function telegramFloat(settings) {
 </a>`;
 }
 
-function pageShell({ title, description, canonical, base, active, body, schema = "" }, settings) {
+function analyticsSnippet(settings) {
+  const measurementId = String(settings.analytics?.googleMeasurementId || "").trim();
+  if (!/^G-[A-Z0-9]+$/i.test(measurementId)) return "";
+  return `<script async src="https://www.googletagmanager.com/gtag/js?id=${escapeAttr(measurementId)}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${escapeAttr(measurementId)}', { anonymize_ip: true });
+</script>`;
+}
+
+function pageShell({ title, description, canonical, base, active, body, schema = "", focused = false }, settings) {
   const accessibleBody = body.replace(/<main(?![^>]*\bid=)/, '<main id="main"');
+  const pageHeader = focused
+    ? `<header class="nav conversion-nav">
+  <div class="nav-inner">
+    <a class="logo conversion-logo" href="${base}index.html" aria-label="Anderseed Consulting home"><img src="${base}assets/anderseed-logo-header.png" alt="Anderseed Consulting" width="642" height="220" /></a>
+    <div class="conversion-context" aria-label="Assessment details"><span>BA Readiness Profile</span><small>8 questions · 2–3 minutes</small></div>
+  </div>
+</header>`
+    : `<header class="nav">
+  <div class="nav-inner">
+    ${logo(base)}
+    ${nav(base, active)}
+    ${mobileNav(base, active)}
+  </div>
+</header>`;
+  const pageFooter = focused
+    ? `<footer class="footer conversion-footer"><div class="footer-inner"><strong>${escapeHtml(settings.siteName)}</strong><div class="footer-links"><a href="${base}privacy/index.html" target="_blank" rel="noopener">Privacy</a><a href="${base}terms/index.html" target="_blank" rel="noopener">Terms</a></div></div></footer>`
+    : footer(base, settings);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,19 +244,14 @@ function pageShell({ title, description, canonical, base, active, body, schema =
 <link rel="icon" type="image/svg+xml" href="${favicon}" />
 ${schema}
 </head>
-<body>
+<body${focused ? ' class="conversion-flow"' : ""}>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="nav">
-  <div class="nav-inner">
-    ${logo(base)}
-    ${nav(base, active)}
-    ${mobileNav(base, active)}
-  </div>
-</header>
+${pageHeader}
 ${accessibleBody}
-${footer(base, settings)}
-${telegramFloat(settings)}
-${mobileNavScript()}
+${pageFooter}
+${focused ? "" : telegramFloat(settings)}
+${focused ? "" : mobileNavScript()}
+${analyticsSnippet(settings)}
 </body>
 </html>`;
 }
@@ -263,25 +313,66 @@ function applyGlobalReplacements(html, settings, formKind = "roadmap") {
     .replaceAll("hello@anderseedconsulting.com", settings.contact.email)
     .replaceAll("https://YOUR-CRM-FORM-ENDPOINT", formEndpoint)
     .replaceAll("https://YOUR-STRIPE-CHECKOUT-LINK", settings.forms.stripeCheckoutUrl)
-    .replaceAll("https://YOUR-KLARNA-CHECKOUT-LINK", settings.forms.klarnaCheckoutUrl)
-    .replaceAll("Anderseed Consulting Ltd", settings.bank.payeeName)
-    .replaceAll("Mettle Business Account", settings.bank.bankName)
-    .replaceAll("04-03-33", settings.bank.sortCode)
-    .replaceAll("69499865", settings.bank.accountNumber)
-    .replaceAll("Your full name + BA Mentorship", settings.bank.reference);
+    .replaceAll("https://YOUR-KLARNA-CHECKOUT-LINK", settings.forms.klarnaCheckoutUrl);
+}
+
+function assessmentGrowthIcons() {
+  return `<div class="growth-track" aria-hidden="true">
+          <svg class="growth-stem" viewBox="0 0 620 86" preserveAspectRatio="none"><path d="M20 61C92 60 120 45 172 49s79 18 132 4 75-33 130-29 87 25 166 7"/><path class="growth-stem-accent" d="M20 61C92 60 120 45 172 49s79 18 132 4 75-33 130-29 87 25 166 7"/></svg>
+          <span class="growth-node" data-growth-node="0"><svg viewBox="0 0 48 48"><ellipse cx="24" cy="29" rx="9" ry="7"/><path d="M18 27c3-5 8-7 13-6"/></svg></span>
+          <span class="growth-node" data-growth-node="1"><svg viewBox="0 0 48 48"><ellipse cx="24" cy="18" rx="7" ry="5"/><path d="M24 23v15m0-8-7 7m7-3 6 5"/></svg></span>
+          <span class="growth-node" data-growth-node="2"><svg viewBox="0 0 48 48"><path d="M24 39V17m0 8c-7-1-10-5-10-10 6 0 10 4 10 10Zm0 4c7-1 10-5 10-10-6 0-10 4-10 10Z"/></svg></span>
+          <span class="growth-node" data-growth-node="3"><svg viewBox="0 0 48 48"><path d="M24 41V12m0 9c-8-1-12-5-12-11 7 0 12 4 12 11Zm0 8c8-1 12-5 12-11-7 0-12 4-12 11Zm0 7c-6-1-9-4-9-9 5 0 9 3 9 9Z"/></svg></span>
+          <span class="growth-node" data-growth-node="4"><svg viewBox="0 0 48 48"><path d="M24 42V22"/><path d="M24 25c-10 0-16-6-16-14 9 0 15 5 16 14Zm0 5c10 0 16-6 16-14-9 0-15 5-16 14Z"/><path d="M13 42h22"/></svg></span>
+        </div>`;
+}
+
+function generateAssessmentFront(assessment) {
+  const home = assessment.home || {};
+  const headline = escapeHtml(home.title || assessment.headline).replace("Business Analysis", "<span>Business Analysis</span>");
+  const label = home.label || assessment.eyebrow;
+  const intro = home.intro || assessment.intro;
+  const buttonLabel = home.buttonLabel || assessment.primaryButtonLabel;
+  const proof = String(home.proof || assessment.timeLabel)
+    .split("·")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const growthIcons = assessmentGrowthIcons();
+  return `<div class="home-assessment-front">
+    <div class="assessment-landing-grid">
+      <div class="assessment-landing-copy">
+        <div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>${escapeHtml(label)}</div>
+        <h2 id="homepageAssessmentTitle">${headline}</h2>
+        <p>${escapeHtml(intro)}</p>
+        <a class="btn btn-primary" href="assessment/index.html?start=1">${escapeHtml(buttonLabel)} <span aria-hidden="true">→</span></a>
+        <div class="assessment-meta" aria-label="Assessment details">${proof.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
+      </div>
+      <aside class="assessment-profile-plate" aria-label="What your personalised Growth Profile includes">
+        <div class="profile-plate-top"><span>Your personalised Growth Profile</span><span>After 8 questions</span></div>
+        <div class="assessment-growth-preview" aria-label="Your assessment grows from a starting point into a complete profile">
+          ${growthIcons}
+          <p>Clear direction for your move into Business Analysis.</p>
+        </div>
+        <div class="profile-plate-index">
+          <div><span>01</span><p><strong>Your BA readiness score</strong></p></div>
+          <div><span>02</span><p><strong>Your strongest transferable strength</strong></p></div>
+          <div><span>03</span><p><strong>Free BA transition roadmap</strong></p></div>
+        </div>
+      </aside>
+    </div>
+  </div>`;
 }
 
 function generateHero(home, settings) {
   const hero = home.hero;
   const subline = escapeHtml(hero.subline).replace("grow.", "<span>grow.</span>");
-  return `<div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>${escapeHtml(hero.eyebrowText)} <strong>${escapeHtml(hero.eyebrowHighlight)}</strong><a class="eyebrow-link" href="#steps" aria-label="See the 90-day Business Analysis journey">${escapeHtml(hero.journeyButtonLabel)} &rarr;</a></div>
+  return `<div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>${escapeHtml(hero.eyebrowText)} <strong>${escapeHtml(hero.eyebrowHighlight)}</strong><a class="eyebrow-link" href="#steps" aria-label="See the 90-day Business Analysis journey">${escapeHtml(hero.journeyButtonLabel || "See journey")} &rarr;</a></div>
           <h1>${escapeHtml(hero.headlinePrefix)} <span class="gold-text">${escapeHtml(hero.headlineHighlight)}</span></h1>
           <p class="hero-subline">${subline}</p>
           <p class="hero-copy">${escapeHtml(hero.body)}</p>
           <div class="hero-actions">
-            <a class="btn btn-secondary" href="${escapeAttr(hero.secondaryButtonUrl)}">${escapeHtml(hero.secondaryButtonLabel)}</a>
             <a class="btn btn-primary" href="${escapeAttr(hero.primaryButtonUrl)}">${escapeHtml(hero.primaryButtonLabel)}</a>
-            <a class="btn btn-secondary" href="${escapeAttr(settings.social.telegram)}" target="_blank" rel="noopener">${escapeHtml(hero.communityButtonLabel)}</a>
+            <a class="btn btn-secondary" href="${escapeAttr(hero.secondaryButtonUrl)}">${escapeHtml(hero.secondaryButtonLabel)}</a>
           </div>`;
 }
 
@@ -347,141 +438,83 @@ function proofCodeLine(type = "") {
   return codeMap[type] || "artefacts.build(portfolioPack)";
 }
 
-function renderArtefactVisual(type = "") {
+function renderArtefactVisual(step = {}, caseType = "crm") {
+  const type = step.type || "stakeholder";
+  const visual = step.visual || {};
+  const outputTitle = escapeHtml(visual.outputTitle || "Portfolio artefact preview");
+
   if (type === "process") {
-    return `<div class="artefact-visual process-output" aria-hidden="true">
-            <div class="output-title">BPMN 2.0 process map</div>
-            <svg class="artefact-svg process-svg-v5" viewBox="0 0 420 220" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" role="img" aria-label="BPMN process map preview">
-              <defs>
-                <marker id="process-v5-arrow" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
-                  <path d="M0,0 L6,3 L0,6 Z" fill="#45514c"></path>
-                </marker>
-              </defs>
+    const lanes = visual.lanes || ["Business user", "Approver"];
+    const task1 = visual.task1 || ["Capture", "request"];
+    const task2 = visual.task2 || ["Review", "request"];
+    const gateway = visual.gateway || ["Approved?", "Yes / No"];
+    const task3 = visual.task3 || ["Update", "system"];
+    const markerId = `process-v5-arrow-${caseType}`;
+    return `<div class="artefact-visual process-output ${escapeAttr(caseType)}-output" aria-hidden="true">
+            <div class="output-title">${outputTitle}</div>
+            <svg class="artefact-svg process-svg-v5" viewBox="0 0 420 220" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision">
+              <defs><marker id="${escapeAttr(markerId)}" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#45514c"></path></marker></defs>
               <rect x="1" y="1" width="418" height="218" rx="12" class="svg-v5-board"></rect>
-              <path d="M1 110 H419" class="svg-v5-divider"></path>
-              <path d="M64 1 V219" class="svg-v5-divider"></path>
-              <rect x="1" y="1" width="63" height="109" rx="12" class="svg-v5-lane-bg sales"></rect>
-              <rect x="1" y="111" width="63" height="108" rx="12" class="svg-v5-lane-bg manager"></rect>
-              <text x="32" y="58" text-anchor="middle" class="svg-v5-lane">Sales</text>
-              <text x="32" y="168" text-anchor="middle" class="svg-v5-lane">Manager</text>
-
-              <circle cx="92" cy="55" r="14" class="svg-v5-start"></circle>
-              <text x="92" y="83" text-anchor="middle" class="svg-v5-note">Start</text>
-
-              <rect x="122" y="38" width="76" height="34" rx="7" class="svg-v5-task"></rect>
-              <text x="160" y="52" text-anchor="middle" class="svg-v5-task-text">Capture</text>
-              <text x="160" y="64" text-anchor="middle" class="svg-v5-task-text">request</text>
-
-              <rect x="122" y="148" width="76" height="34" rx="7" class="svg-v5-task"></rect>
-              <text x="160" y="162" text-anchor="middle" class="svg-v5-task-text">Review</text>
-              <text x="160" y="174" text-anchor="middle" class="svg-v5-task-text">request</text>
-
-              <polygon points="246,141 270,165 246,189 222,165" class="svg-v5-gateway"></polygon>
-              <text x="246" y="162" text-anchor="middle" class="svg-v5-gateway-text">Approve?</text>
-              <text x="246" y="173" text-anchor="middle" class="svg-v5-gateway-text">Yes / No</text>
-
-              <rect x="292" y="38" width="74" height="34" rx="7" class="svg-v5-task"></rect>
-              <text x="329" y="52" text-anchor="middle" class="svg-v5-task-text">Update</text>
-              <text x="329" y="64" text-anchor="middle" class="svg-v5-task-text">CRM</text>
-
-              <circle cx="396" cy="55" r="14" class="svg-v5-end"></circle>
-              <text x="396" y="83" text-anchor="middle" class="svg-v5-note">Complete</text>
-              <circle cx="396" cy="165" r="14" class="svg-v5-end rejected"></circle>
-              <text x="396" y="193" text-anchor="middle" class="svg-v5-note">Rejected</text>
-
-              <path class="svg-v5-arrow" d="M106 55 H122"></path>
-              <path class="svg-v5-arrow" d="M160 72 V148"></path>
-              <path class="svg-v5-arrow" d="M198 165 H222"></path>
-              <path class="svg-v5-arrow" d="M246 141 V55 H292"></path>
-              <path class="svg-v5-arrow" d="M366 55 H382"></path>
-              <path class="svg-v5-arrow" d="M270 165 H382"></path>
-              <text x="255" y="97" class="svg-v5-path-label">YES</text>
-              <text x="316" y="157" class="svg-v5-path-label">NO</text>
+              <path d="M1 110 H419" class="svg-v5-divider"></path><path d="M64 1 V219" class="svg-v5-divider"></path>
+              <rect x="1" y="1" width="63" height="109" rx="12" class="svg-v5-lane-bg sales"></rect><rect x="1" y="111" width="63" height="108" rx="12" class="svg-v5-lane-bg manager"></rect>
+              <text x="32" y="58" text-anchor="middle" class="svg-v5-lane">${escapeHtml(lanes[0])}</text><text x="32" y="168" text-anchor="middle" class="svg-v5-lane">${escapeHtml(lanes[1])}</text>
+              <circle cx="92" cy="55" r="14" class="svg-v5-start"></circle><text x="92" y="83" text-anchor="middle" class="svg-v5-note">${escapeHtml(visual.start || "Start")}</text>
+              <rect x="122" y="38" width="76" height="34" rx="7" class="svg-v5-task"></rect><text x="160" y="52" text-anchor="middle" class="svg-v5-task-text">${escapeHtml(task1[0])}</text><text x="160" y="64" text-anchor="middle" class="svg-v5-task-text">${escapeHtml(task1[1])}</text>
+              <rect x="122" y="148" width="76" height="34" rx="7" class="svg-v5-task"></rect><text x="160" y="162" text-anchor="middle" class="svg-v5-task-text">${escapeHtml(task2[0])}</text><text x="160" y="174" text-anchor="middle" class="svg-v5-task-text">${escapeHtml(task2[1])}</text>
+              <polygon points="246,141 270,165 246,189 222,165" class="svg-v5-gateway"></polygon><text x="246" y="162" text-anchor="middle" class="svg-v5-gateway-text">${escapeHtml(gateway[0])}</text><text x="246" y="173" text-anchor="middle" class="svg-v5-gateway-text">${escapeHtml(gateway[1])}</text>
+              <rect x="292" y="38" width="74" height="34" rx="7" class="svg-v5-task"></rect><text x="329" y="52" text-anchor="middle" class="svg-v5-task-text">${escapeHtml(task3[0])}</text><text x="329" y="64" text-anchor="middle" class="svg-v5-task-text">${escapeHtml(task3[1])}</text>
+              <circle cx="396" cy="55" r="14" class="svg-v5-end"></circle><text x="396" y="83" text-anchor="middle" class="svg-v5-note">${escapeHtml(visual.success || "Complete")}</text>
+              <circle cx="396" cy="165" r="14" class="svg-v5-end rejected"></circle><text x="396" y="193" text-anchor="middle" class="svg-v5-note">${escapeHtml(visual.failure || "Returned")}</text>
+              <path class="svg-v5-arrow" style="marker-end:url(#${escapeAttr(markerId)})" d="M106 55 H122"></path><path class="svg-v5-arrow" style="marker-end:url(#${escapeAttr(markerId)})" d="M160 72 V148"></path><path class="svg-v5-arrow" style="marker-end:url(#${escapeAttr(markerId)})" d="M198 165 H222"></path><path class="svg-v5-arrow" style="marker-end:url(#${escapeAttr(markerId)})" d="M246 141 V55 H292"></path><path class="svg-v5-arrow" style="marker-end:url(#${escapeAttr(markerId)})" d="M366 55 H382"></path><path class="svg-v5-arrow" style="marker-end:url(#${escapeAttr(markerId)})" d="M270 165 H382"></path>
+              <text x="255" y="97" class="svg-v5-path-label">YES</text><text x="316" y="157" class="svg-v5-path-label">NO</text>
             </svg>
           </div>`;
   }
+
   if (type === "requirements" || type === "stories") {
-    return `<div class="artefact-visual requirements-output" aria-hidden="true">
-            <div class="output-title">User story + acceptance criteria</div>
-            <div class="story-output-card">
-              <strong>User story</strong>
-              <p>As a sales manager, I want to view live pipeline status so I can follow up with the right opportunities.</p>
-            </div>
-            <div class="acceptance-output-card">
-              <strong>Acceptance criteria</strong>
-              <span>User can filter pipeline by stage and owner</span>
-              <span>Dashboard updates when opportunity status changes</span>
-              <span>Only authorised users can view revenue values</span>
-            </div>
-            <div class="requirements-footer"><b>BRD</b><span>Scope</span><span>Business rules</span><span>Sign-off</span></div>
+    const criteria = Array.isArray(visual.criteria) ? visual.criteria : [];
+    const footerTags = Array.isArray(visual.footerTags) ? visual.footerTags : [];
+    return `<div class="artefact-visual requirements-output ${escapeAttr(caseType)}-output" aria-hidden="true">
+            <div class="output-title">${outputTitle}</div>
+            <div class="story-output-card"><strong>User story</strong><p>${escapeHtml(visual.story || "Define the user need and business value.")}</p></div>
+            <div class="acceptance-output-card"><strong>Acceptance criteria</strong>${criteria.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
+            <div class="requirements-footer"><b>${escapeHtml(visual.footerLabel || "BRD")}</b>${footerTags.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
           </div>`;
   }
+
   if (type === "prototype") {
-    return `<div class="artefact-visual prototype-output" aria-hidden="true">
-            <div class="output-title">Prototype walkthrough</div>
+    const metrics = Array.isArray(visual.metrics) ? visual.metrics : [];
+    const rows = Array.isArray(visual.rows) ? visual.rows : [];
+    const walkthrough = Array.isArray(visual.walkthrough) ? visual.walkthrough : [];
+    const middleVisual = caseType === "hcm"
+      ? '<div class="prototype-readiness"><span><b>✓</b>HR checks complete</span><span><b>✓</b>Manager tasks assigned</span><span class="pending"><b>!</b>IT access pending</span></div>'
+      : caseType === "erp"
+        ? '<div class="prototype-approval-flow"><span>Requested</span><i></i><span>Finance review</span><i></i><span>PO ready</span></div>'
+        : '<div class="prototype-chart crm-chart"><i></i><i></i><i></i><i></i></div>';
+    return `<div class="artefact-visual prototype-output ${escapeAttr(caseType)}-output" aria-hidden="true">
+            <div class="output-title">${outputTitle}</div>
             <div class="prototype-output-grid">
               <div class="prototype-window">
-                <div class="prototype-sidebar"><span></span><span></span><span></span><small>CRM</small></div>
+                <div class="prototype-sidebar"><span></span><span></span><span></span><small>${escapeHtml(visual.productLabel || caseType.toUpperCase())}</small></div>
                 <div class="prototype-canvas">
-                  <div class="metric-card primary"><b>£48k</b><span>Pipeline</span></div><div class="metric-card"><b>18</b><span>Deals</span></div>
-                  <div class="prototype-chart"><i></i><i></i><i></i><i></i></div>
-                  <div class="prototype-table"><span></span><span></span><span></span></div>
+                  ${metrics.slice(0, 2).map((metric, index) => `<div class="metric-card${index === 0 ? " primary" : ""}"><b>${escapeHtml(metric.value)}</b><span>${escapeHtml(metric.label)}</span></div>`).join("")}
+                  ${middleVisual}
+                  <div class="prototype-table">${rows.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
                 </div>
               </div>
-              <div class="walkthrough-panel">
-                <strong>Interview story</strong>
-                <span>Problem</span><span>Decision</span><span>Outcome</span>
-              </div>
+              <div class="walkthrough-panel"><strong>Interview story</strong>${walkthrough.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
             </div>
           </div>`;
   }
-  return `<div class="artefact-visual stakeholder-output" aria-hidden="true">
-          <div class="output-title">Stakeholder analysis output</div>
-          <svg class="artefact-svg stakeholder-svg-v5" viewBox="0 0 420 220" preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" role="img" aria-label="Stakeholder analysis preview">
-            <rect x="1" y="1" width="418" height="218" rx="12" class="svg-v5-board"></rect>
-            <rect x="10" y="10" width="250" height="200" rx="10" class="svg-v5-panel"></rect>
-            <text x="24" y="35" class="svg-v5-title">Power / interest grid</text>
-            <rect x="24" y="50" width="222" height="142" rx="7" class="svg-v5-matrix"></rect>
-            <path d="M135 50 V192 M24 121 H246" class="svg-v5-grid-line"></path>
-            <text x="151" y="64" class="svg-v5-axis-label">HIGH INFLUENCE</text>
-            <text x="155" y="187" class="svg-v5-axis-label">HIGH INTEREST</text>
 
-            <rect x="42" y="72" width="72" height="26" rx="13" class="svg-v5-chip it"></rect>
-            <text x="78" y="89" text-anchor="middle" class="svg-v5-chip-text">IT</text>
-            <rect x="152" y="72" width="88" height="26" rx="13" class="svg-v5-chip sponsor"></rect>
-            <text x="196" y="89" text-anchor="middle" class="svg-v5-chip-text">Sponsor</text>
-            <rect x="42" y="145" width="72" height="26" rx="13" class="svg-v5-chip users"></rect>
-            <text x="78" y="162" text-anchor="middle" class="svg-v5-chip-text">Users</text>
-            <rect x="148" y="145" width="96" height="26" rx="13" class="svg-v5-chip ops"></rect>
-            <text x="196" y="162" text-anchor="middle" class="svg-v5-chip-text">Sales Ops</text>
-
-            <rect x="270" y="10" width="140" height="200" rx="10" class="svg-v5-panel"></rect>
-            <text x="284" y="35" class="svg-v5-title">RACI snapshot</text>
-            <g class="raci-v5-row">
-              <rect x="282" y="49" width="116" height="31" rx="7"></rect>
-              <circle cx="298" cy="64.5" r="9"></circle>
-              <text x="298" y="68" text-anchor="middle" class="letter">R</text>
-              <text x="314" y="62" class="role">Business</text><text x="314" y="73" class="role">Analyst</text>
-            </g>
-            <g class="raci-v5-row">
-              <rect x="282" y="89" width="116" height="31" rx="7"></rect>
-              <circle cx="298" cy="104.5" r="9"></circle>
-              <text x="298" y="108" text-anchor="middle" class="letter">A</text>
-              <text x="314" y="102" class="role">Product</text><text x="314" y="113" class="role">Sponsor</text>
-            </g>
-            <g class="raci-v5-row">
-              <rect x="282" y="129" width="116" height="31" rx="7"></rect>
-              <circle cx="298" cy="144.5" r="9"></circle>
-              <text x="298" y="148" text-anchor="middle" class="letter">C</text>
-              <text x="314" y="142" class="role">Sales Ops</text><text x="314" y="153" class="role">+ IT</text>
-            </g>
-            <g class="raci-v5-row">
-              <rect x="282" y="169" width="116" height="31" rx="7"></rect>
-              <circle cx="298" cy="184.5" r="9"></circle>
-              <text x="298" y="188" text-anchor="middle" class="letter">I</text>
-              <text x="314" y="188" class="role">End users</text>
-            </g>
-          </svg>
+  const stakeholders = visual.stakeholders || {};
+  const raci = Array.isArray(visual.raci) ? visual.raci : [];
+  return `<div class="artefact-visual stakeholder-output ${escapeAttr(caseType)}-output" aria-hidden="true">
+          <div class="output-title">${outputTitle}</div>
+          <div class="stakeholder-output-grid">
+            <div class="power-interest-output"><strong>Power / interest grid</strong><span class="matrix-x"></span><span class="matrix-y"></span><span class="stakeholder-pill it">${escapeHtml(stakeholders.it || "Technology")}</span><span class="stakeholder-pill sponsor">${escapeHtml(stakeholders.sponsor || "Sponsor")}</span><span class="stakeholder-pill users">${escapeHtml(stakeholders.users || "Users")}</span><span class="stakeholder-pill ops">${escapeHtml(stakeholders.ops || "Operations")}</span></div>
+            <div class="raci-output"><strong>RACI snapshot</strong>${raci.map((item) => `<div><b>${escapeHtml(item.key)}</b><span>${escapeHtml(item.line1)}<br />${escapeHtml(item.line2)}</span></div>`).join("")}</div>
+          </div>
         </div>`;
 }
 
@@ -490,7 +523,7 @@ function renderTags(tags = []) {
   return `<div class="proof-tags">${tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>`;
 }
 
-function generateArtefactsSection(home) {
+function generateLegacyArtefactsSection(home) {
   const artefacts = home.artefacts;
   if (!artefacts || !Array.isArray(artefacts.items) || artefacts.items.length === 0) {
     return "";
@@ -518,19 +551,24 @@ function generateArtefactsSection(home) {
             </button>`;
     })
     .join("\n              ");
-  const visualPanels = artefacts.items
-    .map((item, index) => {
-      const type = item.type || "requirements";
-      return `<div class="lab-visual-panel${index === 0 ? " active" : ""}" data-visual-type="${escapeAttr(type)}">
-                ${renderArtefactVisual(type)}
+  const visualPanels = systemList
+    .flatMap((system, systemIndex) => {
+      const caseType = system.type || projectAccentType(system.label);
+      const steps = Array.isArray(system.steps) && system.steps.length ? system.steps : artefacts.items;
+      return steps.map((item, stepIndex) => {
+        const type = item.type || "requirements";
+        return `<div class="lab-visual-panel${systemIndex === 0 && stepIndex === 0 ? " active" : ""}" data-case-type="${escapeAttr(caseType)}" data-step-type="${escapeAttr(type)}">
+                ${renderArtefactVisual(item, caseType)}
               </div>`;
+      });
     })
     .join("\n                ");
   const headlineLead = artefacts.headline || artefacts.title || "Turn one business case into a portfolio";
   const headlineHighlight = artefacts.headlineHighlight || "employers can trust.";
   const outcome = artefacts.outcome || {};
   const defaultSystem = systemList[0];
-  const defaultStep = artefacts.items[0];
+  const defaultSteps = Array.isArray(defaultSystem.steps) && defaultSystem.steps.length ? defaultSystem.steps : artefacts.items;
+  const defaultStep = defaultSteps[0];
   const defaultStepTags = Array.isArray(defaultStep.tags) ? defaultStep.tags.join(" + ") : "";
   const outcomeBenefits = Array.isArray(outcome.benefits)
     ? outcome.benefits.map((benefit) => `<span>${escapeHtml(benefit)}</span>`).join("")
@@ -559,9 +597,9 @@ function generateArtefactsSection(home) {
               <span>Selected case</span>
               <h3 class="lab-case-title">${escapeHtml(defaultSystem.title)}</h3>
               <p class="lab-case-text">${escapeHtml(defaultSystem.text)}</p>
-              <code class="lab-code-line">${escapeHtml(proofCodeLine(defaultStep.type || "stakeholder"))}</code>
+              <code class="lab-code-line">${escapeHtml(defaultStep.code || proofCodeLine(defaultStep.type || "stakeholder"))}</code>
             </div>
-            <div class="lab-visual-shell" aria-live="polite">
+            <div class="lab-visual-shell">
               ${visualPanels}
             </div>
           </div>
@@ -583,8 +621,263 @@ function generateArtefactsSection(home) {
             <strong>${escapeHtml(outcome.title || "From business problem to portfolio-ready project pack.")}</strong>
             <div>${outcomeBenefits}</div>
           </div>
+          <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-portfolio-status></p>
+          <script type="application/json" class="lab-portfolio-data">${JSON.stringify(systemList.map((system) => ({ ...system, steps: Array.isArray(system.steps) && system.steps.length ? system.steps : artefacts.items }))).replaceAll("<", "\\u003c")}</script>
         </div>
       </div>
+    </div>
+  </section>`;
+}
+
+function portfolioStatusTone(value = "") {
+  const status = String(value).toLowerCase();
+  if (/(pass|ready|agreed|covered|confirmed)/.test(status)) return "positive";
+  if (/(high|review|retest|open|monitor|fix|final check)/.test(status)) return "attention";
+  return "neutral";
+}
+
+function renderPortfolioTable(title, rows = [], columns = []) {
+  return `<div class="px-table-wrap">
+    <table class="px-document-table">
+      <caption class="visually-hidden">${escapeHtml(title)} using fictional sample project data</caption>
+      <thead><tr>${columns.map((column) => `<th scope="col">${escapeHtml(column.label)}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map((row) => `<tr>${columns.map((column) => {
+        const value = row[column.key] || "";
+        const statusCell = column.status === true;
+        return `<td data-label="${escapeAttr(column.label)}">${statusCell ? `<span class="px-table-status ${portfolioStatusTone(value)}">${escapeHtml(value)}</span>` : escapeHtml(value)}</td>`;
+      }).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderPortfolioPreview(artefact = {}) {
+  const kind = artefact.kind || "requirements-table";
+  const preview = artefact.preview || {};
+  let body = "";
+
+  if (kind === "stakeholder-map") {
+    const points = Array.isArray(preview.points) ? preview.points : [];
+    const mobileQuadrants = [
+      { id: "high-keep", label: "Keep satisfied", positions: [] },
+      { id: "high-manage", label: "Manage closely", positions: ["high-high", "mid-high"] },
+      { id: "low-monitor", label: "Monitor", positions: ["low-mid"] },
+      { id: "low-inform", label: "Keep informed", positions: ["high-mid"] },
+    ];
+    const mobileMap = mobileQuadrants
+      .map((quadrant) => {
+        const quadrantPoints = points.filter((point) => quadrant.positions.includes(point.position));
+        return `<div class="px-map-mobile-region ${escapeAttr(quadrant.id)}">
+          <strong>${escapeHtml(quadrant.label)}</strong>
+          <div class="px-map-mobile-points" role="list">${quadrantPoints.length
+            ? quadrantPoints.map((point) => `<span class="px-map-mobile-point" role="listitem">${escapeHtml(point.name)}</span>`).join("")
+            : '<span class="px-map-mobile-empty" role="listitem">No stakeholder currently</span>'}</div>
+        </div>`;
+      })
+      .join("");
+    body = `<div class="px-stakeholder-map" role="img" aria-label="Power and interest map showing the project stakeholder groups">
+      <span class="px-map-quadrant high-manage">Manage closely</span>
+      <span class="px-map-quadrant high-keep">Keep satisfied</span>
+      <span class="px-map-quadrant low-inform">Keep informed</span>
+      <span class="px-map-quadrant low-monitor">Monitor</span>
+      <span class="px-map-axis axis-y">Influence</span>
+      <span class="px-map-axis axis-x">Interest</span>
+      ${points.map((point) => `<span class="px-map-point ${escapeAttr(String(point.position || "").replace(/[^a-z0-9-]/gi, ""))}">${escapeHtml(point.name)}</span>`).join("")}
+    </div>
+    <div class="px-stakeholder-map-mobile" role="group" aria-label="Power and interest map showing the project stakeholder groups">
+      <div class="px-map-mobile-axis" aria-hidden="true"><span>Higher influence ↑</span><span>Higher interest →</span></div>
+      <div class="px-map-mobile-grid">${mobileMap}</div>
+    </div>`;
+  } else if (kind === "process-flow") {
+    const nodes = Array.isArray(preview.nodes) ? preview.nodes : [];
+    body = `<div class="px-process-wrap">
+      <div class="px-process-flow" role="img" aria-label="Current lead process from submission to sales follow-up">
+        ${nodes.map((node, index) => `<span class="px-process-node">${escapeHtml(node)}</span>${index < nodes.length - 1 ? '<span class="px-process-arrow" aria-hidden="true">→</span>' : ""}`).join("")}
+      </div>
+      <div class="px-process-finding"><span>Finding</span><strong>${escapeHtml(preview.exception || "A business rule is missing")}</strong></div>
+    </div>`;
+  } else if (kind === "user-story") {
+    const criteria = Array.isArray(preview.criteria) ? preview.criteria : [];
+    body = `<div class="px-story-preview">
+      <div class="px-story-key"><span>Story</span><strong>${escapeHtml(preview.key || "CRM-001")}</strong></div>
+      <p>${escapeHtml(preview.story || "A clear user need with measurable business value.")}</p>
+      <div class="px-criteria-preview"><strong>Acceptance criteria</strong><ol>${criteria.map((criterion) => `<li>${escapeHtml(criterion)}</li>`).join("")}</ol></div>
+    </div>`;
+  } else if (kind === "readiness-checklist") {
+    const items = Array.isArray(preview.items) ? preview.items : [];
+    body = `<ul class="px-readiness-list">${items.map((item) => `<li><span class="px-readiness-mark ${portfolioStatusTone(item.status)}" aria-hidden="true"></span><strong>${escapeHtml(item.task)}</strong><em>${escapeHtml(item.status)}</em></li>`).join("")}</ul>`;
+  } else {
+    const tableMap = {
+      "requirements-table": [
+        { key: "id", label: "ID" },
+        { key: "requirement", label: "Requirement" },
+        { key: "priority", label: "Priority", status: true },
+        { key: "status", label: "Status", status: true },
+      ],
+      "data-mapping": [
+        { key: "source", label: "Source" },
+        { key: "target", label: "Salesforce target" },
+        { key: "rule", label: "Business rule" },
+      ],
+      traceability: [
+        { key: "requirement", label: "Requirement" },
+        { key: "decision", label: "Design decision" },
+        { key: "coverage", label: "Coverage", status: true },
+      ],
+      "test-table": [
+        { key: "id", label: "ID" },
+        { key: "scenario", label: "UAT scenario" },
+        { key: "expected", label: "Expected outcome" },
+        { key: "status", label: "Status", status: true },
+      ],
+      "defect-log": [
+        { key: "id", label: "ID" },
+        { key: "issue", label: "Issue" },
+        { key: "severity", label: "Severity", status: true },
+        { key: "status", label: "Status", status: true },
+      ],
+      "validation-table": [
+        { key: "check", label: "Post-deployment check" },
+        { key: "owner", label: "Owner" },
+        { key: "status", label: "Status", status: true },
+      ],
+    };
+    body = renderPortfolioTable(artefact.title || "BA artefact", Array.isArray(preview.rows) ? preview.rows : [], tableMap[kind] || tableMap["requirements-table"]);
+  }
+
+  return `<div class="px-document">
+    <header class="px-document-head">
+      <div><span>Sample project data</span><strong>${escapeHtml(artefact.title || "BA artefact")}</strong></div>
+      <dl><div><dt>Status</dt><dd>Working draft</dd></div><div><dt>Revision</dt><dd>0.3</dd></div></dl>
+    </header>
+    <div class="px-document-body">${body}</div>
+    <p class="px-document-caption">${escapeHtml(artefact.caption || "A realistic Business Analysis working artefact.")}</p>
+  </div>`;
+}
+
+function generateArtefactsSection(home) {
+  const artefacts = home.artefacts || {};
+  const flagship = artefacts.flagship || {};
+  const lifecycle = Array.isArray(flagship.lifecycle) ? flagship.lifecycle : [];
+  if (!lifecycle.length) return "";
+
+  const metadata = (flagship.metadata || [])
+    .map((item) => `<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd></div>`)
+    .join("");
+  const stageTabs = lifecycle
+    .map((stage, index) => `<button class="px-stage-tab${index === 0 ? " is-active" : ""}" type="button" role="tab" id="portfolio-tab-${escapeAttr(stage.id)}" aria-controls="portfolio-panel-${escapeAttr(stage.id)}" aria-selected="${index === 0 ? "true" : "false"}" tabindex="${index === 0 ? "0" : "-1"}" data-portfolio-stage="${escapeAttr(stage.id)}" data-stage-index="${index}">
+      <span class="px-stage-node" aria-hidden="true">${escapeHtml(stage.number || String(index + 1).padStart(2, "0"))}</span>
+      <span class="px-stage-title">${escapeHtml(stage.title)}</span>
+      <span class="px-stage-current">${index === 0 ? "Current stage" : ""}</span>
+    </button>`)
+    .join("");
+  const stagePanels = lifecycle
+    .map((stage, stageIndex) => {
+      const outputs = Array.isArray(stage.outputs) ? stage.outputs : [];
+      const stageArtefacts = Array.isArray(stage.artefacts) ? stage.artefacts : [];
+      const nextStage = lifecycle[(stageIndex + 1) % lifecycle.length];
+      const isFinalStage = stageIndex === lifecycle.length - 1;
+      const artefactTabs = stageArtefacts
+        .map((artefact, artefactIndex) => `<button class="px-artefact-tab${artefactIndex === 0 ? " is-active" : ""}" type="button" aria-pressed="${artefactIndex === 0 ? "true" : "false"}" aria-controls="portfolio-artefact-${escapeAttr(stage.id)}-${artefactIndex}" data-portfolio-artefact="${artefactIndex}" data-portfolio-artefact-stage="${escapeAttr(stage.id)}">${escapeHtml(artefact.title)}</button>`)
+        .join("");
+      const artefactPanels = stageArtefacts
+        .map((artefact, artefactIndex) => `<article class="px-artefact-panel${artefactIndex === 0 ? " is-active" : ""}" id="portfolio-artefact-${escapeAttr(stage.id)}-${artefactIndex}" data-portfolio-artefact-panel="${artefactIndex}"${artefactIndex === 0 ? "" : " hidden"} aria-label="${escapeAttr(artefact.title)} preview">
+          ${renderPortfolioPreview(artefact)}
+        </article>`)
+        .join("");
+      return `<section class="px-stage-panel${stageIndex === 0 ? " is-active" : ""}" role="tabpanel" id="portfolio-panel-${escapeAttr(stage.id)}" aria-labelledby="portfolio-tab-${escapeAttr(stage.id)}" data-portfolio-stage-panel="${escapeAttr(stage.id)}"${stageIndex === 0 ? "" : " hidden"} tabindex="0">
+        <div class="px-stage-narrative">
+          <span class="px-stage-count">Stage ${escapeHtml(stage.number || String(stageIndex + 1).padStart(2, "0"))} of ${String(lifecycle.length).padStart(2, "0")}</span>
+          <h4>${escapeHtml(stage.title)}</h4>
+          <p class="px-stage-description">${escapeHtml(stage.description)}</p>
+          <p class="px-stage-continuity"><span aria-hidden="true">↳</span> ${escapeHtml(stage.continuity)}</p>
+          <div class="px-output-list">
+            <strong>Potential outputs</strong>
+            <ul>${outputs.map((output) => `<li>${escapeHtml(output)}</li>`).join("")}</ul>
+          </div>
+        </div>
+        <div class="px-evidence-workspace">
+          <header class="px-evidence-head"><div><span>Professional BA evidence</span><strong>Explore the working artefacts</strong></div><span>Salesforce CRM · Sample</span></header>
+          <div class="px-artefact-tabs" role="group" aria-label="Choose a ${escapeAttr(stage.title)} artefact preview">${artefactTabs}</div>
+          <div class="px-artefact-panels">${artefactPanels}</div>
+        </div>
+        <button class="px-next-stage" type="button" data-portfolio-next-stage="${escapeAttr(nextStage.id)}">
+          <span>${isFinalStage ? "Review the connected journey" : "Continue the connected journey"}</span>
+          <strong>${isFinalStage ? `Return to ${escapeHtml(nextStage.title)}` : `Next stage: ${escapeHtml(nextStage.title)}`}</strong>
+          <i aria-hidden="true">${isFinalStage ? "↺" : "→"}</i>
+        </button>
+      </section>`;
+    })
+    .join("");
+  const delivery = (artefacts.delivery || [])
+    .map((item, index) => `<div class="px-delivery-item"><span>0${index + 1}</span><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.text)}</p></div>`)
+    .join("");
+  const secondary = artefacts.secondary || {};
+  const secondaryProjects = (secondary.projects || [])
+    .map((project) => `<article class="px-secondary-project">
+      <button type="button" aria-expanded="false" aria-controls="portfolio-secondary-${escapeAttr(project.id)}" data-portfolio-secondary="${escapeAttr(project.id)}">
+        <span class="px-secondary-index">${escapeHtml(project.label)}</span>
+        <span class="px-secondary-copy"><strong>${escapeHtml(project.title)}</strong><em>${escapeHtml(project.description)}</em></span>
+        <span class="px-secondary-toggle" aria-hidden="true">+</span>
+      </button>
+      <div class="px-secondary-reveal" id="portfolio-secondary-${escapeAttr(project.id)}" hidden><p>${escapeHtml(project.reveal)}</p></div>
+    </article>`)
+    .join("");
+  const cta = artefacts.cta || {};
+  const version = artefacts.portfolioVersion || "v1.0";
+
+  return `<section class="section artefacts-section portfolio-experience-section" id="portfolio" data-portfolio-version="${escapeAttr(version)}">
+    <div class="section-inner portfolio-experience">
+      <header class="px-intro">
+        <div class="section-label">${escapeHtml(artefacts.label || "PORTFOLIO EXPERIENCE")}</div>
+        <h2>${escapeHtml(artefacts.headline)}</h2>
+        <p>${escapeHtml(artefacts.intro)}</p>
+      </header>
+
+      <article class="px-flagship" aria-labelledby="portfolio-flagship-title">
+        <header class="px-project-masthead">
+          <div class="px-project-copy">
+            <span class="px-flagship-label"><i aria-hidden="true"></i>${escapeHtml(flagship.label)}</span>
+            <h3 id="portfolio-flagship-title">${escapeHtml(flagship.title)}</h3>
+            <p><strong>Project scenario</strong>${escapeHtml(flagship.scenario)}</p>
+          </div>
+          <aside class="px-role-stamp" aria-label="Your role in the flagship project">
+            <span>Your role</span><strong>${escapeHtml(flagship.role)}</strong><p>${escapeHtml(flagship.roleNote)}</p>
+          </aside>
+        </header>
+        <dl class="px-project-meta">${metadata}</dl>
+
+        <div class="px-lifecycle-shell">
+          <div class="px-lifecycle-heading"><div><span>ONE CONNECTED PROJECT</span><strong>From first finding to go-live evidence</strong></div><span data-portfolio-stage-count>Stage 1 of ${lifecycle.length}</span></div>
+          <div class="px-lifecycle-scroll">
+            <div class="px-lifecycle" role="tablist" aria-label="Salesforce CRM delivery lifecycle" aria-describedby="portfolio-lifecycle-instruction" style="--portfolio-progress:0%">
+              <span class="px-lifecycle-track" aria-hidden="true"><i></i></span>
+              ${stageTabs}
+            </div>
+          </div>
+          <p class="px-lifecycle-instruction" id="portfolio-lifecycle-instruction"><span aria-hidden="true">↔</span><span>Swipe to see all five stages. <strong>Tap a stage to open it.</strong></span><span aria-hidden="true">→</span></p>
+          <div class="px-stage-panels">${stagePanels}</div>
+          <div class="px-evidence-thread" aria-label="One connected evidence thread">
+            <strong>One evidence thread</strong>
+            <ol><li>Discovery finding</li><li>Requirement</li><li>Design decision</li><li>UAT scenario</li><li>Deployment readiness</li></ol>
+          </div>
+        </div>
+      </article>
+
+      <section class="px-delivery" aria-labelledby="portfolio-delivery-title">
+        <header><span>HOW THE EXPERIENCE WORKS</span><h3 id="portfolio-delivery-title">Practical by design.</h3></header>
+        <div class="px-delivery-grid">${delivery}</div>
+      </section>
+
+      <section class="px-secondary" aria-labelledby="portfolio-secondary-title">
+        <header><span>APPLY THE APPROACH</span><h3 id="portfolio-secondary-title">${escapeHtml(secondary.heading)}</h3></header>
+        <div class="px-secondary-list">${secondaryProjects}</div>
+      </section>
+
+      <aside class="px-cta">
+        <div><span>NEXT STEP</span><h3>${escapeHtml(cta.title)}</h3></div>
+        <a class="btn px-cta-link" href="${escapeAttr(cta.url || "#pricing")}" data-portfolio-cta><span>${escapeHtml(cta.label)}</span><span aria-hidden="true">→</span></a>
+      </aside>
+      <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-portfolio-status></p>
     </div>
   </section>`;
 }
@@ -720,75 +1013,12 @@ function generateContactSection(home, settings) {
   </section>`;
 }
 
-function generateHomeRoadmapSection(settings, roadmap) {
-  const title = escapeHtml(roadmap.homeTitle || "Download the free BA Career Roadmap").replace(
-    escapeHtml(roadmap.homeTitleHighlight || "BA Career Roadmap"),
-    `<span class="highlight">${escapeHtml(roadmap.homeTitleHighlight || "BA Career Roadmap")}</span>`
-  );
-  const cards = (roadmap.homeCards && roadmap.homeCards.length ? roadmap.homeCards : [
-    { title: "Know the path", text: "Understand what to learn first and what to avoid wasting time on." },
-    { title: "Position yourself", text: "See how your current experience can connect to BA roles." },
-    { title: "Take action", text: "Leave with a simple plan for skills, CV, LinkedIn, and applications." },
-  ])
-    .map((item) => `<div class="roadmap-point"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.text)}</span></div>`)
-    .join("\n            ");
-  const includes = (roadmap.homeIncludes && roadmap.homeIncludes.length ? roadmap.homeIncludes : [
-    { title: "BA Career Roadmap", text: "Clear beginner-friendly stages from exploring BA to becoming interview-ready." },
-    { title: "Starter CV Template", text: "A simple structure you can adapt for BA applications and transferable experience." },
-    { title: "Community Invitation", text: "Get access to updates, practical tips, live sessions, and cohort announcements." },
-  ])
-    .map((item) => `<div class="roadmap-include"><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.text)}</span></div>`)
-    .join("\n        ");
-  const stageOptions = (roadmap.stageOptions && roadmap.stageOptions.length ? roadmap.stageOptions : [
-    "Career changer",
-    "Graduate",
-    "New to the UK job market",
-    "Already in tech or business",
-    "Just exploring Business Analysis",
-  ])
-    .map((option) => `<option>${escapeHtml(option)}</option>`)
-    .join("\n              ");
-  const requiredNote = roadmap.requiredNote ? `<p class="form-note">${escapeHtml(roadmap.requiredNote)}</p>` : "";
-
-  return `<section class="section roadmap-landing" id="roadmap-landing">
-    <div class="section-inner">
-      <div class="roadmap-hero">
-        <div class="roadmap-copy">
-          <div class="section-label">${escapeHtml(roadmap.homeSectionLabel || "Free resource")}</div>
-          <h2>${title}</h2>
-          <p class="section-copy">${escapeHtml(roadmap.homeIntro || roadmap.intro)}</p>
-          <div class="roadmap-points">
-            ${cards}
-          </div>
-        </div>
-        <div class="roadmap-form-panel">
-          <h3>${escapeHtml(roadmap.formTitle)}</h3>
-          <p>${escapeHtml(roadmap.formIntro)}</p>
-          <form class="lead-form" action="${escapeAttr(settings.forms.roadmapEndpoint)}" method="post">
-            <label for="firstName">${escapeHtml(roadmap.firstNameLabel || "First name")} <span class="required-mark" aria-hidden="true">*</span></label>
-            <input id="firstName" name="firstName" type="text" placeholder="${escapeAttr(roadmap.firstNamePlaceholder || "Your first name")}" required aria-required="true" />
-            <label for="email">${escapeHtml(roadmap.emailLabel || "Email address")} <span class="required-mark" aria-hidden="true">*</span></label>
-            <input id="email" name="email" type="email" placeholder="${escapeAttr(roadmap.emailPlaceholder || "you@example.com")}" required aria-required="true" />
-            <label for="stage">${escapeHtml(roadmap.stageLabel || "Where are you now?")}</label>
-            <select id="stage" name="stage" required>
-              <option value="">${escapeHtml(roadmap.stagePlaceholder || "Select one")}</option>
-              ${stageOptions}
-            </select>
-            <input type="hidden" name="leadSource" value="${escapeAttr(roadmap.leadSource || "BA Roadmap Website")}" />
-            <label class="terms-consent" for="termsConsent">
-              <input id="termsConsent" name="termsConsent" type="checkbox" required aria-required="true" />
-              <span>${escapeHtml(roadmap.consentText || "I agree to the")} <a href="terms/index.html">${escapeHtml(roadmap.termsLinkLabel || "terms")}</a> and <a href="privacy/index.html">${escapeHtml(roadmap.privacyLinkLabel || "privacy notice")}</a>.</span>
-            </label>
-            <button class="btn btn-primary" type="submit">${escapeHtml(roadmap.submitButtonLabel || "Send me the free roadmap")}</button>
-            ${requiredNote}
-          </form>
-        </div>
-      </div>
-      <div class="roadmap-includes" aria-label="${escapeAttr(roadmap.homeIncludesLabel || "What the free BA roadmap includes")}">
-        ${includes}
-      </div>
-    </div>
-  </section>`;
+function generateHomeAssessmentSection(assessment) {
+  return `<section class="home-assessment-section" id="assessment" aria-labelledby="homepageAssessmentTitle">
+  <div class="assessment-landing-inner">
+    ${generateAssessmentFront(assessment)}
+  </div>
+</section>`;
 }
 
 function generateHomeFaqSection(faqs) {
@@ -797,7 +1027,11 @@ function generateHomeFaqSection(faqs) {
     .map((question) => all.find((item) => item.question === question))
     .filter(Boolean);
   const faqItems = selected
-    .map((item, index) => `<article class="faq-item${index === 0 ? " open" : ""}"><button class="faq-question" type="button" aria-expanded="${index === 0 ? "true" : "false"}">${escapeHtml(item.question)}</button><div class="faq-answer">${escapeHtml(item.answer)}</div></article>`)
+    .map((item, index) => {
+      const questionId = `homepage-faq-question-${index + 1}`;
+      const answerId = `homepage-faq-answer-${index + 1}`;
+      return `<article class="faq-item${index === 0 ? " open" : ""}"><button class="faq-question" id="${questionId}" type="button" aria-expanded="${index === 0 ? "true" : "false"}" aria-controls="${answerId}">${escapeHtml(item.question)}</button><div class="faq-answer" id="${answerId}" role="region" aria-labelledby="${questionId}">${escapeHtml(item.answer)}</div></article>`;
+    })
     .join("\n        ");
   return `<section class="section" id="faq">
     <div class="section-inner">
@@ -814,7 +1048,7 @@ function generateHomeFaqSection(faqs) {
   </section>`;
 }
 
-function updateHomepage(settings, home, pricing, testimonials, faqs, roadmap) {
+function updateHomepage(settings, home, pricing, testimonials, faqs, assessment) {
   let html = fs.readFileSync(path.join(root, "index.html"), "utf8");
   const homeFaqItems = faqs.homepageQuestions
     .map((question) => flattenFaqs(faqs).find((item) => item.question === question))
@@ -843,7 +1077,9 @@ function updateHomepage(settings, home, pricing, testimonials, faqs, roadmap) {
   html = replaceFirst(
     html,
     /<section class="section(?: artefacts-section)?" id="portfolio">[\s\S]*?<\/section>\s*<section class="section" id="steps">|<section class="section" id="steps">/,
-    `${generateArtefactsSection(home)}
+    `${generateHomeAssessmentSection(assessment)}
+
+  ${generateArtefactsSection(home)}
 
   <section class="section" id="steps">`,
     "portfolio artefacts section"
@@ -860,8 +1096,6 @@ function updateHomepage(settings, home, pricing, testimonials, faqs, roadmap) {
     html,
     /<section class="section" id="pricing">[\s\S]*?<\/section>\s*<section class="section" id="proof">/,
     `${generatePricingSection(pricing)}
-
-  ${generateHomeRoadmapSection(settings, roadmap)}
 
   <section class="section" id="proof">`,
     "pricing section"
@@ -892,6 +1126,23 @@ function updateHomepage(settings, home, pricing, testimonials, faqs, roadmap) {
       <div class="community">`,
     "homepage FAQ section"
   );
+  if (!html.includes('assets/assessment.css')) {
+    html = html.replace('</head>', '<link rel="stylesheet" href="assets/assessment.css" />\n</head>');
+  }
+  if (!html.includes('assets/portfolio-experience.css')) {
+    html = html.replace('</head>', '<link rel="stylesheet" href="assets/portfolio-experience.css" />\n</head>');
+  }
+  if (!html.includes('assets/portfolio-experience.js')) {
+    html = html.replace('</body>', '<script src="assets/portfolio-experience.js"></script>\n</body>');
+  }
+  html = html.replace(
+    /\n\/\* Compact interactive portfolio lab \*\/[\s\S]*?\n@media\(max-width:360px\)/,
+    '\n.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}\n@media(max-width:360px)'
+  );
+  html = html.replace(
+    /\ndocument\.querySelectorAll\("\.portfolio-lab"\)\.forEach\(lab=>\{[\s\S]*?\n\}\);\nconst navLinks=/,
+    "\nconst navLinks="
+  );
   html = applyGlobalReplacements(html, settings, "roadmap");
   html = html.replace(/[ \t]+$/gm, "");
   writeFile("index.html", html);
@@ -917,7 +1168,7 @@ function generateAbout(settings, about) {
       <p class="hero-copy">${escapeHtml(about.intro)}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="../index.html#pricing">View premium mentorship</a>
-        <a class="btn btn-secondary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
+        <a class="btn btn-secondary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
       </div>
     </div>
   </section>
@@ -956,9 +1207,9 @@ function generateAbout(settings, about) {
       <div class="dark-panel">
         <div class="section-label">Next step</div>
         <h2>Start with clarity.</h2>
-        <p>Download the free BA Career Roadmap, join the free Telegram community, or move straight into the premium mentorship when you are ready for deeper support.</p>
+        <p>Reveal the BA strengths already in your experience, join the free community, or move straight into the premium mentorship when you are ready for deeper support.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
+          <a class="btn btn-primary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
           <a class="btn btn-secondary" href="${escapeAttr(settings.social.telegram)}" target="_blank" rel="noopener">Join free community</a>
         </div>
       </div>
@@ -1009,10 +1260,10 @@ function generateFaq(settings, faqs) {
     <div class="hero-inner">
       <div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>Frequently asked questions</div>
       <h1>Answers before you start your Business Analysis journey.</h1>
-      <p class="hero-copy">Use this page to understand the Anderseed mentorship, the free roadmap, career support, payment options, and what to expect before joining.</p>
+      <p class="hero-copy">Use this page to understand the Anderseed mentorship, free BA career assessment, career support, payment options, and what to expect before joining.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="../index.html#pricing">View premium mentorship</a>
-        <a class="btn btn-secondary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
+        <a class="btn btn-secondary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
       </div>
     </div>
   </section>
@@ -1024,10 +1275,10 @@ function generateFaq(settings, faqs) {
       ${categories}
       <div class="dark-panel">
         <div class="section-label">Still deciding?</div>
-        <h2>Start with the free roadmap.</h2>
-        <p>If you are not ready for premium mentorship yet, use the free BA Career Roadmap and community to understand the path first.</p>
+        <h2>Start with your BA Readiness.</h2>
+        <p>Use the free assessment to connect your analytical behaviour, transferable experience and current journey with the one growth area that can move you forward.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="../index.html#roadmap-landing">Get Free BA Roadmap</a>
+          <a class="btn btn-primary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
           <a class="btn btn-secondary" href="../index.html#pricing">View premium mentorship</a>
         </div>
       </div>
@@ -1048,9 +1299,7 @@ function generateFaq(settings, faqs) {
   );
 }
 
-function generateRoadmap(settings, roadmap) {
-  const title = roadmap.seoTitle || "Free BA Career Roadmap | Anderseed Consulting";
-  const description = roadmap.seoDescription || settings.defaultDescription;
+function generateRoadmapRedirect(settings) {
   writeFile(
     "roadmap/index.html",
     `<!DOCTYPE html>
@@ -1058,24 +1307,222 @@ function generateRoadmap(settings, roadmap) {
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="refresh" content="0; url=../index.html#roadmap-landing" />
-<title>${escapeHtml(title)}</title>
-<meta name="description" content="${escapeAttr(description)}" />
-<link rel="canonical" href="${escapeAttr(settings.siteUrl.replace(/\/$/, ""))}/#roadmap-landing" />
+<meta http-equiv="refresh" content="0; url=../assessment/index.html?start=1" />
+<title>BA Readiness Assessment | Anderseed Consulting</title>
+<meta name="description" content="Discover your BA Readiness Stage, strongest area, primary growth area and personalised next steps." />
+<link rel="canonical" href="${escapeAttr(settings.siteUrl.replace(/\/$/, ""))}/assessment/" />
 <link rel="stylesheet" href="../assets/landing-pages.css" />
 <link rel="icon" type="image/svg+xml" href="${favicon}" />
 </head>
 <body>
 <main class="section">
   <div class="section-inner center">
-    <div class="section-label">Free Roadmap</div>
-    <h1>Opening the free roadmap section.</h1>
-    <p class="section-copy">The free roadmap now lives on the homepage.</p>
-    <a class="btn btn-primary" href="../index.html#roadmap-landing">Go to Free Roadmap</a>
+    <div class="section-label">Free BA assessment</div>
+    <h1>Opening the BA Readiness Assessment.</h1>
+    <p class="section-copy">Your personalised assessment is opening now.</p>
+    <a class="btn btn-primary" href="../assessment/index.html?start=1">Discover My BA Readiness</a>
   </div>
 </main>
 </body>
 </html>`
+  );
+}
+
+function generateAssessment(settings, assessment, scoringConfig) {
+  const headline = escapeHtml(assessment.headline).replace("Business Analysis", "<span>Business Analysis</span>");
+  const assessmentSettings = settings.assessment || {};
+  const configJson = JSON.stringify({
+    schemaVersion: assessment.schemaVersion,
+    questions: assessment.questions,
+    scoring: scoringConfig,
+    endpoints: {
+      complete: assessmentSettings.completionEndpoint,
+      contact: assessmentSettings.contactEndpoint,
+      events: assessmentSettings.eventEndpoint,
+    },
+    progressTtlHours: assessmentSettings.progressTtlHours || 24,
+    marketingConsentTextVersion: assessmentSettings.marketingConsentTextVersion,
+  }).replaceAll("<", "\\u003c");
+  const assurances = assessment.assurances.map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+  const lockedOutputs = assessment.gate.lockedOutputs.map((item) => `<li>${escapeHtml(item)}</li>`).join("\n          ");
+  const growthIcons = assessmentGrowthIcons();
+  const body = `<main class="assessment-page" data-assessment-app>
+  <section class="assessment-view" data-assessment-landing hidden>
+    <div class="assessment-landing-inner">
+      <div class="assessment-landing-grid">
+        <div class="assessment-landing-copy">
+          <div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>${escapeHtml(assessment.eyebrow)}</div>
+          <h1 id="assessmentLandingTitle" tabindex="-1">${headline}</h1>
+          <p>${escapeHtml(assessment.intro)}</p>
+          <button class="btn btn-primary" type="button" data-start-assessment>${escapeHtml(assessment.primaryButtonLabel)} <span aria-hidden="true">→</span></button>
+          <div class="assessment-meta"><span>${escapeHtml(assessment.timeLabel)}</span><span>Immediate personalised result</span></div>
+          <div class="assessment-assurances" aria-label="Assessment details">${assurances}</div>
+          <p class="assessment-delivery-note">Complete all eight questions, then enter your name and email to reveal your result immediately on screen.</p>
+        </div>
+        <aside class="assessment-profile-plate" aria-label="What your Anderseed Growth Profile includes">
+          <div class="profile-plate-top"><span>Anderseed Growth Profile</span><span>01—08</span></div>
+          <div class="assessment-growth-preview" aria-label="Your assessment grows from a starting point into a complete profile">
+            ${growthIcons}
+            <p>Eight thoughtful answers become one clear picture of where you are now—and what should come next.</p>
+          </div>
+          <div class="profile-plate-index">
+            <div><span>01</span><p><strong>BA readiness stage + score</strong><small>See your current position clearly.</small></p></div>
+            <div><span>02</span><p><strong>Strength + growth diagnosis</strong><small>Understand what already works in your favour.</small></p></div>
+            <div><span>03</span><p><strong>Free BA transition roadmap</strong><small>Turn your result into practical next steps.</small></p></div>
+          </div>
+          <p class="profile-plate-note"><span aria-hidden="true"></span>Personalised to your experience—not a generic checklist.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="assessment-view" data-question-view hidden>
+    <div class="assessment-workspace">
+      <div class="assessment-shell">
+        <aside class="assessment-progress-rail">
+          <div class="assessment-progress-head"><span data-progress-text>Question 1 of 8</span><span>Your Growth Profile</span></div>
+          <div class="assessment-progress" role="progressbar" aria-label="Assessment progress" aria-valuemin="1" aria-valuenow="1" aria-valuemax="8"><span data-progress-bar></span></div>
+          <div class="assessment-growth" data-growth-progress>
+            ${growthIcons}
+            <p data-growth-copy>Your Growth Profile is beginning to take shape.</p>
+          </div>
+        </aside>
+        <div class="assessment-question-panel">
+          <p class="assessment-resume-status" data-resume-status role="status" aria-live="polite" hidden></p>
+          <div class="assessment-micro-reveal" data-micro-reveal role="status" aria-live="polite" hidden></div>
+          <div data-question-host></div>
+          <p class="assessment-status" data-assessment-status role="alert" hidden></p>
+          <div class="assessment-actions">
+            <button class="btn btn-secondary" type="button" data-back>Back</button>
+            <button class="btn btn-primary" type="button" data-next disabled>Next Question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="assessment-view" data-gate-view hidden>
+    <div class="assessment-workspace">
+      <div class="assessment-shell assessment-gate">
+        <div class="assessment-gate-intro">
+          <div class="assessment-gate-mark" aria-hidden="true"><span>Profile</span><strong>08</strong></div>
+          <h1>${escapeHtml(assessment.gate.heading)}</h1>
+          <p>${escapeHtml(assessment.gate.intro)}</p>
+          <div class="assessment-locked-preview" aria-hidden="true"><span>Stage</span><strong>Your profile</strong><i></i><span>Readiness score</span><strong>— / 100</strong><i></i></div>
+          <ul class="assessment-gate-benefits" aria-label="Your locked assessment outputs">
+            ${lockedOutputs}
+          </ul>
+        </div>
+        <div class="assessment-gate-form-sheet">
+          <span class="assessment-form-kicker">Reveal your Growth Profile</span>
+          <p class="assessment-resume-status" data-gate-resume-status role="status" aria-live="polite" hidden></p>
+          <form class="assessment-lead-form" data-lead-form novalidate>
+            <label class="assessment-field" for="assessmentFirstName">First name <span aria-hidden="true">*</span>
+              <input id="assessmentFirstName" name="firstName" type="text" autocomplete="given-name" required maxlength="80" />
+            </label>
+            <label class="assessment-field" for="assessmentEmail">Email address <span aria-hidden="true">*</span>
+              <input id="assessmentEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" />
+            </label>
+            <p class="assessment-processing">We use these details to store and display the result you requested. Your email is not automatically treated as marketing permission. See our <a href="../privacy/index.html" target="_blank" rel="noopener">privacy notice</a>.</p>
+            <label class="assessment-marketing" for="assessmentMarketing">
+              <input id="assessmentMarketing" name="marketingOptIn" value="yes" type="checkbox" />
+              <span><strong>Yes—email me practical BA career guidance, portfolio advice and Anderseed programme updates.</strong> I can unsubscribe at any time. This is optional.</span>
+            </label>
+            <p class="assessment-storage-status" data-storage-status role="alert" hidden></p>
+            <button class="btn btn-primary" type="submit">${escapeHtml(assessment.gate.buttonLabel)} <span aria-hidden="true">→</span></button>
+          </form>
+          <button class="assessment-gate-back" type="button" data-gate-back>Back to my answers</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="assessment-view" data-result-view hidden role="region" aria-labelledby="assessmentResultTitle">
+    <div class="assessment-result-wrap">
+      <div class="assessment-result-hero">
+        <div class="result-botanical" aria-hidden="true"><svg viewBox="0 0 360 480"><path class="result-plant-stem" d="M180 468c-4-105 1-194 3-286 2-58 18-107 65-158"/><path d="M183 354c-65-6-104-39-116-94 59 1 103 28 116 94Z"/><path d="M183 287c56-5 91-35 102-85-52 1-91 26-102 85Z"/><path d="M185 213c-45-4-74-28-83-68 42 1 73 20 83 68Z"/><path d="M196 139c43-7 68-33 73-72-39 4-67 25-73 72Z"/><ellipse cx="255" cy="36" rx="15" ry="10" transform="rotate(-35 255 36)"/></svg></div>
+        <span class="result-kicker">Your personalised Growth Profile</span>
+        <div class="result-hero-grid">
+          <div>
+            <div class="result-stage-lockup"><span data-result-stage-icon aria-hidden="true"></span><div><small>Your BA Readiness Stage</small><strong data-result-stage></strong></div></div>
+            <h1 id="assessmentResultTitle" tabindex="-1" data-result-title></h1>
+            <p class="result-greeting" data-result-greeting></p>
+            <p class="result-explanation" data-result-explanation></p>
+            <a class="result-roadmap-link" href="#result-roadmap" data-roadmap-cta>Open My Free BA Transition Roadmap <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="result-score" data-result-score-wrap aria-label="BA Readiness Score">
+            <div class="result-score-value"><strong data-result-score></strong><span>/100</span></div><small>BA Readiness Score</small><div class="result-score-scale" aria-hidden="true"><i></i></div>
+            <p class="result-score-note">A directional career-guidance score—not a pass, fail or limit on your potential.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-signal-grid">
+        <section class="result-section">
+          <div class="result-section-label">What you already bring</div>
+          <h2 data-result-strength-label>Your Strongest Area</h2>
+          <p data-result-strength></p>
+        </section>
+        <section class="result-section">
+          <div class="result-section-label">What can move you forward</div>
+          <h2 data-result-growth-label>Your Primary Growth Area</h2>
+          <p data-result-gap></p>
+        </section>
+      </div>
+
+      <section class="result-section" id="result-roadmap" tabindex="-1">
+        <div class="result-section-label">Your personalised field guide</div>
+        <h2>Your Free BA Transition Roadmap</h2>
+        <p>These are the three practical moves most relevant to what your assessment identified.</p>
+        <ol class="result-priorities" data-result-priorities></ol>
+      </section>
+
+      <section class="result-section">
+        <div class="result-section-label">The signals behind your result</div>
+        <h2>Your Supporting Scores</h2>
+        <p>Use these four signals to see what is already working and where focused development will make the greatest difference.</p>
+        <div class="result-dimensions" data-result-dimensions></div>
+      </section>
+
+      <div class="result-next">
+        <div><span class="result-next-label">Why Anderseed is relevant</span><h2 data-programme-heading></h2><p data-programme-text></p></div>
+        <a class="btn btn-primary" href="../index.html#pricing" data-programme-cta></a>
+      </div>
+      <button class="result-restart" type="button" data-restart>Retake the assessment</button>
+      <p class="assessment-disclaimer">This assessment is a practical career-guidance tool based on your answers. It is not a psychometric test and does not determine whether you can become a Business Analyst.</p>
+    </div>
+  </section>
+
+  <dialog class="assessment-exit-dialog" data-exit-dialog aria-labelledby="assessmentExitTitle" aria-describedby="assessmentExitMessage assessmentExitStorage">
+    <div class="assessment-exit-panel">
+      <span class="assessment-exit-kicker">Your progress matters</span>
+      <h2 id="assessmentExitTitle" data-exit-title>Leave before seeing your result?</h2>
+      <p id="assessmentExitMessage" data-exit-message>You have not reached your personalised result yet.</p>
+      <p class="assessment-exit-storage" id="assessmentExitStorage" data-exit-storage>Your place and answers will be saved on this device for 24 hours.</p>
+      <div class="assessment-exit-actions">
+        <button class="btn btn-primary" type="button" data-exit-continue>Continue My Assessment</button>
+        <button class="assessment-exit-confirm" type="button" data-exit-confirm>Leave &amp; Save My Progress</button>
+      </div>
+    </div>
+  </dialog>
+  <noscript><div class="assessment-workspace"><div class="assessment-shell">Please enable JavaScript to complete the BA Readiness Assessment.</div></div></noscript>
+  <script id="assessment-config" type="application/json">${configJson}</script>
+  <script src="../assets/assessment-scoring.js"></script>
+  <script src="../assets/assessment.js"></script>
+</main>`;
+
+  writeFile(
+    "assessment/index.html",
+    pageShell({
+      title: assessment.seoTitle,
+      description: assessment.seoDescription,
+      canonical: "/assessment/",
+      base: "../",
+      active: "assessment",
+      body,
+      schema: '<link rel="stylesheet" href="../assets/assessment.css" />',
+      focused: true,
+    }, settings)
   );
 }
 
@@ -1193,7 +1640,7 @@ function generateBlogIndex(settings, posts, blogPage) {
       <h1>${escapeHtml(blogPage.headline)} <span>${escapeHtml(blogPage.headlineHighlight)}</span></h1>
       <p class="hero-copy">${escapeHtml(blogPage.intro)}</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="../index.html#roadmap-landing">${escapeHtml(blogPage.primaryButtonLabel)}</a>
+        <a class="btn btn-primary" href="../assessment/index.html?start=1">${escapeHtml(blogPage.primaryButtonLabel)}</a>
         <a class="btn btn-secondary" href="../index.html#pricing">${escapeHtml(blogPage.secondaryButtonLabel)}</a>
       </div>
     </div>
@@ -1221,7 +1668,7 @@ function generateBlogIndex(settings, posts, blogPage) {
           <div class="section-label">${escapeHtml(blogPage.resourceLabel)}</div>
           <h2>${escapeHtml(blogPage.resourceTitle)}</h2>
           <p>${escapeHtml(blogPage.resourceText)}</p>
-          <a class="btn btn-primary" href="../index.html#roadmap-landing">${escapeHtml(blogPage.resourceButtonLabel)}</a>
+          <a class="btn btn-primary" href="../assessment/index.html?start=1">${escapeHtml(blogPage.resourceButtonLabel)}</a>
         </div>
         <div class="sidebar-card">
           <h3>${escapeHtml(blogPage.communityTitle)}</h3>
@@ -1255,7 +1702,7 @@ function generateBlogPosts(settings, posts) {
       <h1>${escapeHtml(post.title)}</h1>
       <p class="hero-copy">${escapeHtml(post.description)}</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="../../index.html#roadmap-landing">Get Free BA Roadmap</a>
+        <a class="btn btn-primary" href="../../assessment/index.html?start=1">Discover My BA Readiness</a>
         <a class="btn btn-secondary" href="../../index.html#pricing">View mentorship</a>
       </div>
     </div>
@@ -1267,10 +1714,10 @@ function generateBlogPosts(settings, posts) {
       </article>
       <aside class="sidebar">
         <div class="dark-panel">
-          <div class="section-label">Free resource</div>
-          <h2>Get the BA Career Roadmap</h2>
-          <p>Start with a clear path before you commit to paid support.</p>
-          <a class="btn btn-primary" href="../../index.html#roadmap-landing">Download roadmap</a>
+          <div class="section-label">Free assessment</div>
+          <h2>Discover your BA Readiness</h2>
+          <p>Recognise your strengths and receive three personalised priorities before you commit to paid support.</p>
+          <a class="btn btn-primary" href="../../assessment/index.html?start=1">Discover My BA Readiness</a>
         </div>
         <div class="sidebar-card">
           <h3>Need guided support?</h3>
@@ -1362,7 +1809,8 @@ function main() {
   const testimonials = readJson("content/pages/testimonials.json");
   const faqs = readJson("content/pages/faqs.json");
   const about = readJson("content/pages/about.json");
-  const roadmap = readJson("content/pages/roadmap.json");
+  const assessment = readJson("content/pages/assessment.json");
+  const assessmentScoring = readJson("content/assessment-scoring.json");
   const blogPage = readJson("content/pages/blog.json");
   const terms = readJson("content/pages/terms.json");
   const privacy = readJson("content/pages/privacy.json");
@@ -1370,9 +1818,11 @@ function main() {
 
   cleanDist();
   copyDir(root, dist);
-  updateHomepage(settings, home, pricing, testimonials, faqs, roadmap);
+  updateHomepage(settings, home, pricing, testimonials, faqs, assessment);
   generateAbout(settings, about);
   generateFaq(settings, faqs);
+  generateAssessment(settings, assessment, assessmentScoring);
+  generateRoadmapRedirect(settings);
   generateBlogIndex(settings, posts, blogPage);
   generateBlogPosts(settings, posts);
   generateLegalPage(settings, terms, { output: "terms/index.html", canonical: "/terms/" });
