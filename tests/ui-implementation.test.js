@@ -30,7 +30,7 @@ function between(source, startMarker, endMarker) {
   return source.slice(start, end);
 }
 
-test("optional analytics require an explicit choice on every generated public page", () => {
+test("optional analytics remain opt-in without blocking generated public pages", () => {
   const publicPages = [
     "dist/index.html",
     "dist/about/index.html",
@@ -61,17 +61,17 @@ test("optional analytics require an explicit choice on every generated public pa
     assert.match(head, /defaults:\s*'2026-05-30'/);
     assert.match(head, /person_profiles:\s*'identified_only'/);
     assert.equal((head.match(/Anderseed PostHog assessment bridge/g) || []).length, 2);
-    assert.equal((html.match(/<aside class="analytics-consent"/g) || []).length, 1, `${page} should show one consent gate`);
+    assert.equal((html.match(/<aside class="analytics-consent"/g) || []).length, 1, `${page} should show one consent panel`);
     assert.equal((html.match(/<button class="analytics-settings"/g) || []).length, 1, `${page} should provide one preferences control`);
-    assert.match(html, /<aside class="analytics-consent"[^>]*role="dialog"[^>]*aria-modal="true"/);
+    assert.match(html, /<aside class="analytics-consent"[^>]*role="region"/);
+    assert.doesNotMatch(html, /aria-modal="true"/);
     assert.match(html, /aria-describedby="analyticsConsentDescription"/);
     assert.match(html, /<div class="analytics-consent-card">/);
-    assert.match(head, /html\.analytics-consent-required,html\.analytics-consent-required body\{overflow:hidden!important\}/);
-    assert.match(head, /setPageLocked\(!isDecided\(initialChoice\)\)/);
+    assert.match(head, /\.analytics-consent\{position:fixed;[^}]*bottom:/);
+    assert.match(head, /html\.assessment-prompt-visible \.analytics-consent\{visibility:hidden;pointer-events:none/);
+    assert.doesNotMatch(head, /analytics-consent-required|setPageLocked|containDialogFocus/);
     assert.match(head, /document\.querySelector\("aside\[data-analytics-consent\]"\)/);
     assert.match(head, /querySelector\('\[data-consent-choice="accepted"\]'\)/);
-    assert.match(head, /event\.key==="Escape"/);
-    assert.match(head, /event\.key!=="Tab"/);
     assert.match(head, /document\.querySelector\("footer \.footer-links"\)\|\|document\.querySelector\("footer"\)/);
     assert.match(head, /footerDestination\.appendChild\(settingsButton\)/);
     assert.match(head, /restorePageFocus\(focusTarget\)/);
@@ -85,6 +85,238 @@ test("optional analytics require an explicit choice on every generated public pa
     );
     assert.doesNotMatch(html, /data-consent-close/);
   }
+});
+
+test("the delayed assessment prompt is central, selective, engagement-delayed, and accessible", () => {
+  const eligiblePages = [
+    ["dist/index.html", "assessment/index.html?intro=1", "assets/assessment-prompt"],
+    ["dist/about/index.html", "../assessment/index.html?intro=1", "../assets/assessment-prompt"],
+    ["dist/faq/index.html", "../assessment/index.html?intro=1", "../assets/assessment-prompt"],
+    ["dist/blog/index.html", "../assessment/index.html?intro=1", "../assets/assessment-prompt"],
+    ["dist/blog/ba-interview-questions/index.html", "../../assessment/index.html?intro=1", "../../assets/assessment-prompt"],
+    ["dist/blog/business-analyst-cv-recruiters/index.html", "../../assessment/index.html?intro=1", "../../assets/assessment-prompt"],
+    ["dist/blog/how-to-become-a-business-analyst-with-no-it-experience/index.html", "../../assessment/index.html?intro=1", "../../assets/assessment-prompt"],
+    ["dist/blog/requirements-gathering-new-business-analysts/index.html", "../../assessment/index.html?intro=1", "../../assets/assessment-prompt"],
+  ];
+  const excludedPages = [
+    "dist/assessment/index.html",
+    "dist/checkout/index.html",
+    "dist/privacy/index.html",
+    "dist/terms/index.html",
+    "dist/roadmap/index.html",
+  ];
+
+  for (const [page, assessmentHref, assetBase] of eligiblePages) {
+    const html = read(page);
+    assert.equal((html.match(/data-assessment-prompt(?:\s|>)/g) || []).length, 1, `${page} should contain one prompt`);
+    assert.match(html, new RegExp(`href="${assessmentHref.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));
+    assert.match(html, new RegExp(`href="${assetBase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.css"`));
+    assert.match(html, new RegExp(`src="${assetBase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.js" defer`));
+    assert.match(html, /aria-label="Free BA readiness assessment"/);
+    assert.match(html, /data-assessment-prompt-close aria-label="Dismiss assessment prompt"/);
+    assert.match(html, /Discover your Business Analysis readiness/);
+    assert.match(html, /Take the free 2–3 minute assessment\./);
+    assert.match(html, />Start assessment <span aria-hidden="true">→<\/span><\/a>/);
+  }
+
+  for (const page of excludedPages) {
+    const html = read(page);
+    assert.doesNotMatch(html, /data-assessment-prompt(?:\s|>)/, `${page} should not contain the prompt`);
+    assert.doesNotMatch(html, /assessment-prompt\.(?:css|js)/, `${page} should not load prompt assets`);
+  }
+
+  const script = read("assets/assessment-prompt.js");
+  const styles = read("assets/assessment-prompt.css");
+  assert.match(script, /const standardDelayMs = 18000/);
+  assert.match(script, /const delayMs = previewMode \? 1200 : standardDelayMs/);
+  assert.match(script, /localHostname && \/\(\?:\^\|\[\?&\]\)assessmentPromptPreview=1/);
+  assert.match(script, /const scrollThreshold = 0\.3/);
+  assert.match(script, /const dismissForMs = 14 \* 24 \* 60 \* 60 \* 1000/);
+  assert.doesNotMatch(script, /consentDecided|data-analytics-consent|anderseed:analytics-consent-changed/);
+  assert.match(script, /window\.sessionStorage, shownKey/);
+  assert.match(script, /window\.localStorage, dismissedKey/);
+  assert.match(script, /window\.localStorage, startedKey/);
+  assert.match(script, /capture\("assessment_prompt_shown", \{ trigger: trigger \}\)/);
+  assert.match(script, /capture\("assessment_prompt_clicked"\)/);
+  assert.match(script, /capture\("assessment_prompt_dismissed"\)/);
+  assert.equal((script.match(/capture\("assessment_prompt_shown"/g) || []).length, 1);
+  assert.match(styles, /html\.assessment-prompt-visible \.tg-float/);
+  assert.match(styles, /@media\(max-width:680px\)/);
+  assert.match(styles, /env\(safe-area-inset-bottom,0px\)/);
+  assert.match(styles, /@media\(prefers-reduced-motion:reduce\)/);
+});
+
+test("the assessment prompt replaces Telegram after engagement and restores it after dismissal", () => {
+  const source = read("assets/assessment-prompt.js");
+  const rootClasses = new Set();
+  const promptClasses = new Set();
+  const localValues = new Map();
+  const sessionValues = new Map();
+  const windowListeners = new Map();
+  const documentListeners = new Map();
+  const closeListeners = new Map();
+  const ctaListeners = new Map();
+  const timers = [];
+  const captures = [];
+  const classList = (values) => ({
+    add: (...names) => names.forEach((name) => values.add(name)),
+    remove: (...names) => names.forEach((name) => values.delete(name)),
+  });
+  const storage = (values) => ({
+    getItem: (key) => values.get(key) || null,
+    setItem: (key, value) => values.set(key, String(value)),
+  });
+  const closeButton = { addEventListener: (name, listener) => closeListeners.set(name, listener) };
+  const cta = { addEventListener: (name, listener) => ctaListeners.set(name, listener) };
+  const prompt = {
+    hidden: true,
+    classList: classList(promptClasses),
+    querySelector: (selector) => selector.includes("close") ? closeButton : cta,
+  };
+  const documentElement = {
+    scrollHeight: 1100,
+    classList: classList(rootClasses),
+  };
+  const windowObject = {
+    __anderseedAssessmentPromptInstalled: false,
+    localStorage: storage(localValues),
+    sessionStorage: storage(sessionValues),
+    innerHeight: 100,
+    scrollY: 0,
+    pageYOffset: 0,
+    location: { hostname: "www.anderseedconsulting.co.uk", pathname: "/", search: "" },
+    posthog: { capture: (name, properties) => captures.push({ name, properties }) },
+    addEventListener: (name, listener) => windowListeners.set(name, listener),
+    removeEventListener: (name, listener) => {
+      if (windowListeners.get(name) === listener) windowListeners.delete(name);
+    },
+    setTimeout: (listener, delay) => {
+      timers.push({ listener, delay });
+      return timers.length;
+    },
+    requestAnimationFrame: (listener) => listener(),
+  };
+  const documentObject = {
+    readyState: "complete",
+    visibilityState: "visible",
+    documentElement,
+    querySelector: (selector) => selector === "[data-assessment-prompt]" ? prompt : null,
+    addEventListener: (name, listener) => documentListeners.set(name, listener),
+  };
+
+  vm.runInNewContext(source, {
+    window: windowObject,
+    document: documentObject,
+    Date,
+    Number,
+    Object,
+  });
+
+  assert.equal(prompt.hidden, true, "the prompt should not appear before engagement");
+  assert.equal(timers.filter(({ delay }) => delay === 18000).length, 1, "one delay trigger should be scheduled independently of analytics consent");
+  windowObject.scrollY = 300;
+  windowListeners.get("scroll")();
+  assert.equal(prompt.hidden, false);
+  assert.ok(promptClasses.has("is-visible"));
+  assert.ok(rootClasses.has("assessment-prompt-visible"), "Telegram should be hidden while the prompt is visible");
+  assert.equal(sessionValues.get("anderseed.assessmentPrompt.shown.v1"), "1");
+  assert.deepEqual(captures.map(({ name }) => name), ["assessment_prompt_shown"]);
+
+  closeListeners.get("click")();
+  assert.ok(Number(localValues.get("anderseed.assessmentPrompt.dismissedUntil.v1")) > Date.now());
+  assert.ok(!rootClasses.has("assessment-prompt-visible"), "Telegram should return immediately after dismissal");
+  assert.deepEqual(captures.map(({ name }) => name), ["assessment_prompt_shown", "assessment_prompt_dismissed"]);
+  timers.find(({ delay }) => delay === 230).listener();
+  assert.equal(prompt.hidden, true);
+});
+
+test("the generated publish folder excludes private and development-only files", () => {
+  for (const relativePath of [
+    "dist/.local-data",
+    "dist/netlify",
+    "dist/.gitignore",
+    "dist/ANDERSEED-COLOUR-INVENTORY.md",
+    "dist/mobile-preview.html",
+  ]) {
+    assert.equal(fs.existsSync(path.join(root, relativePath)), false, `${relativePath} must not be published`);
+  }
+});
+
+test("the About page presents the broader company without diluting or overstating talent development", () => {
+  const html = read("dist/about/index.html");
+  const about = JSON.parse(read("content/pages/about.json"));
+  const cms = between(read("admin/config.yml"), '- label: "About page"', '- label: "Blog page"');
+  const main = between(html, '<main id="main">', "</main>");
+  const capabilities = between(
+    html,
+    '<section class="section company-capability-section" aria-labelledby="companyCapabilityTitle">',
+    "</section>"
+  );
+
+  assert.equal(about.capabilityCards.length, 3);
+  assert.equal(about.differenceCards.length, 6);
+  assert.equal(about.audiences.length, 3);
+  assert.match(html, /<h1>Business transformation and talent development, built around practical capability\.<\/h1>/);
+  assert.match(html, /Anderseed Consulting is a business and technology consulting firm focused on Business Analysis, ERP, CRM and HCM transformation, and talent development\./);
+  assert.match(html, /Our current flagship talent-development offering helps aspiring and developing Business Analysts/);
+  assert.match(html, /<a class="btn btn-primary" href="\.\.\/index\.html#pricing">View premium mentorship<\/a>/);
+  assert.match(html, /<a class="btn btn-secondary" href="\.\.\/assessment\/index\.html\?intro=1">Discover My BA Readiness<\/a>/);
+
+  const differencePosition = main.indexOf("What makes Anderseed different");
+  const capabilityPosition = main.indexOf("Where business transformation meets capability development.");
+  const audiencePosition = main.indexOf("Who we help");
+  assert.ok(differencePosition >= 0 && differencePosition < capabilityPosition, "company capability must follow the talent-development difference section");
+  assert.ok(capabilityPosition < audiencePosition, "company capability must precede Who we help");
+
+  assert.equal((capabilities.match(/<article class="info-card">/g) || []).length, 3);
+  assert.match(capabilities, /<h3>Business Analysis<\/h3>/);
+  assert.match(capabilities, /<h3>ERP, CRM &amp; HCM Transformation<\/h3>/);
+  assert.match(capabilities, /<h3>Talent Development<\/h3>/);
+  assert.doesNotMatch(capabilities, /<(?:a|button|form)\b/i, "the capability section must not become a consulting-sales funnel");
+
+  assert.match(main, /Anderseed does not promise guaranteed jobs, interviews or salaries\./);
+  assert.match(main, /If Business Analysis is the direction you are considering/);
+  assert.match(main, /href="\.\.\/assessment\/index\.html\?intro=1">Discover My BA Readiness<\/a>/);
+  assert.match(main, /href="https:\/\/t\.me\/anderseedconsulting"[^>]*>Join free community<\/a>/);
+  assert.doesNotMatch(main, /Anderseed (?:clients|employees)|worked for Anderseed|client implementation|we guarantee (?:a )?(?:job|interview|salary)/i);
+
+  for (const field of [
+    "primaryCtaLabel",
+    "secondaryCtaLabel",
+    "sections",
+    "differenceLabel",
+    "differenceTitle",
+    "differenceIntro",
+    "differenceCards",
+    "capabilityLabel",
+    "capabilityTitle",
+    "capabilityCards",
+    "audienceLabel",
+    "audienceTitle",
+    "audienceIntro",
+    "audiences",
+    "trustLabel",
+    "trustTitle",
+    "trustBody",
+    "nextStepLabel",
+    "nextStepTitle",
+    "nextStepBody",
+    "nextStepPrimaryCtaLabel",
+    "nextStepSecondaryCtaLabel",
+  ]) {
+    assert.match(cms, new RegExp(`name: "${field}"`), `${field} should be editable in Decap CMS`);
+  }
+});
+
+test("starting the assessment suppresses future sticky prompts even without PostHog", () => {
+  const html = read("dist/assessment/index.html");
+  const bridge = between(html, "/* Anderseed PostHog assessment bridge */", "/* End Anderseed PostHog assessment bridge */");
+  const markerPosition = bridge.indexOf('detail.eventName==="assessment_started"');
+  const posthogGuardPosition = bridge.indexOf('if(!window.posthog||typeof window.posthog.capture!=="function")return');
+
+  assert.ok(markerPosition >= 0, "the bridge should recognise assessment_started");
+  assert.match(bridge, /window\.localStorage\.setItem\("anderseed\.assessmentPrompt\.started\.v1","1"\)/);
+  assert.ok(markerPosition < posthogGuardPosition, "the started marker must be written before checking PostHog availability");
 });
 
 test("the deployed assessment CSP permits PostHog scripts and event delivery", () => {

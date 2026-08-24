@@ -330,12 +330,51 @@ collections:
           - { label: "Eyebrow", name: "eyebrow", widget: "string" }
           - { label: "Headline", name: "headline", widget: "string" }
           - { label: "Intro", name: "intro", widget: "text" }
+          - { label: "Primary button label", name: "primaryCtaLabel", widget: "string" }
+          - { label: "Secondary button label", name: "secondaryCtaLabel", widget: "string" }
+          - label: "Why we exist and our approach"
+            name: "sections"
+            widget: "list"
+            fields:
+              - { label: "Panel style", name: "style", widget: "select", options: ["dark", "light"] }
+              - { label: "Section label", name: "label", widget: "string" }
+              - { label: "Headline", name: "title", widget: "string" }
+              - { label: "Body", name: "body", widget: "text" }
+              - { label: "Bullet points", name: "points", widget: "list", field: { label: "Bullet point", name: "point", widget: "string" } }
+          - { label: "Difference section label", name: "differenceLabel", widget: "string" }
+          - { label: "Difference section headline", name: "differenceTitle", widget: "string" }
+          - { label: "Difference section introduction", name: "differenceIntro", widget: "text" }
           - label: "Difference cards"
             name: "differenceCards"
             widget: "list"
             fields:
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Text", name: "text", widget: "text" }
+          - { label: "Company capability label", name: "capabilityLabel", widget: "string" }
+          - { label: "Company capability headline", name: "capabilityTitle", widget: "string" }
+          - label: "Company capability cards"
+            name: "capabilityCards"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+          - { label: "Audience section label", name: "audienceLabel", widget: "string" }
+          - { label: "Audience section headline", name: "audienceTitle", widget: "string" }
+          - { label: "Audience section introduction", name: "audienceIntro", widget: "text" }
+          - label: "Who we help cards"
+            name: "audiences"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+          - { label: "Trust section label", name: "trustLabel", widget: "string" }
+          - { label: "Trust section headline", name: "trustTitle", widget: "string" }
+          - { label: "Trust section body", name: "trustBody", widget: "text" }
+          - { label: "Next step label", name: "nextStepLabel", widget: "string" }
+          - { label: "Next step headline", name: "nextStepTitle", widget: "string" }
+          - { label: "Next step body", name: "nextStepBody", widget: "text" }
+          - { label: "Next step primary button label", name: "nextStepPrimaryCtaLabel", widget: "string" }
+          - { label: "Next step secondary button label", name: "nextStepSecondaryCtaLabel", widget: "string" }
       - label: "Blog page"
         name: "blog_page"
         file: "content/pages/blog.json"

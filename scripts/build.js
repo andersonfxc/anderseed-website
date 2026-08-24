@@ -9,25 +9,23 @@ const favicon =
 
 const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
   .analytics-consent[hidden],.analytics-settings[hidden]{display:none!important}
-  html.analytics-consent-required,html.analytics-consent-required body{overflow:hidden!important}
-  .analytics-consent{position:fixed;z-index:2147483000;inset:0;display:grid;place-items:center;width:100%;height:100%;padding:24px;background:rgba(15,46,34,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#17231e;font-family:Arial,sans-serif;overscroll-behavior:contain;touch-action:none}
-  .analytics-consent-card{width:min(100%,560px);max-height:min(720px,calc(100vh - 48px));overflow:auto;padding:36px;border:1px solid rgba(126,212,160,.55);border-top:4px solid #7ed4a0;border-radius:8px;background:#fff;box-shadow:0 28px 80px rgba(0,0,0,.32);touch-action:auto}
-  .analytics-consent-brand{display:flex;align-items:center;gap:9px;margin-bottom:22px;color:#1f6b52;font-size:11px;font-weight:800;line-height:1.2;letter-spacing:0;text-transform:uppercase}
+  .analytics-consent{position:fixed;z-index:2147483000;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:16px;color:#17231e;font-family:Arial,sans-serif;transition:opacity .2s ease,visibility .2s ease,transform .2s ease}
+  .analytics-consent-card{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;gap:5px 24px;align-items:center;width:min(100%,940px);margin:0 auto;padding:18px 20px;border:1px solid rgba(31,107,82,.28);border-top:3px solid #1f6b52;border-radius:8px;background:#fff;box-shadow:0 16px 44px rgba(15,46,34,.2)}
+  .analytics-consent-brand{grid-column:1;grid-row:1;display:flex;align-items:center;gap:9px;color:#1f6b52;font-size:11px;font-weight:800;line-height:1.2;letter-spacing:0;text-transform:uppercase}
   .analytics-consent-brand-mark{display:inline-block;width:12px;height:18px;border-radius:100% 0 100% 0;background:#1f6b52;transform:rotate(-18deg)}
-  .analytics-consent-copy strong{display:block;margin-bottom:12px;color:#0f2e22;font-size:28px;line-height:1.15;letter-spacing:0}
-  .analytics-consent-copy p{margin:0;color:#52605a;font-size:15px;line-height:1.65}
-  .analytics-consent-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:26px}
-  .analytics-consent-action{min-height:50px;padding:12px 16px;border:1.5px solid #1f6b52;border-radius:6px;background:#fff;color:#174f3d;font:700 14px/1.2 Arial,sans-serif;cursor:pointer;white-space:normal}
+  .analytics-consent-copy{grid-column:1;grid-row:2}.analytics-consent-copy strong{display:block;margin-bottom:5px;color:#0f2e22;font-size:18px;line-height:1.2;letter-spacing:0}
+  .analytics-consent-copy p{margin:0;color:#52605a;font-size:13px;line-height:1.5}
+  .analytics-consent-actions{grid-column:2;grid-row:1/4;display:grid;grid-template-columns:repeat(2,minmax(145px,1fr));gap:10px}
+  .analytics-consent-action{min-height:46px;padding:10px 14px;border:1.5px solid #1f6b52;border-radius:6px;background:#fff;color:#174f3d;font:700 13px/1.2 Arial,sans-serif;cursor:pointer;white-space:normal}
   .analytics-consent-action:hover,.analytics-consent-action:focus-visible{background:#edf7f0;outline:3px solid rgba(126,212,160,.48);outline-offset:3px}
-  .analytics-consent-action[data-consent-choice="accepted"]{background:#1f6b52;color:#fff;box-shadow:0 8px 20px rgba(31,107,82,.22)}
-  .analytics-consent-action[data-consent-choice="accepted"]:hover,.analytics-consent-action[data-consent-choice="accepted"]:focus-visible{background:#174f3d}
-  .analytics-consent-privacy{display:inline-block;margin-top:20px;color:#1f6b52;font-size:13px;font-weight:700;text-underline-offset:3px}
+  .analytics-consent-privacy{grid-column:1;grid-row:3;display:inline-block;width:max-content;margin-top:2px;color:#1f6b52;font-size:12px;font-weight:700;text-underline-offset:3px}
   .analytics-consent-privacy:hover,.analytics-consent-privacy:focus-visible{color:#0f2e22;outline:3px solid rgba(31,107,82,.18);outline-offset:3px}
+  html.assessment-prompt-visible .analytics-consent{visibility:hidden;pointer-events:none;opacity:0;transform:translateY(10px)}
   .analytics-settings{display:inline;padding:0;border:0;border-bottom:1px solid currentColor;border-radius:0;background:transparent;color:inherit;box-shadow:none;font:inherit;font-weight:700;line-height:inherit;cursor:pointer}
   .footer-links .analytics-settings{color:#ddd5c8;font-size:14px}
   footer>.analytics-settings{margin-left:8px}
   .analytics-settings:hover,.analytics-settings:focus-visible{color:#7ed4a0;outline:3px solid rgba(126,212,160,.28);outline-offset:3px}
-  @media(max-width:680px){.analytics-consent{padding:16px}.analytics-consent-card{max-height:calc(100vh - 32px);padding:26px 20px}.analytics-consent-copy strong{font-size:24px}.analytics-consent-copy p{font-size:14px}.analytics-consent-actions{grid-template-columns:1fr}.analytics-consent-action{width:100%}}
+  @media(max-width:680px){.analytics-consent{right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:10px}.analytics-consent-card{grid-template-columns:1fr;grid-template-rows:auto;gap:7px;padding:15px}.analytics-consent-brand,.analytics-consent-copy,.analytics-consent-privacy,.analytics-consent-actions{grid-column:1;grid-row:auto}.analytics-consent-copy strong{font-size:17px}.analytics-consent-copy p{font-size:12.5px}.analytics-consent-actions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:5px}.analytics-consent-action{min-width:0;width:100%;padding:9px 8px;font-size:12px}}
   @media(prefers-reduced-motion:reduce){.analytics-consent,.analytics-consent *{scroll-behavior:auto!important}}
 </style>
 <script>
@@ -50,30 +48,10 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
             return choice===accepted||choice===rejected;
         }
 
-        function setPageLocked(locked){
-            document.documentElement.classList.toggle("analytics-consent-required",locked);
-        }
-
         function focusPrimaryAction(){
             if(!banner||banner.hidden)return;
             var primaryAction=banner.querySelector('[data-consent-choice="accepted"]');
             if(primaryAction)primaryAction.focus();
-        }
-
-        function containDialogFocus(event){
-            if(!banner||banner.hidden)return;
-            if(event.key==="Escape"){
-                event.preventDefault();
-                return;
-            }
-            if(event.key!=="Tab")return;
-            var focusable=Array.prototype.slice.call(banner.querySelectorAll('button:not([disabled]),a[href]'));
-            if(!focusable.length){event.preventDefault();return}
-            var first=focusable[0];
-            var last=focusable[focusable.length-1];
-            if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
-            else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
-            else if(!banner.contains(document.activeElement)){event.preventDefault();first.focus()}
         }
 
         function loadPostHog(){
@@ -98,8 +76,6 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
             document.documentElement.setAttribute("data-analytics-consent",decided?choice:"pending");
             if(banner)banner.hidden=decided;
             if(settingsButton)settingsButton.hidden=!decided;
-            setPageLocked(!decided);
-            if(!decided)window.setTimeout(focusPrimaryAction,0);
         }
 
         function saveChoice(choice){
@@ -122,7 +98,6 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
             returnFocusTo=document.activeElement;
             banner.hidden=!1;
             settingsButton.hidden=!0;
-            setPageLocked(!0);
             focusPrimaryAction();
         }
 
@@ -151,7 +126,6 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
                 banner.querySelectorAll("[data-consent-choice]").forEach(function(button){
                     button.addEventListener("click",function(){saveChoice(button.getAttribute("data-consent-choice"))});
                 });
-                banner.addEventListener("keydown",containDialogFocus);
             }
             if(settingsButton)settingsButton.addEventListener("click",openPreferences);
             syncControls();
@@ -159,7 +133,6 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
 
         var initialChoice=readChoice();
         document.documentElement.setAttribute("data-analytics-consent",isDecided(initialChoice)?initialChoice:"pending");
-        setPageLocked(!isDecided(initialChoice));
         window.__anderseedLoadOptionalAnalytics=activatePostHog;
         if(readChoice()===accepted)activatePostHog();
         if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindControls,{once:!0});else bindControls();
@@ -175,7 +148,11 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
         window.addEventListener("anderseed:analytics",function(event){
             try{
                 var detail=event&&event.detail;
-                if(!detail||typeof detail.eventName!=="string"||!detail.eventName||!window.posthog||typeof window.posthog.capture!=="function")return;
+                if(!detail||typeof detail.eventName!=="string"||!detail.eventName)return;
+                if(detail.eventName==="assessment_started"){
+                    try{window.localStorage.setItem("anderseed.assessmentPrompt.started.v1","1")}catch(_error){}
+                }
+                if(!window.posthog||typeof window.posthog.capture!=="function")return;
                 var eventId=typeof detail.eventId==="string"?detail.eventId:"";
                 if(eventId&&sentEventIds.has(eventId))return;
                 var properties={environment:environment};
@@ -201,7 +178,7 @@ const posthogSnippet = `<style id="anderseed-analytics-consent-styles">
 </script>`;
 
 function analyticsConsentMarkup(privacyHref) {
-  return `<aside class="analytics-consent" data-analytics-consent role="dialog" aria-modal="true" aria-labelledby="analyticsConsentTitle" aria-describedby="analyticsConsentDescription" hidden>
+  return `<aside class="analytics-consent" data-analytics-consent role="region" aria-labelledby="analyticsConsentTitle" aria-describedby="analyticsConsentDescription" hidden>
   <div class="analytics-consent-card">
     <div class="analytics-consent-brand" aria-hidden="true"><span class="analytics-consent-brand-mark"></span>Anderseed Consulting</div>
     <div class="analytics-consent-copy">
@@ -218,6 +195,20 @@ function analyticsConsentMarkup(privacyHref) {
 <button class="analytics-settings" type="button" data-analytics-settings hidden>Privacy choices</button>`;
 }
 
+function shouldIncludeAssessmentPrompt(relativePath) {
+  if (relativePath === "index.html" || relativePath === "about/index.html" || relativePath === "faq/index.html" || relativePath === "blog/index.html") return true;
+  return /^blog\/[^/]+\/index\.html$/.test(relativePath);
+}
+
+function assessmentPromptMarkup(assessmentHref) {
+  return `<aside class="assessment-prompt" data-assessment-prompt aria-label="Free BA readiness assessment" hidden>
+  <button class="assessment-prompt-close" type="button" data-assessment-prompt-close aria-label="Dismiss assessment prompt">&times;</button>
+  <span class="assessment-prompt-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21V10"/><path d="M12 14c-5 0-8-3-8-8 5 0 8 3 8 8Z"/><path d="M12 11c5 0 8-3 8-8-5 0-8 3-8 8Z"/></svg></span>
+  <span class="assessment-prompt-copy"><strong>Discover your Business Analysis readiness</strong><span>Take the free 2–3 minute assessment.</span></span>
+  <a class="assessment-prompt-cta" data-assessment-prompt-cta href="${assessmentHref}">Start assessment <span aria-hidden="true">→</span></a>
+</aside>`;
+}
+
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
 }
@@ -231,10 +222,18 @@ function injectPostHog(content, relativePath) {
   if (!content.includes("</head>")) throw new Error("Could not install PostHog because the generated page has no </head> tag.");
   if (!content.includes("</body>")) throw new Error("Could not install analytics consent because the generated page has no </body> tag.");
   const depth = path.dirname(relativePath).split(path.sep).filter((part) => part && part !== ".").length;
-  const privacyHref = `${"../".repeat(depth)}privacy/index.html`;
+  const base = "../".repeat(depth);
+  const privacyHref = `${base}privacy/index.html`;
+  const includeAssessmentPrompt = shouldIncludeAssessmentPrompt(relativePath);
+  const promptAssets = includeAssessmentPrompt
+    ? `<link rel="stylesheet" href="${base}assets/assessment-prompt.css" />\n<script src="${base}assets/assessment-prompt.js" defer></script>\n`
+    : "";
+  const promptMarkup = includeAssessmentPrompt
+    ? `${assessmentPromptMarkup(`${base}assessment/index.html?intro=1`)}\n`
+    : "";
   return content
-    .replace("</head>", `${posthogSnippet}\n</head>`)
-    .replace("</body>", `${analyticsConsentMarkup(privacyHref)}\n</body>`);
+    .replace("</head>", `${promptAssets}${posthogSnippet}\n</head>`)
+    .replace("</body>", `${promptMarkup}${analyticsConsentMarkup(privacyHref)}\n</body>`);
 }
 
 function writeFile(relativePath, content) {
@@ -267,7 +266,10 @@ function copyDir(source, target) {
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     if (
       source === root &&
-      ["content", "dist", "docs", "roadmap", "scripts", "tests", "node_modules", ".git", "README.md", "package.json", "package-lock.json", "netlify.toml"].includes(entry.name)
+      [
+        "content", "dist", "docs", "roadmap", "scripts", "tests", "node_modules", "netlify", ".git", ".local-data",
+        ".gitignore", "README.md", "ANDERSEED-COLOUR-INVENTORY.md", "mobile-preview.html", "package.json", "package-lock.json", "netlify.toml",
+      ].includes(entry.name)
     ) {
       continue;
     }
@@ -510,6 +512,15 @@ function cards(items) {
   return `<div class="card-grid">
         ${items.map((item) => `<article class="info-card"><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join("\n        ")}
       </div>`;
+}
+
+function paragraphWithBreaks(value, className = "") {
+  const content = String(value || "")
+    .split(/\n\s*\n/)
+    .map((paragraph) => escapeHtml(paragraph.trim()))
+    .filter(Boolean)
+    .join("<br /><br />");
+  return `<p${className ? ` class="${escapeAttr(className)}"` : ""}>${content}</p>`;
 }
 
 const iconMap = {
@@ -1412,7 +1423,7 @@ function generateAbout(settings, about) {
       return `<div class="${panelClass}">
         <div class="section-label">${escapeHtml(section.label)}</div>
         <h2>${escapeHtml(section.title)}</h2>
-        <p${section.style === "dark" ? "" : ' class="section-copy"'}>${escapeHtml(section.body)}</p>
+        ${paragraphWithBreaks(section.body, section.style === "dark" ? "" : "section-copy")}
         ${list(section.points)}
       </div>`;
     })
@@ -1422,10 +1433,10 @@ function generateAbout(settings, about) {
     <div class="hero-inner">
       <div class="eyebrow"><span class="leaf-dot" aria-hidden="true"></span>${escapeHtml(about.eyebrow)}</div>
       <h1>${escapeHtml(about.headline)}</h1>
-      <p class="hero-copy">${escapeHtml(about.intro)}</p>
+      ${paragraphWithBreaks(about.intro, "hero-copy")}
       <div class="hero-actions">
-        <a class="btn btn-primary" href="../index.html#pricing">View premium mentorship</a>
-        <a class="btn btn-secondary" href="../assessment/index.html?intro=1">Discover My BA Readiness</a>
+        <a class="btn btn-primary" href="../index.html#pricing">${escapeHtml(about.primaryCtaLabel)}</a>
+        <a class="btn btn-secondary" href="../assessment/index.html?intro=1">${escapeHtml(about.secondaryCtaLabel)}</a>
       </div>
     </div>
   </section>
@@ -1437,37 +1448,48 @@ function generateAbout(settings, about) {
   <section class="section alt">
     <div class="section-inner">
       <div class="section-head center">
-        <div class="section-label">What makes Anderseed different</div>
+        <div class="section-label">${escapeHtml(about.differenceLabel)}</div>
         <h2>${escapeHtml(about.differenceTitle)}</h2>
         <p class="section-copy">${escapeHtml(about.differenceIntro)}</p>
       </div>
       ${cards(about.differenceCards)}
     </div>
   </section>
-  <section class="section">
+  <section class="section company-capability-section" aria-labelledby="companyCapabilityTitle">
     <div class="section-inner">
       <div class="section-head center">
-        <div class="section-label">Who we help</div>
+        <div class="section-label">${escapeHtml(about.capabilityLabel)}</div>
+        <h2 id="companyCapabilityTitle">${escapeHtml(about.capabilityTitle)}</h2>
+      </div>
+      <div class="company-capability-cards">
+        ${cards(about.capabilityCards)}
+      </div>
+    </div>
+  </section>
+  <section class="section alt">
+    <div class="section-inner">
+      <div class="section-head center">
+        <div class="section-label">${escapeHtml(about.audienceLabel)}</div>
         <h2>${escapeHtml(about.audienceTitle)}</h2>
         <p class="section-copy">${escapeHtml(about.audienceIntro)}</p>
       </div>
       ${cards(about.audiences)}
     </div>
   </section>
-  <section class="section alt">
+  <section class="section">
     <div class="section-inner grid-2">
       <div class="panel panel-pad">
-        <div class="section-label">Trust</div>
-        <h2>Honest support without false promises.</h2>
-        <p class="section-copy">Anderseed does not promise guaranteed jobs, interviews, or salary outcomes. The promise is practical guidance, real effort, structured support, clearer positioning, and a community that helps learners keep moving.</p>
+        <div class="section-label">${escapeHtml(about.trustLabel)}</div>
+        <h2>${escapeHtml(about.trustTitle)}</h2>
+        ${paragraphWithBreaks(about.trustBody, "section-copy")}
       </div>
       <div class="dark-panel">
-        <div class="section-label">Next step</div>
-        <h2>Start with clarity.</h2>
-        <p>See your BA Readiness Stage and Score, join the free community, or move into the premium mentorship when you are ready for deeper support.</p>
+        <div class="section-label">${escapeHtml(about.nextStepLabel)}</div>
+        <h2>${escapeHtml(about.nextStepTitle)}</h2>
+        ${paragraphWithBreaks(about.nextStepBody)}
         <div class="hero-actions">
-          <a class="btn btn-primary" href="../assessment/index.html?intro=1">Discover My BA Readiness</a>
-          <a class="btn btn-secondary" href="${escapeAttr(settings.social.telegram)}" target="_blank" rel="noopener">Join free community</a>
+          <a class="btn btn-primary" href="../assessment/index.html?intro=1">${escapeHtml(about.nextStepPrimaryCtaLabel)}</a>
+          <a class="btn btn-secondary" href="${escapeAttr(settings.social.telegram)}" target="_blank" rel="noopener">${escapeHtml(about.nextStepSecondaryCtaLabel)}</a>
         </div>
       </div>
     </div>

@@ -1,76 +1,104 @@
 {
-  "differenceCards": [
-    {
-      "title": "Beginner-friendly structure",
-      "text": "Clear steps for people with no IT background, no BA title, or no confidence about where to start."
-    },
-    {
-      "title": "Real project thinking",
-      "text": "Practice goes beyond theory, with requirements, process mapping, documentation, stakeholder scenarios, and delivery awareness."
-    },
-    {
-      "title": "Career positioning",
-      "text": "CV, LinkedIn, job application, recruiter, and interview support help learners explain their value with stronger BA language."
-    },
-    {
-      "title": "UK , European and International market focus",
-      "text": "Guidance is shaped around UK Business Analyst roles, hiring expectations, salary context, and recruiter language."
-    },
-    {
-      "title": "Small cohort attention",
-      "text": "The mentorship is designed for feedback, accountability, and personal attention instead of anonymous learning."
-    },
-    {
-      "title": "Support after training",
-      "text": "Learners stay close to community support, career check-ins, job-search encouragement, and alumni accountability."
-    }
-  ],
-  "audienceIntro": "Anderseed is built for people with ambition, transferable experience, and the willingness to practise. The mentorship helps connect what you already know to the Business Analysis role you want.",
+  "seoTitle": "About Anderseed Consulting | BA & Talent Development",
+  "seoDescription": "Anderseed Consulting is a business and technology consulting firm focused on Business Analysis, ERP, CRM and HCM transformation, with practical BA mentorship and talent development.",
   "eyebrow": "About Anderseed Consulting",
-  "intro": "Anderseed Consulting helps beginners, career changers, graduates, and newcomers to the UK market build the practical skills, language, confidence, and career positioning needed to move toward Business Analysis roles.",
+  "headline": "Business transformation and talent development, built around practical capability.",
+  "intro": "Anderseed Consulting is a business and technology consulting firm focused on Business Analysis, ERP, CRM and HCM transformation, and talent development.\n\nOur current flagship talent-development offering helps aspiring and developing Business Analysts turn transferable experience and learning into practical capability, credible project evidence and stronger career positioning.",
+  "primaryCtaLabel": "View premium mentorship",
+  "secondaryCtaLabel": "Discover My BA Readiness",
   "sections": [
     {
       "style": "dark",
       "label": "Why we exist",
-      "title": "Clear guidance for the messy career-change middle.",
-      "body": "Many people want to become Business Analysts but do not know what to learn first, how to describe their current experience, or how to become confident enough for interviews. Anderseed turns that uncertainty into a structured path.",
+      "title": "Better transformation needs capable people.",
+      "body": "Technology alone does not solve business problems. Successful change depends on understanding the problem, the people affected, the process and what the organisation is trying to achieve.\n\nAnderseed brings that same thinking into talent development — helping people understand how Business Analysts contribute to change and build the practical capability to do it confidently.",
       "points": [
-        "Start from your current experience, not an unrealistic perfect background.",
-        "Build practical BA habits through guided tasks and live project thinking.",
-        "Translate your story into CV, LinkedIn, application, and interview language."
+        "Understand the business problem before jumping to a solution.",
+        "Connect people, processes, requirements and technology.",
+        "Build practical BA capability through structured, workplace-style practice."
       ]
     },
     {
       "style": "light",
       "label": "Our approach",
       "title": "Practical first. Human always.",
-      "body": "The Anderseed model combines live mentorship, project-style practice, career support, and community accountability. Learners are supported beyond the classroom so they can build confidence, keep applying, and stay close to people on the same journey.",
+      "body": "Our approach combines structured learning, practical application, career support and community accountability.\n\nWe focus on helping people understand not only what a Business Analyst does, but how BA thinking is applied across real transformation lifecycles.",
       "points": [
-        "Business Analysis fundamentals explained in plain language.",
-        "Hands-on requirements, stakeholder, process, and documentation practice.",
-        "Career assets built around UK recruiter expectations.",
-        "Community support that continues after the cohort ends."
+        "Business Analysis explained in clear, practical language.",
+        "Guided practice across requirements, stakeholders, processes and delivery.",
+        "Career evidence built around what employers expect to see and hear.",
+        "Ongoing community and career support beyond formal learning."
       ]
     }
   ],
+  "differenceLabel": "What makes Anderseed different",
+  "differenceTitle": "Built around the journey from learning to application.",
+  "differenceIntro": "The goal is not simply to understand Business Analysis. It is to build the capability, evidence and career positioning needed to contribute confidently in a BA environment.",
+  "differenceCards": [
+    {
+      "title": "Beginner-friendly structure",
+      "text": "Clear guidance for people entering Business Analysis from different professional and educational backgrounds."
+    },
+    {
+      "title": "Workplace-style BA practice",
+      "text": "Apply BA thinking through structured scenarios covering business problems, stakeholders, requirements, processes and delivery."
+    },
+    {
+      "title": "Career positioning",
+      "text": "Learn how to translate your experience and project evidence into stronger CV, LinkedIn, application and interview language."
+    },
+    {
+      "title": "UK & international career context",
+      "text": "Guidance shaped around BA roles, employer expectations, recruitment language and career positioning."
+    },
+    {
+      "title": "Small-cohort attention",
+      "text": "Structured feedback, mentor access and accountability rather than anonymous, self-directed learning."
+    },
+    {
+      "title": "Support beyond the programme",
+      "text": "Community, career check-ins and workplace support help learners continue developing after the structured journey ends."
+    }
+  ],
+  "capabilityLabel": "Anderseed Consulting",
+  "capabilityTitle": "Where business transformation meets capability development.",
+  "capabilityCards": [
+    {
+      "title": "Business Analysis",
+      "text": "Problem discovery, requirements, process analysis and structured change thinking."
+    },
+    {
+      "title": "ERP, CRM & HCM Transformation",
+      "text": "Business-focused analysis and transformation capability across enterprise resource planning, customer relationship management and human capital management systems."
+    },
+    {
+      "title": "Talent Development",
+      "text": "Structured BA mentorship, guided portfolio practice and career-readiness support."
+    }
+  ],
+  "audienceLabel": "Who we help",
+  "audienceTitle": "You do not need to arrive as a Business Analyst.",
+  "audienceIntro": "Anderseed is built for people with ambition, transferable experience and a willingness to practise. The aim is to connect what you already know to the Business Analyst role and build what is still missing.",
   "audiences": [
     {
       "title": "Career changers",
-      "text": "People moving from operations, customer service, admin, healthcare, retail, finance, education, or other fields into Business Analysis."
+      "text": "Professionals moving from operations, customer service, administration, healthcare, finance, retail, project support and other fields into Business Analysis."
     },
     {
       "title": "Graduates",
-      "text": "People who need practical project language, clearer positioning, and support moving from study into BA-ready applications."
+      "text": "People who need practical BA application, project evidence and stronger career positioning alongside their academic background."
     },
     {
       "title": "Newcomers to the UK market",
-      "text": "People who need help understanding UK recruiter expectations, CV language, LinkedIn positioning, and interview confidence."
+      "text": "Professionals who need help understanding UK employer expectations, positioning transferable experience and communicating their value confidently."
     }
   ],
-  "differenceIntro": "The goal is to help learners understand the role, practise the work, position their experience, and stay supported through the job-search process.",
-  "headline": "Business Analysis mentorship for people ready to grow.",
-  "audienceTitle": "You do not need to arrive as a Business Analyst.",
-  "differenceTitle": "Built around the full journey, not just the lessons.",
-  "seoTitle": "About Anderseed Consulting | Business Analysis Mentorship UK",
-  "seoDescription": "Learn about Anderseed Consulting, a practical Business Analysis mentorship brand helping beginners, career changers, graduates, and newcomers to the UK market become BA-ready."
+  "trustLabel": "Trust",
+  "trustTitle": "Honest support without false promises.",
+  "trustBody": "Anderseed does not promise guaranteed jobs, interviews or salaries.\n\nWhat we provide is structured guidance, practical application, credible portfolio development, career positioning and a supportive community designed to help you make stronger, more informed career moves.",
+  "nextStepLabel": "Next step",
+  "nextStepTitle": "Start with clarity.",
+  "nextStepBody": "If Business Analysis is the direction you are considering, start by understanding what you already bring and where your biggest development opportunities may be.",
+  "nextStepPrimaryCtaLabel": "Discover My BA Readiness",
+  "nextStepSecondaryCtaLabel": "Join free community"
 }

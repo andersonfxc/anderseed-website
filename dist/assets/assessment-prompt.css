@@ -1,0 +1,15 @@
+.assessment-prompt[hidden]{display:none!important}
+.assessment-prompt{position:fixed;right:calc(22px + env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:60;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;width:min(520px,calc(100vw - 44px));padding:16px 18px;border:1px solid rgba(126,212,160,.42);border-radius:8px;background:#0f2e22;color:#fff;box-shadow:0 18px 48px rgba(15,46,34,.3);font-family:Arial,sans-serif;opacity:0;transform:translateY(14px);transition:opacity .22s ease,transform .22s ease}
+.assessment-prompt.is-visible{opacity:1;transform:translateY(0)}
+.assessment-prompt-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#e8f5ed;color:#1f6b52}
+.assessment-prompt-mark svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.assessment-prompt-copy{min-width:0;padding-right:24px}
+.assessment-prompt-copy strong{display:block;margin:0 0 3px;color:#fff;font-size:16px;line-height:1.25;letter-spacing:0}
+.assessment-prompt-copy span{display:block;color:#d9e8e0;font-size:13px;line-height:1.4;letter-spacing:0}
+.assessment-prompt-cta{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:11px 14px;border:1px solid #7ed4a0;border-radius:6px;background:#7ed4a0;color:#0f2e22;font-size:13px;font-weight:800;line-height:1.15;text-decoration:none;white-space:nowrap;transition:background .18s ease,transform .18s ease,box-shadow .18s ease}
+.assessment-prompt-cta:hover,.assessment-prompt-cta:focus-visible{background:#96e2b3;box-shadow:0 7px 18px rgba(0,0,0,.18);outline:3px solid rgba(126,212,160,.35);outline-offset:3px;transform:scale(1.025)}
+.assessment-prompt-close{position:absolute;top:7px;right:8px;display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:transparent;color:#d9e8e0;font:400 23px/1 Arial,sans-serif;cursor:pointer}
+.assessment-prompt-close:hover,.assessment-prompt-close:focus-visible{background:rgba(255,255,255,.12);color:#fff;outline:2px solid rgba(126,212,160,.65);outline-offset:1px}
+html.assessment-prompt-visible .tg-float{visibility:hidden!important;pointer-events:none!important;opacity:0!important;transform:translateY(10px)!important}
+@media(max-width:680px){.assessment-prompt{right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));left:calc(12px + env(safe-area-inset-left,0px));grid-template-columns:38px minmax(0,1fr);gap:11px;width:auto;padding:14px}.assessment-prompt-mark{width:38px;height:38px}.assessment-prompt-copy{padding-right:24px}.assessment-prompt-copy strong{font-size:15px}.assessment-prompt-copy span{font-size:12px}.assessment-prompt-cta{grid-column:1/-1;width:100%;min-height:42px}.assessment-prompt-close{top:6px;right:6px}}
+@media(prefers-reduced-motion:reduce){.assessment-prompt,.assessment-prompt-cta{transition:none!important}}
