@@ -58,19 +58,19 @@
     {
       "id": "transferableExperience",
       "type": "multiple",
-      "question": "Which of these have you already done through work, study, volunteering or everyday responsibilities?",
-      "help": "Select every option that applies. You do not need previous BA experience for these to count.",
+      "question": "Which of these things have you done at work, during study, while volunteering or in everyday life?",
+      "help": "Choose every example that feels familiar. They count even if Business Analyst was never your job title.",
       "revealAfter": "You may already have more transferable Business Analysis experience than your job title suggests.",
       "options": [
-        { "value": "improve_process", "label": "Improved how a process or task was completed" },
-        { "value": "understand_needs", "label": "Worked with different people to understand what they needed" },
-        { "value": "data_reporting", "label": "Used data, reports or patterns to support a decision" },
-        { "value": "explain_complex", "label": "Explained complex information in a clearer way" },
-        { "value": "solve_recurring", "label": "Investigated or helped solve a recurring problem" },
-        { "value": "conflicting_priorities", "label": "Managed competing needs or conflicting priorities" },
-        { "value": "structured_docs", "label": "Created structured documents, instructions or records" },
-        { "value": "coordinate_teams", "label": "Coordinated work across people, teams or departments" },
-        { "value": "none", "label": "None of these yet", "exclusive": true }
+        { "value": "improve_process", "label": "Found a better way to do a task at work" },
+        { "value": "understand_needs", "label": "Asked people what they needed before starting a task" },
+        { "value": "data_reporting", "label": "Used figures, reports or patterns to help make a decision" },
+        { "value": "explain_complex", "label": "Explained something complicated in a way others could understand" },
+        { "value": "solve_recurring", "label": "Looked into why the same problem kept happening" },
+        { "value": "conflicting_priorities", "label": "Balanced requests from people who wanted different things" },
+        { "value": "structured_docs", "label": "Wrote clear instructions, notes or step-by-step guidance" },
+        { "value": "coordinate_teams", "label": "Helped different people or teams work together" },
+        { "value": "none", "label": "I have not done any of these yet", "exclusive": true }
       ]
     },
     {

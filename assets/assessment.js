@@ -11,6 +11,9 @@
 
   const draftKey = "anderseed.baReadiness.v2.draft";
   const analyticsKey = "anderseed.baReadiness.v2.analyticsSession";
+  const analyticsQueueKey = `${analyticsKey}.pendingEvents`;
+  const analyticsBatchSize = 20;
+  const analyticsQueueLimit = 100;
   const createId = () => {
     if (window.crypto?.randomUUID) return window.crypto.randomUUID();
     const bytes = new Uint8Array(16);
@@ -85,6 +88,11 @@
   let beforeUnloadAttached = false;
   let draftRestoreStatus = "none";
   let resumeFromIntroduction = false;
+  let analyticsQueue = readAnalyticsQueue();
+  let analyticsInFlight = [];
+  let analyticsFlushPromise = null;
+  let analyticsRetryTimer = null;
+  let analyticsRetryAttempt = 0;
 
   function focusViewHeading(element) {
     window.requestAnimationFrame(() => element?.focus({ preventScroll: true }));
@@ -103,21 +111,113 @@
     }
   }
 
-  function sendAnalyticsEvent(detail) {
-    const endpoint = config.endpoints?.events;
-    if (!endpoint) return;
-    const body = JSON.stringify({ events: [detail] });
-    if (navigator.sendBeacon) {
-      const sent = navigator.sendBeacon(endpoint, new Blob([body], { type: "application/json" }));
-      if (sent) return;
+  function readAnalyticsQueue() {
+    try {
+      const saved = JSON.parse(window.sessionStorage.getItem(analyticsQueueKey) || "[]");
+      if (!Array.isArray(saved)) return [];
+      return saved.filter((item) => item && typeof item.eventId === "string").slice(-analyticsQueueLimit);
+    } catch {
+      return [];
     }
-    window.fetch(endpoint, {
+  }
+
+  function pendingAnalyticsEvents() {
+    const seen = new Set();
+    return [...analyticsInFlight, ...analyticsQueue].filter((item) => {
+      if (!item?.eventId || seen.has(item.eventId)) return false;
+      seen.add(item.eventId);
+      return true;
+    }).slice(-analyticsQueueLimit);
+  }
+
+  function persistAnalyticsQueue() {
+    try {
+      const pending = pendingAnalyticsEvents();
+      if (pending.length) window.sessionStorage.setItem(analyticsQueueKey, JSON.stringify(pending));
+      else window.sessionStorage.removeItem(analyticsQueueKey);
+    } catch {}
+  }
+
+  function scheduleAnalyticsRetry() {
+    if (analyticsRetryTimer || !analyticsQueue.length) return;
+    const delay = Math.min(30000, 1000 * (2 ** analyticsRetryAttempt));
+    analyticsRetryTimer = window.setTimeout(() => {
+      analyticsRetryTimer = null;
+      analyticsRetryAttempt = Math.min(5, analyticsRetryAttempt + 1);
+      void flushAnalytics();
+    }, delay);
+  }
+
+  function requeueAnalyticsEvents(events) {
+    const existing = new Set(analyticsQueue.map((item) => item.eventId));
+    analyticsQueue = [
+      ...events.filter((item) => !existing.has(item.eventId)),
+      ...analyticsQueue,
+    ].slice(-analyticsQueueLimit);
+    persistAnalyticsQueue();
+  }
+
+  function flushAnalyticsWithBeacon() {
+    const endpoint = config.endpoints?.events;
+    if (!endpoint || typeof navigator.sendBeacon !== "function") return false;
+    const pending = pendingAnalyticsEvents();
+    if (!pending.length) return true;
+
+    const acceptedIds = new Set();
+    for (let index = 0; index < pending.length; index += analyticsBatchSize) {
+      const batch = pending.slice(index, index + analyticsBatchSize);
+      const body = JSON.stringify({ events: batch });
+      const accepted = navigator.sendBeacon(endpoint, new Blob([body], { type: "application/json" }));
+      if (!accepted) break;
+      batch.forEach((item) => acceptedIds.add(item.eventId));
+    }
+    if (!acceptedIds.size) return false;
+    analyticsQueue = analyticsQueue.filter((item) => !acceptedIds.has(item.eventId));
+    analyticsInFlight = analyticsInFlight.filter((item) => !acceptedIds.has(item.eventId));
+    persistAnalyticsQueue();
+    return acceptedIds.size === pending.length;
+  }
+
+  function flushAnalytics(options = {}) {
+    const endpoint = config.endpoints?.events;
+    if (!endpoint) return Promise.resolve(false);
+    if (options.useBeacon && flushAnalyticsWithBeacon()) return Promise.resolve(true);
+    if (analyticsFlushPromise) return analyticsFlushPromise;
+    if (!analyticsQueue.length) return Promise.resolve(true);
+
+    const batch = analyticsQueue.splice(0, analyticsBatchSize);
+    analyticsInFlight = batch;
+    persistAnalyticsQueue();
+    analyticsFlushPromise = window.fetch(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ events: batch }),
       keepalive: true,
       credentials: "same-origin",
-    }).catch(() => {});
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Analytics request failed with ${response.status}`);
+      analyticsInFlight = [];
+      analyticsRetryAttempt = 0;
+      persistAnalyticsQueue();
+      return true;
+    }).catch(() => {
+      requeueAnalyticsEvents(analyticsInFlight);
+      analyticsInFlight = [];
+      scheduleAnalyticsRetry();
+      return false;
+    }).finally(() => {
+      analyticsFlushPromise = null;
+      if (analyticsQueue.length >= analyticsBatchSize) void flushAnalytics();
+    });
+    return analyticsFlushPromise;
+  }
+
+  function queueAnalyticsEvent(detail) {
+    if (!config.endpoints?.events) return;
+    analyticsQueue.push(detail);
+    analyticsQueue = analyticsQueue.slice(-analyticsQueueLimit);
+    persistAnalyticsQueue();
+    if (analyticsQueue.length >= analyticsBatchSize) void flushAnalytics();
   }
 
   function trackEvent(name, parameters) {
@@ -140,7 +240,7 @@
         question_number: detail.questionNumber,
       });
     }
-    sendAnalyticsEvent(detail);
+    queueAnalyticsEvent(detail);
   }
 
   function assessmentStartedSessionKey() {
@@ -389,16 +489,38 @@
     renderQuestion();
   }
 
-  async function postJson(url, payload) {
-    const response = await window.fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify(payload),
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.message || "We could not securely save your assessment. Please try again.");
-    return data;
+  function retryDelay(attempt) {
+    return 350 * (2 ** attempt);
+  }
+
+  function wait(delay) {
+    return new Promise((resolve) => window.setTimeout(resolve, delay));
+  }
+
+  async function postJson(url, payload, maximumAttempts = 3) {
+    let lastError;
+    for (let attempt = 0; attempt < maximumAttempts; attempt += 1) {
+      try {
+        const response = await window.fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.ok !== false) return data;
+        const error = new Error(data.message || "We could not securely save your assessment. Please try again.");
+        error.status = response.status;
+        throw error;
+      } catch (error) {
+        lastError = error;
+        const status = Number(error.status || 0);
+        const retryable = status === 0 || [408, 425, 500, 502, 503, 504].includes(status);
+        if (!retryable || attempt === maximumAttempts - 1) throw error;
+        await wait(retryDelay(attempt));
+      }
+    }
+    throw lastError;
   }
 
   async function completeAssessment() {
@@ -437,6 +559,7 @@
       completionContinueButton.textContent = "See My Result →";
       completionContinueButton.disabled = false;
       persistDraft();
+      void flushAnalytics();
     } catch (error) {
       completionContinueButton.dataset.action = "retry";
       completionContinueButton.textContent = "Try Preparing My Result Again";
@@ -684,6 +807,7 @@
       focusViewHeading(resultTitle);
       trackEvent("contact_details_submitted");
       trackEvent("result_viewed");
+      void flushAnalytics();
     } catch (error) {
       submitButton.disabled = false;
       submitButton.textContent = "Try Revealing My Results Again";
@@ -781,9 +905,11 @@
     if (document.visibilityState === "hidden" && state.step >= 0 && (state.phase === "question" || state.phase === "completion" || state.phase === "gate")) {
       persistDraft();
     }
+    if (document.visibilityState === "hidden") void flushAnalytics({ useBeacon: true });
   });
   window.addEventListener("pagehide", () => {
     if (state.step >= 0 && (state.phase === "question" || state.phase === "completion" || state.phase === "gate")) persistDraft();
+    void flushAnalytics({ useBeacon: true });
   });
 
   if (typeof mobileGateQuery.addEventListener === "function") {
@@ -793,6 +919,7 @@
   }
 
   trackEvent("assessment_page_viewed");
+  if (analyticsQueue.length > 1) scheduleAnalyticsRetry();
   const routeParameters = new URLSearchParams(window.location.search);
   const forceIntroduction = routeParameters.get("intro") === "1";
   const restoredDraft = restoreDraft();

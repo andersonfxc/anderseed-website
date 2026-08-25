@@ -86,7 +86,16 @@ collections:
               - { label: "Intro", name: "intro", widget: "text" }
               - { label: "Featured title", name: "featuredTitle", widget: "string" }
               - { label: "Featured badge", name: "featuredBadge", widget: "string" }
+              - { label: "Featured badge URL", name: "featuredBadgeUrl", widget: "string" }
               - { label: "Featured text", name: "featuredText", widget: "text" }
+              - label: "Featured phases"
+                name: "featuredPhases"
+                widget: "list"
+                fields:
+                  - { label: "Period", name: "period", widget: "string" }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Text", name: "text", widget: "text" }
+              - { label: "Featured outcome", name: "featuredOutcome", widget: "text" }
           - label: "Programme cards"
             name: "serviceCards"
             widget: "list"

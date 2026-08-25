@@ -146,15 +146,26 @@ h1,h2,h3,p{margin-top:0}
 .cohort-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch}
 .cohort-card{min-height:205px;padding:28px 24px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 26px rgba(49,43,31,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}
 .cohort-card:hover{transform:scale(1.035);border-color:rgba(31,107,82,.42);box-shadow:0 18px 40px rgba(31,107,82,.12);z-index:2}
-.cohort-card.featured{grid-column:span 3;background:var(--mint);border-color:#7ED4A0;padding:34px}
+.cohort-card.featured{grid-column:span 3;background:var(--mint);border-color:#7ED4A0;padding:28px}
 .cohort-card.wide{grid-column:span 2}
 .cohort-card.highlight{border-color:rgba(31,107,82,.72);box-shadow:inset 0 0 0 1px rgba(31,107,82,.22),0 10px 26px rgba(49,43,31,.04)}
-.cohort-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+.cohort-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:12px}
 .cohort-card h3{margin:0 0 10px;font-size:19px;line-height:1.25}
 .cohort-card.featured h3{font-size:27px}
 .cohort-card p{margin:0;color:var(--soft-ink);font-size:15px;line-height:1.55;font-weight:500}
 .cohort-card.featured p{font-size:16px;line-height:1.6}
-.cohort-badge{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:999px;background:var(--leaf);color:#fff;padding:10px 22px;font-weight:900}
+.cohort-badge{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:999px;background:var(--leaf);color:#fff;padding:10px 22px;font-weight:900;transform-origin:center;transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+.cohort-badge:hover,.cohort-badge:focus-visible{transform:scale(1.07);background:#174F3E;box-shadow:0 10px 24px rgba(15,46,34,.2)}
+.cohort-card.featured .programme-summary{max-width:760px;font-size:15px;line-height:1.5}
+.programme-phases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:14px 0 11px;padding:12px 0;border-top:1px solid rgba(31,107,82,.22);border-bottom:1px solid rgba(31,107,82,.22)}
+.programme-phase{padding:0 16px}
+.programme-phase:first-child{padding-left:0}
+.programme-phase+.programme-phase{border-left:1px solid rgba(31,107,82,.22)}
+.programme-phase span{display:block;margin-bottom:2px;color:var(--leaf);font-size:11px;font-weight:900;text-transform:uppercase}
+.programme-phase h4{margin:0 0 3px;color:var(--ink);font-size:16px;line-height:1.2}
+.cohort-card.featured .programme-phase p{font-size:13px;line-height:1.42}
+.cohort-card.featured .programme-outcome{font-size:13px;line-height:1.42}
+.programme-outcome strong{color:var(--ink)}
 .cohort-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;margin-bottom:20px;color:var(--leaf);background:var(--mint)}
 .cohort-icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .cohort-icon.cv{background:#E0F4E8;color:#1F6B52}
@@ -433,6 +444,9 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
   .cohort-card p,.cohort-card.featured p{font-size:15px}
   .cohort-card-head{display:block}
   .cohort-badge{margin-top:12px}
+  .programme-phases{grid-template-columns:1fr;gap:16px}
+  .programme-phase{padding:0}
+  .programme-phase+.programme-phase{padding-top:16px;border-top:1px solid rgba(31,107,82,.22);border-left:0}
   .image-frame img{height:290px}
   .quote-card{margin:-34px 12px 0;padding:20px}
   .quote-card:before{display:none}
@@ -933,11 +947,11 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
     <nav class="nav-links" aria-label="Primary navigation">
       <a class="active" href="#home" aria-current="location">Home</a>
       <a href="about/index.html">About</a>
-      <a href="#pricing">Pricing</a>
       <a href="#portfolio">Portfolio</a>
+      <a href="#pricing">Pricing</a>
       <a href="blog/index.html">Blog</a>
-      <a href="#contact">Contact Us</a>
       <a href="faq/index.html">FAQ</a>
+      <a href="#contact">Contact Us</a>
     </nav>
     <div class="nav-actions">
       <a class="btn btn-primary" href="assessment/index.html?intro=1">Discover My BA Readiness</a>
@@ -947,11 +961,11 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
   <nav class="mobile-panel" id="mobile-navigation" aria-label="Mobile navigation" hidden>
     <a class="active" href="#home" aria-current="location">Home</a>
     <a href="about/index.html">About</a>
-    <a href="#pricing">Pricing</a>
     <a href="#portfolio">Portfolio</a>
+    <a href="#pricing">Pricing</a>
     <a href="blog/index.html">Blog</a>
-    <a href="#contact">Contact Us</a>
     <a href="faq/index.html">FAQ</a>
+    <a href="#contact">Contact Us</a>
     <a class="btn btn-primary" href="assessment/index.html?intro=1">Discover My BA Readiness</a>
   </nav>
 </header>
@@ -988,10 +1002,23 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
       <div class="cohort-grid">
         <article class="cohort-card featured">
           <div class="cohort-card-head">
-            <h3>8-Week Live Mentorship Cohort</h3>
-            <a class="cohort-badge" href="#pricing">Join premium</a>
+            <h3>12-Week BA Career Journey</h3>
+            <a class="cohort-badge" href="#portfolio">See Portfolio Project</a>
           </div>
-          <p>Hands-on BA training across the end-to-end software development lifecycle. Practise requirements gathering, process mapping, stakeholder conversations, documentation, and real project thinking with mentor feedback and accountability.</p>
+          <p class="programme-summary">Eight weeks of guided learning, followed by four weeks applying it to a portfolio-ready project.</p>
+          <div class="programme-phases" aria-label="Programme phases">
+            <div class="programme-phase">
+              <span>Weeks 1-8</span>
+              <h4>Live Mentorship</h4>
+              <p>Live BA training, practical exercises, mentor feedback, and career support.</p>
+            </div>
+            <div class="programme-phase">
+              <span>Weeks 9-12</span>
+              <h4>Portfolio Project</h4>
+              <p>Build an end-to-end Salesforce CRM case and interview-ready BA artefacts.</p>
+            </div>
+          </div>
+          <p class="programme-outcome"><strong>Outcome:</strong> Practical BA capability and portfolio evidence you can confidently explain.</p>
         </article>
         <article class="cohort-card highlight">
           <div class="cohort-icon cv" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3h6l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5"/><path d="m9.5 15 1.7 1.7 3.8-4.2"/></svg></div>
@@ -1035,12 +1062,12 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
         <p class="section-copy">A clear route from beginner to supported BA professional, with practical training, live project experience, job-readiness, and ongoing career support.</p>
       </div>
       <div class="process-flow" aria-label="Business Analysis mentorship process flow">
-        <article class="process-step start"><div class="process-marker">Start</div><span class="process-time">Day 0</span><h3>Choose programme</h3><p>Select the mentorship path that matches your current stage, goals, and level of BA confidence.</p></article>
-        <article class="process-step training"><div class="process-marker">Access</div><span class="process-time">Week 1</span><h3>Get onboarded</h3><p>Join smoothly and receive access to premium training, resources, mentor guidance, and your support community.</p></article>
-        <article class="process-step action"><div class="process-marker">Build</div><span class="process-time">Weeks 2–8</span><h3>Learn and take action</h3><p>Work through BA concepts, practical tasks, and live project scenarios that mirror real workplace expectations.</p></article>
-        <article class="process-step confidence"><div class="process-marker">Ready</div><span class="process-time">90 days</span><h3>Build confidence</h3><p>Strengthen your BA language, stakeholder thinking, documentation skills, and ability to explain your work clearly.</p></article>
-        <article class="process-step hired"><div class="process-marker">Career</div><span class="process-time">6 months</span><h3>Get hired</h3><p>Use your CV, LinkedIn, job application strategy, and interview preparation to move confidently toward BA roles.</p></article>
-        <article class="process-step support"><div class="process-marker">Ongoing</div><span class="process-time">Lifetime</span><h3>Lifetime job support group</h3><p>Stay connected after the programme with career check-ins, peer support, job leads, and continued accountability.</p></article>
+        <article class="process-step start"><div class="process-marker">Start</div><span class="process-time">Day 0</span><h3>Start Your Journey</h3><p>Follow a clear route from your starting point to practical, job-ready Business Analysis capability.</p></article>
+        <article class="process-step training"><div class="process-marker">Access</div><span class="process-time">Week 1</span><h3>Get onboarded</h3><p>Set your goals in a 15-minute welcome call, then access premium training, templates, and community support.</p></article>
+        <article class="process-step action"><div class="process-marker">Build</div><span class="process-time">Weeks 2–8</span><h3>Learn by doing</h3><p>Gain hands-on BA experience through live training, end-to-end project work, workplace tasks, and mentor feedback.</p></article>
+        <article class="process-step confidence"><div class="process-marker">Ready</div><span class="process-time">90 days</span><h3>Become BA-ready</h3><p>Create professional BA artefacts and confidently explain your analysis, decisions, and project contribution.</p></article>
+        <article class="process-step hired"><div class="process-marker">Career</div><span class="process-time">6 months</span><h3>Get hired</h3><p>Stand out with an ATS-ready CV, optimised LinkedIn, portfolio evidence, our Signature Application Guide, and mock interviews.</p></article>
+        <article class="process-step support"><div class="process-marker">Ongoing</div><span class="process-time">Lifetime</span><h3>Lifetime career support</h3><p>Keep progressing with lifetime career check-ins, on-the-job guidance, opportunities, and community accountability.</p></article>
       </div>
       <aside class="salary-strip" aria-label="Indicative UK Business Analysis salary ranges">
         <div class="salary-strip-text">

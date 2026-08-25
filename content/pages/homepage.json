@@ -17,9 +17,23 @@
     "label": "The programme",
     "title": "Everything you need to become BA-ready",
     "intro": "More than a course, this is a structured mentorship programme designed to bridge the gap between learning Business Analysis and becoming a Business Analyst.",
-    "featuredTitle": "8-Week Live Mentorship Cohort",
-    "featuredBadge": "Join premium",
-    "featuredText": "Designed to bridge the gap between learning and doing Business Analysis. Through hands-on projects across the Software Development Lifecycle, you'll build a professional portfolio, practical experience, and stand out to employers."
+    "featuredTitle": "12-Week BA Career Journey",
+    "featuredBadge": "See Portfolio Project",
+    "featuredBadgeUrl": "#portfolio",
+    "featuredText": "Eight weeks of guided learning, followed by four weeks applying it to a portfolio-ready project.",
+    "featuredPhases": [
+      {
+        "period": "Weeks 1-8",
+        "title": "Live Mentorship",
+        "text": "Live BA training, practical exercises, mentor feedback, and career support."
+      },
+      {
+        "period": "Weeks 9-12",
+        "title": "Portfolio Project",
+        "text": "Build an end-to-end Salesforce CRM case and interview-ready BA artefacts."
+      }
+    ],
+    "featuredOutcome": "Practical BA capability and portfolio evidence you can confidently explain."
   },
   "serviceCards": [
     {
@@ -269,7 +283,7 @@
     "cta": {
       "title": "Ready to build experience you can actually talk about?",
       "label": "Start Building My BA Experience",
-      "url": "checkout/index.html"
+      "url": "#pricing"
     }
   },
   "process": {
@@ -281,42 +295,42 @@
         "marker": "Start",
         "time": "Day 0",
         "title": "Start Your Journey",
-        "text": "Take the first step towards becoming a Business Analyst with Anderseed.",
+        "text": "Follow a clear route from your starting point to practical, job-ready Business Analysis capability.",
         "style": "start"
       },
       {
         "marker": "Access",
         "time": "Week 1",
         "title": "Get onboarded",
-        "text": "Meet with me, your mentor, for a 15-minute welcome call to map out your journey and set you up for success from day one. Then unlock your training, resources, and support community.",
+        "text": "Set your goals in a 15-minute welcome call, then access premium training, templates, and community support.",
         "style": "training"
       },
       {
         "marker": "Build",
         "time": "Weeks 2–8",
-        "title": "Learn and take action",
-        "text": "Work through BA concepts, practical tasks, and live project scenarios that mirror real workplace expectations.",
+        "title": "Learn by doing",
+        "text": "Gain hands-on BA experience through live training, end-to-end project work, workplace tasks, and mentor feedback.",
         "style": "action"
       },
       {
         "marker": "Ready",
         "time": "90 days",
-        "title": "Build confidence",
-        "text": "Strengthen your BA language, stakeholder thinking, documentation skills, and ability to explain your work clearly.",
+        "title": "Become BA-ready",
+        "text": "Create professional BA artefacts and confidently explain your analysis, decisions, and project contribution.",
         "style": "confidence"
       },
       {
         "marker": "Career",
         "time": "6 months",
         "title": "Get hired",
-        "text": "Confidently apply for BA roles with a standout CV, an optimised LinkedIn profile, our Signature Application Guide, and interview preparation designed to help you stand out.",
+        "text": "Stand out with an ATS-ready CV, optimised LinkedIn, portfolio evidence, our Signature Application Guide, and mock interviews.",
         "style": "hired"
       },
       {
         "marker": "Ongoing",
         "time": "Lifetime",
-        "title": "Lifetime job support group",
-        "text": "Stay connected after the programme for career check-ins, on-the-job support, job opportunities, and ongoing accountability.",
+        "title": "Lifetime career support",
+        "text": "Keep progressing with lifetime career check-ins, on-the-job guidance, opportunities, and community accountability.",
         "style": "support"
       }
     ]

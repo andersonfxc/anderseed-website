@@ -647,6 +647,15 @@ function generateHero(home, settings) {
 function generateProgramme(home) {
   const programme = home.programme;
   const title = escapeHtml(programme.title).replace("BA-ready", "<span>BA-ready</span>");
+  const featuredPhases = (programme.featuredPhases || [])
+    .map(
+      (phase) => `<div class="programme-phase">
+              <span>${escapeHtml(phase.period)}</span>
+              <h4>${escapeHtml(phase.title)}</h4>
+              <p>${escapeHtml(phase.text)}</p>
+            </div>`
+    )
+    .join("\n            ");
   const cards = home.serviceCards
     .map((card, index) => {
       const classes = ["cohort-card"];
@@ -668,9 +677,13 @@ function generateProgramme(home) {
         <article class="cohort-card featured">
           <div class="cohort-card-head">
             <h3>${escapeHtml(programme.featuredTitle)}</h3>
-            <a class="cohort-badge" href="#pricing">${escapeHtml(programme.featuredBadge)}</a>
+            <a class="cohort-badge" href="${escapeAttr(programme.featuredBadgeUrl || "#portfolio")}">${escapeHtml(programme.featuredBadge)}</a>
           </div>
-          <p>${escapeHtml(programme.featuredText)}</p>
+          <p class="programme-summary">${escapeHtml(programme.featuredText)}</p>
+          ${featuredPhases ? `<div class="programme-phases" aria-label="Programme phases">
+            ${featuredPhases}
+          </div>` : ""}
+          ${programme.featuredOutcome ? `<p class="programme-outcome"><strong>Outcome:</strong> ${escapeHtml(programme.featuredOutcome)}</p>` : ""}
         </article>
         ${cards}
       </div>`;
@@ -1246,7 +1259,7 @@ function generateTestimonialsSection(testimonials) {
 
 function generateContactSection(home, settings) {
   const contact = home.contact;
-  return `<section class="section alt" id="contact">
+  return `<section class="section" id="contact">
     <div class="section-inner">
       <div class="section-head center">
         <div class="section-label">${escapeHtml(contact.label)}</div>
@@ -1301,7 +1314,7 @@ function generateHomeFaqSection(faqs) {
       return `<article class="faq-item${index === 0 ? " open" : ""}"><button class="faq-question" id="${questionId}" type="button" aria-expanded="${index === 0 ? "true" : "false"}" aria-controls="${answerId}">${escapeHtml(item.question)}</button><div class="faq-answer" id="${answerId}" role="region" aria-labelledby="${questionId}">${escapeHtml(item.answer)}</div></article>`;
     })
     .join("\n        ");
-  return `<section class="section" id="faq">
+  return `<section class="section alt" id="faq">
     <div class="section-inner">
       <div class="section-head center">
         <div class="section-label">FAQ</div>
@@ -1378,21 +1391,11 @@ function updateHomepage(settings, home, pricing, testimonials, faqs, assessment)
   );
   html = replaceFirst(
     html,
-    /<section class="section alt" id="contact">[\s\S]*?<\/section>\s*<section class="section" id="faq">/,
-    `${generateContactSection(home, settings)}
-
-  <section class="section" id="faq">`,
-    "contact section"
-  );
-  html = replaceFirst(
-    html,
-    /<section class="section" id="faq">[\s\S]*?<\/section>\s*<section class="section alt">\s*<div class="section-inner">\s*<div class="community">/,
+    /<section class="section alt" id="contact">[\s\S]*?<\/section>\s*<section class="section" id="faq">[\s\S]*?<\/section>/,
     `${generateHomeFaqSection(faqs)}
 
-  <section class="section alt">
-    <div class="section-inner">
-      <div class="community">`,
-    "homepage FAQ section"
+  ${generateContactSection(home, settings)}`,
+    "homepage FAQ and contact sections"
   );
   if (!html.includes('assets/assessment.css')) {
     html = html.replace('</head>', '<link rel="stylesheet" href="assets/assessment.css" />\n</head>');

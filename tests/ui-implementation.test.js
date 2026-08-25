@@ -372,6 +372,8 @@ test("the generated assessment uses the V2 positioning and exact eight-question 
 
   assert.match(config.questions[1].revealAfter, /unclear problems|analytical capability/i);
   assert.match(config.questions[2].revealAfter, /transferable Business Analysis experience/i);
+  assert.equal(config.questions[2].options[0].value, "improve_process");
+  assert.equal(config.questions[2].options[0].label, "Found a better way to do a task at work");
   assert.match(config.questions[6].revealAfter, /growth area/i);
   assert.match(config.questions[5].help, /not a BA knowledge test/i);
   assert.match(config.questions[7].help, /does not raise or lower your BA Readiness Score/i);
@@ -483,7 +485,7 @@ test("the approved post-survey journey pauses at completion and reveals a tailor
   for (const outcome of ["Portfolio", "CV", "Applications", "Interviews"]) {
     assert.match(result, new RegExp(outcome));
   }
-  assert.match(result, /href="https:\/\/anderseedconsulting\.co\.uk\/#pricing"[^>]*data-programme-cta/);
+  assert.match(result, /href="\.\.\/index\.html#pricing"[^>]*data-programme-cta/);
   assert.match(result, /href="https:\/\/t\.me\/anderseedconsulting"/);
   assert.match(result, /Explore The Programme &amp; Pricing →/);
   assert.match(result, /Join the Free BA Community →/);
@@ -733,6 +735,7 @@ test("the homepage keeps the assessment dominant and presents a Salesforce-first
   const assessmentCss = read("dist/assets/assessment.css");
   const portfolioCss = read("dist/assets/portfolio-experience.css");
   const portfolioJs = read("dist/assets/portfolio-experience.js");
+  const cms = read("admin/config.yml");
   const hero = between(homepage, '<section class="hero"', "</section>");
   const assessmentSection = between(homepage, '<section class="home-assessment-section"', "</section>");
   const assessmentLinks = [...homepage.matchAll(/href="([^"]*assessment\/index\.html[^"]*)"/g)].map((match) => match[1]);
@@ -798,7 +801,27 @@ test("the homepage keeps the assessment dominant and presents a Salesforce-first
   assert.match(homepage, /INDEPENDENT CHALLENGE[\s\S]*HCM Transformation/);
   assert.match(homepage, /OPTIONAL CAPSTONE[\s\S]*ERP Transformation/);
   assert.equal((homepage.match(/data-portfolio-secondary="(?:hcm|erp)"/g) || []).length, 2);
-  assert.match(homepage, /href="checkout\/index\.html" data-portfolio-cta[\s\S]*Start Building My BA Experience/);
+  assert.match(homepage, /12-Week BA Career Journey/);
+  assert.match(homepage, /Weeks 1-8[\s\S]*Live Mentorship/);
+  assert.match(homepage, /Weeks 9-12[\s\S]*Portfolio Project/);
+  assert.match(homepage, /href="#portfolio"[^>]*>See Portfolio Project<\/a>/);
+  assert.match(homepage, /\.cohort-badge:hover,\.cohort-badge:focus-visible\{transform:scale\(1\.07\)/);
+  assert.doesNotMatch(homepage, /class="process-route"|class="process-card"|class="process-sequence"/);
+  assert.equal((homepage.match(/class="process-step (?:start|training|action|confidence|hired|support)"/g) || []).length, 6);
+  assert.match(homepage, /\.process-flow\{display:grid;grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+  assert.match(homepage, /\.process-step:after\{content:"";[^}]*height:2px;background:#829089/);
+  assert.match(homepage, /Start Your Journey[\s\S]*15-minute welcome call[\s\S]*Learn by doing[\s\S]*Become BA-ready[\s\S]*Get hired[\s\S]*Lifetime career support/);
+  assert.match(homepage, /@media\(max-width:1060px\)[\s\S]*\.process-flow\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)\}/);
+  assert.match(cms, /name: "featuredBadgeUrl"/);
+  assert.match(cms, /name: "featuredPhases"/);
+  assert.match(cms, /name: "featuredOutcome"/);
+  assert.match(homepage, /href="#pricing" data-portfolio-cta[\s\S]*Start Building My BA Experience/);
+  assert.ok(homepage.indexOf('id="pricing"') < homepage.indexOf('id="faq"'));
+  assert.ok(homepage.indexOf('id="faq"') < homepage.indexOf('id="contact"'));
+  assert.ok(homepage.indexOf('id="contact"') < homepage.indexOf('Join the Anderseed community'));
+  const primaryNavigation = homepage.match(/<nav class="nav-links"[\s\S]*?<\/nav>/)?.[0] || "";
+  assert.ok(primaryNavigation.indexOf('href="#portfolio"') < primaryNavigation.indexOf('href="#pricing"'));
+  assert.ok(primaryNavigation.indexOf('href="faq\/index.html"') < primaryNavigation.indexOf('href="#contact"'));
   assert.doesNotMatch(homepage, /data-case-type=|class="lab-case|assets\/portfolio-lab\.css/);
   assert.match(homepage, /assets\/portfolio-experience\.css/);
   assert.match(homepage, /assets\/portfolio-experience\.js/);

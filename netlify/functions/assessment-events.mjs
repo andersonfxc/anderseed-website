@@ -28,26 +28,25 @@ export default async (request) => {
     const events = Array.isArray(body.events) ? body.events.slice(0, 20) : [];
     if (!events.length || events.some((event) => !validEvent(event))) return errorResponse("One or more analytics events are invalid.");
     const db = database();
-    const client = await db.pool.connect();
-    try {
-      await client.query("BEGIN");
-      for (const event of events) {
-        const timestamp = Number.isNaN(Date.parse(event.clientTimestamp)) ? null : event.clientTimestamp;
-        await client.query(
-          `INSERT INTO assessment_events (
-            event_id, analytics_session_id, event_name, schema_version, scoring_version, question_id, question_number, client_timestamp
-          ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-          ON CONFLICT (event_id) DO NOTHING`,
-          [event.eventId, event.analyticsSessionId, event.eventName, String(event.schemaVersion).slice(0, 80), String(event.scoringVersion).slice(0, 80), event.questionId || null, event.questionNumber || null, timestamp]
-        );
-      }
-      await client.query("COMMIT");
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    } finally {
-      client.release();
-    }
+    await db.pool.query(
+      `INSERT INTO assessment_events (
+        event_id, analytics_session_id, event_name, schema_version, scoring_version, question_id, question_number, client_timestamp
+      )
+      SELECT * FROM UNNEST(
+        $1::uuid[], $2::uuid[], $3::text[], $4::text[], $5::text[], $6::text[], $7::smallint[], $8::timestamptz[]
+      )
+      ON CONFLICT (event_id) DO NOTHING`,
+      [
+        events.map((event) => event.eventId),
+        events.map((event) => event.analyticsSessionId),
+        events.map((event) => event.eventName),
+        events.map((event) => String(event.schemaVersion).slice(0, 80)),
+        events.map((event) => String(event.scoringVersion).slice(0, 80)),
+        events.map((event) => event.questionId || null),
+        events.map((event) => event.questionNumber || null),
+        events.map((event) => Number.isNaN(Date.parse(event.clientTimestamp)) ? null : event.clientTimestamp),
+      ]
+    );
     return jsonResponse({ ok: true, accepted: events.length }, 202);
   } catch {
     return errorResponse("Analytics events could not be stored.", 500);

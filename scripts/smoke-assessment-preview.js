@@ -36,7 +36,8 @@ async function run() {
   const page = await fetch(`${base}/assessment/`);
   const html = await page.text();
   assert.equal(page.ok, true);
-  assert.match(html, /How close are you to a career in/);
+  assert.match(html, /Discover how ready you are for/);
+  assert.match(html, /<span>Business Analysis<\/span>/);
 
   const events = [
     ["assessment_page_viewed", null],

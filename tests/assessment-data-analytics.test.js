@@ -58,7 +58,7 @@ test("the actual analytics payload excludes identity, answers and contact consen
   const client = read("assets/assessment.js");
   const instrumented = client.replace(
     "  function show(view) {",
-    "  globalThis.__assessmentTrackEvent = trackEvent;\n  return;\n  function show(view) {"
+    "  globalThis.__assessmentTrackEvent = trackEvent;\n  globalThis.__assessmentFlushAnalytics = flushAnalytics;\n  return;\n  function show(view) {"
   );
   assert.notEqual(instrumented, client, "could not instrument the analytics function");
 
@@ -87,12 +87,14 @@ test("the actual analytics payload excludes identity, answers and contact consen
       sessionStorage: {
         getItem: (key) => session.get(key) || null,
         setItem: (key, value) => session.set(key, value),
+        removeItem: (key) => session.delete(key),
       },
+      setTimeout,
       dispatchEvent: () => true,
       gtag: (...args) => { gtagRequest = args; },
       fetch: async (url, options) => {
         fetchRequest = { url, options };
-        return { ok: true };
+        return { ok: true, status: 202 };
       },
     },
   };
@@ -107,6 +109,8 @@ test("the actual analytics payload excludes identity, answers and contact consen
     marketingOptIn: true,
   });
 
+  assert.equal(fetchRequest, undefined, "first-party analytics should wait for a batch boundary");
+  await context.__assessmentFlushAnalytics();
   assert.equal(fetchRequest.url, "/api/v1/assessment/events");
   const payload = JSON.parse(fetchRequest.options.body);
   assert.equal(payload.events.length, 1);
@@ -136,6 +140,111 @@ test("the actual analytics payload excludes identity, answers and contact consen
       question_number: 2,
     },
   ]);
+});
+
+test("first-party analytics are buffered, persisted and sent in batches of 20", async () => {
+  const client = read("assets/assessment.js");
+  const instrumented = client.replace(
+    "  function show(view) {",
+    "  globalThis.__assessmentTrackEvent = trackEvent;\n  globalThis.__assessmentFlushAnalytics = flushAnalytics;\n  return;\n  function show(view) {"
+  );
+  const session = new Map();
+  const requests = [];
+  const context = {
+    Blob,
+    CustomEvent: class CustomEvent {
+      constructor(type, options) { this.type = type; this.detail = options.detail; }
+    },
+    document: {
+      getElementById: () => ({
+        textContent: JSON.stringify({
+          schemaVersion: "ba-readiness-mvp-v2",
+          scoring: { scoringVersion: "2026-08-22-v1" },
+          endpoints: { events: "/api/v1/assessment/events" },
+        }),
+      }),
+      querySelector: () => ({ querySelector: () => null }),
+    },
+    navigator: {},
+    window: {
+      crypto: { randomUUID: () => crypto.randomUUID() },
+      AnderseedAssessmentScoring: { validateConfig: () => true },
+      sessionStorage: {
+        getItem: (key) => session.get(key) || null,
+        setItem: (key, value) => session.set(key, value),
+        removeItem: (key) => session.delete(key),
+      },
+      setTimeout,
+      dispatchEvent: () => true,
+      fetch: async (url, options) => {
+        requests.push({ url, options });
+        return { ok: true, status: 202 };
+      },
+    },
+  };
+  vm.runInNewContext(instrumented, context);
+
+  for (let index = 0; index < 20; index += 1) {
+    context.__assessmentTrackEvent("assessment_question_viewed", {
+      question_id: "handlingAmbiguity",
+      question_number: 2,
+    });
+  }
+  await context.__assessmentFlushAnalytics();
+
+  assert.equal(requests.length, 1, "20 events should use one first-party request");
+  const payload = JSON.parse(requests[0].options.body);
+  assert.equal(payload.events.length, 20);
+  assert.equal(new Set(payload.events.map((event) => event.eventId)).size, 20);
+  assert.equal(session.has("anderseed.baReadiness.v2.analyticsSession.pendingEvents"), false, "successful batches should be removed from storage");
+});
+
+test("result and contact posts retry temporary failures without retrying validation failures", async () => {
+  const client = read("assets/assessment.js");
+  const instrumented = client.replace(
+    "  async function completeAssessment() {",
+    "  globalThis.__assessmentPostJson = postJson;\n  return;\n  async function completeAssessment() {"
+  );
+  const session = new Map();
+  const responses = [
+    { ok: false, status: 503, json: async () => ({ message: "Temporarily unavailable" }) },
+    { ok: true, status: 201, json: async () => ({ ok: true, persisted: true }) },
+  ];
+  let requests = 0;
+  const context = {
+    Blob,
+    CustomEvent: class CustomEvent {},
+    document: {
+      getElementById: () => ({ textContent: JSON.stringify({ scoring: {}, endpoints: {} }) }),
+      querySelector: () => ({ querySelector: () => null }),
+    },
+    navigator: {},
+    window: {
+      crypto: { randomUUID: () => crypto.randomUUID() },
+      AnderseedAssessmentScoring: { validateConfig: () => true },
+      sessionStorage: {
+        getItem: (key) => session.get(key) || null,
+        setItem: (key, value) => session.set(key, value),
+        removeItem: (key) => session.delete(key),
+      },
+      setTimeout: (callback) => { callback(); return 1; },
+      fetch: async () => {
+        requests += 1;
+        return responses.shift();
+      },
+    },
+  };
+  vm.runInNewContext(instrumented, context);
+  const outcome = await context.__assessmentPostJson("/complete", { assessmentId: "test" });
+  assert.equal(outcome.persisted, true);
+  assert.equal(requests, 2);
+
+  context.window.fetch = async () => {
+    requests += 1;
+    return { ok: false, status: 400, json: async () => ({ message: "Invalid submission" }) };
+  };
+  await assert.rejects(() => context.__assessmentPostJson("/complete", {}), /Invalid submission/);
+  assert.equal(requests, 3, "validation failures must not be retried");
 });
 
 test("the central PostHog bridge forwards each assessment event once with only approved non-PII properties", () => {
@@ -259,7 +368,7 @@ test("assessment, contact, consent and analytics data are structurally separated
   assert.match(migration, /REFERENCES assessment_runs\(assessment_id\) ON DELETE CASCADE/g);
 });
 
-test("the completion API validates and recomputes results server-side, then stores every Q3 selection separately", () => {
+test("assessment APIs validate server-side and bulk-write all answer and analytics rows", () => {
   const complete = read("netlify/functions/assessment-complete.mjs");
   const contact = read("netlify/functions/assessment-contact.mjs");
   const events = read("netlify/functions/assessment-events.mjs");
@@ -270,8 +379,10 @@ test("the completion API validates and recomputes results server-side, then stor
   assert.match(complete, /randomBytes\(32\)/);
   assert.match(complete, /completion_token_hash/);
   assert.match(complete, /const values = Array\.isArray\(body\.answers\[question\.id\]\)/);
+  assert.match(complete, /flatMap\(\(question\)/);
   assert.match(complete, /INSERT INTO assessment_answers/);
-  assert.match(complete, /values\[index\], index/);
+  assert.match(complete, /UNNEST\(\$2::text\[\], \$3::text\[\], \$4::smallint\[\]\)/);
+  assert.match(complete, /answerRows\.map\(\(answer\) => answer\.value\)/);
 
   assert.match(contact, /normalizeName\(body\.firstName\)/);
   assert.match(contact, /normalizeEmail\(body\.email\)/);
@@ -280,14 +391,21 @@ test("the completion API validates and recomputes results server-side, then stor
   assert.match(contact, /ON CONFLICT \(assessment_id\) DO UPDATE/);
   assert.match(contact, /INSERT INTO assessment_marketing_consents/);
   assert.match(contact, /Boolean\(body\.marketingOptIn\)/);
+  assert.match(contact, /WITH contact_upsert AS/);
+  assert.match(contact, /consent_upsert AS/);
   assert.match(contact, /persisted: true/);
 
   assert.match(events, /COUNT|INSERT INTO assessment_events|accepted: events\.length/);
+  assert.match(events, /SELECT \* FROM UNNEST/);
+  assert.match(events, /\$1::uuid\[\]/);
   assert.match(events, /event\.questionId/);
   assert.match(events, /event\.questionNumber/);
   assert.doesNotMatch(events, /firstName|normalizeEmail|answers_json|assessment_contacts/);
   assert.doesNotMatch(helpers, /Brevo/i);
   assert.doesNotMatch(complete + contact + events, /Brevo|brevo\.com/i);
+  assert.match(complete, /windowLimit: 60/);
+  assert.match(contact, /windowLimit: 60/);
+  assert.match(events, /windowLimit: 180/);
 });
 
 test("assessment endpoints and retention are configured independently of Brevo", () => {

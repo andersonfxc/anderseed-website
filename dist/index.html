@@ -203,15 +203,26 @@ h1,h2,h3,p{margin-top:0}
 .cohort-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:stretch}
 .cohort-card{min-height:205px;padding:28px 24px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 26px rgba(49,43,31,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease}
 .cohort-card:hover{transform:scale(1.035);border-color:rgba(31,107,82,.42);box-shadow:0 18px 40px rgba(31,107,82,.12);z-index:2}
-.cohort-card.featured{grid-column:span 3;background:var(--mint);border-color:#7ED4A0;padding:34px}
+.cohort-card.featured{grid-column:span 3;background:var(--mint);border-color:#7ED4A0;padding:28px}
 .cohort-card.wide{grid-column:span 2}
 .cohort-card.highlight{border-color:rgba(31,107,82,.72);box-shadow:inset 0 0 0 1px rgba(31,107,82,.22),0 10px 26px rgba(49,43,31,.04)}
-.cohort-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+.cohort-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:12px}
 .cohort-card h3{margin:0 0 10px;font-size:19px;line-height:1.25}
 .cohort-card.featured h3{font-size:27px}
 .cohort-card p{margin:0;color:var(--soft-ink);font-size:15px;line-height:1.55;font-weight:500}
 .cohort-card.featured p{font-size:16px;line-height:1.6}
-.cohort-badge{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:999px;background:var(--leaf);color:#fff;padding:10px 22px;font-weight:900}
+.cohort-badge{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:999px;background:var(--leaf);color:#fff;padding:10px 22px;font-weight:900;transform-origin:center;transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+.cohort-badge:hover,.cohort-badge:focus-visible{transform:scale(1.07);background:#174F3E;box-shadow:0 10px 24px rgba(15,46,34,.2)}
+.cohort-card.featured .programme-summary{max-width:760px;font-size:15px;line-height:1.5}
+.programme-phases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:14px 0 11px;padding:12px 0;border-top:1px solid rgba(31,107,82,.22);border-bottom:1px solid rgba(31,107,82,.22)}
+.programme-phase{padding:0 16px}
+.programme-phase:first-child{padding-left:0}
+.programme-phase+.programme-phase{border-left:1px solid rgba(31,107,82,.22)}
+.programme-phase span{display:block;margin-bottom:2px;color:var(--leaf);font-size:11px;font-weight:900;text-transform:uppercase}
+.programme-phase h4{margin:0 0 3px;color:var(--ink);font-size:16px;line-height:1.2}
+.cohort-card.featured .programme-phase p{font-size:13px;line-height:1.42}
+.cohort-card.featured .programme-outcome{font-size:13px;line-height:1.42}
+.programme-outcome strong{color:var(--ink)}
 .cohort-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;margin-bottom:20px;color:var(--leaf);background:var(--mint)}
 .cohort-icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .cohort-icon.cv{background:#E0F4E8;color:#1F6B52}
@@ -490,6 +501,9 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
   .cohort-card p,.cohort-card.featured p{font-size:15px}
   .cohort-card-head{display:block}
   .cohort-badge{margin-top:12px}
+  .programme-phases{grid-template-columns:1fr;gap:16px}
+  .programme-phase{padding:0}
+  .programme-phase+.programme-phase{padding-top:16px;border-top:1px solid rgba(31,107,82,.22);border-left:0}
   .image-frame img{height:290px}
   .quote-card{margin:-34px 12px 0;padding:20px}
   .quote-card:before{display:none}
@@ -703,11 +717,11 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
     <nav class="nav-links" aria-label="Primary navigation">
       <a class="active" href="#home" aria-current="location">Home</a>
       <a href="about/index.html">About</a>
-      <a href="#pricing">Pricing</a>
       <a href="#portfolio">Portfolio</a>
+      <a href="#pricing">Pricing</a>
       <a href="blog/index.html">Blog</a>
-      <a href="#contact">Contact Us</a>
       <a href="faq/index.html">FAQ</a>
+      <a href="#contact">Contact Us</a>
     </nav>
     <div class="nav-actions">
       <a class="btn btn-primary" href="assessment/index.html?intro=1">Discover My BA Readiness</a>
@@ -717,11 +731,11 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
   <nav class="mobile-panel" id="mobile-navigation" aria-label="Mobile navigation" hidden>
     <a class="active" href="#home" aria-current="location">Home</a>
     <a href="about/index.html">About</a>
-    <a href="#pricing">Pricing</a>
     <a href="#portfolio">Portfolio</a>
+    <a href="#pricing">Pricing</a>
     <a href="blog/index.html">Blog</a>
-    <a href="#contact">Contact Us</a>
     <a href="faq/index.html">FAQ</a>
+    <a href="#contact">Contact Us</a>
     <a class="btn btn-primary" href="assessment/index.html?intro=1">Discover My BA Readiness</a>
   </nav>
 </header>
@@ -757,10 +771,23 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
       <div class="cohort-grid">
         <article class="cohort-card featured">
           <div class="cohort-card-head">
-            <h3>8-Week Live Mentorship Cohort</h3>
-            <a class="cohort-badge" href="#pricing">Join premium</a>
+            <h3>12-Week BA Career Journey</h3>
+            <a class="cohort-badge" href="#portfolio">See Portfolio Project</a>
           </div>
-          <p>Designed to bridge the gap between learning and doing Business Analysis. Through hands-on projects across the Software Development Lifecycle, you&#039;ll build a professional portfolio, practical experience, and stand out to employers.</p>
+          <p class="programme-summary">Eight weeks of guided learning, followed by four weeks applying it to a portfolio-ready project.</p>
+          <div class="programme-phases" aria-label="Programme phases">
+            <div class="programme-phase">
+              <span>Weeks 1-8</span>
+              <h4>Live Mentorship</h4>
+              <p>Live BA training, practical exercises, mentor feedback, and career support.</p>
+            </div>
+            <div class="programme-phase">
+              <span>Weeks 9-12</span>
+              <h4>Portfolio Project</h4>
+              <p>Build an end-to-end Salesforce CRM case and interview-ready BA artefacts.</p>
+            </div>
+          </div>
+          <p class="programme-outcome"><strong>Outcome:</strong> Practical BA capability and portfolio evidence you can confidently explain.</p>
         </article>
         <article class="cohort-card highlight">
           <div class="cohort-icon cv" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3h6l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5"/><path d="m9.5 15 1.7 1.7 3.8-4.2"/></svg></div>
@@ -1179,7 +1206,7 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
 
       <aside class="px-cta">
         <div><span>NEXT STEP</span><h3>Ready to build experience you can actually talk about?</h3></div>
-        <a class="btn px-cta-link" href="checkout/index.html" data-portfolio-cta><span>Start Building My BA Experience</span><span aria-hidden="true">→</span></a>
+        <a class="btn px-cta-link" href="#pricing" data-portfolio-cta><span>Start Building My BA Experience</span><span aria-hidden="true">→</span></a>
       </aside>
       <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-portfolio-status></p>
     </div>
@@ -1193,12 +1220,12 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
         <p class="section-copy">A clear route from beginner to supported BA professional, with practical training, live project experience, job-readiness, and ongoing career support.</p>
       </div>
       <div class="process-flow" aria-label="Business Analysis mentorship process flow">
-        <article class="process-step start"><div class="process-marker">Start</div><span class="process-time">Day 0</span><h3>Start Your Journey</h3><p>Take the first step towards becoming a Business Analyst with Anderseed.</p></article>
-        <article class="process-step training"><div class="process-marker">Access</div><span class="process-time">Week 1</span><h3>Get onboarded</h3><p>Meet with me, your mentor, for a 15-minute welcome call to map out your journey and set you up for success from day one. Then unlock your training, resources, and support community.</p></article>
-        <article class="process-step action"><div class="process-marker">Build</div><span class="process-time">Weeks 2–8</span><h3>Learn and take action</h3><p>Work through BA concepts, practical tasks, and live project scenarios that mirror real workplace expectations.</p></article>
-        <article class="process-step confidence"><div class="process-marker">Ready</div><span class="process-time">90 days</span><h3>Build confidence</h3><p>Strengthen your BA language, stakeholder thinking, documentation skills, and ability to explain your work clearly.</p></article>
-        <article class="process-step hired"><div class="process-marker">Career</div><span class="process-time">6 months</span><h3>Get hired</h3><p>Confidently apply for BA roles with a standout CV, an optimised LinkedIn profile, our Signature Application Guide, and interview preparation designed to help you stand out.</p></article>
-        <article class="process-step support"><div class="process-marker">Ongoing</div><span class="process-time">Lifetime</span><h3>Lifetime job support group</h3><p>Stay connected after the programme for career check-ins, on-the-job support, job opportunities, and ongoing accountability.</p></article>
+        <article class="process-step start"><div class="process-marker">Start</div><span class="process-time">Day 0</span><h3>Start Your Journey</h3><p>Follow a clear route from your starting point to practical, job-ready Business Analysis capability.</p></article>
+        <article class="process-step training"><div class="process-marker">Access</div><span class="process-time">Week 1</span><h3>Get onboarded</h3><p>Set your goals in a 15-minute welcome call, then access premium training, templates, and community support.</p></article>
+        <article class="process-step action"><div class="process-marker">Build</div><span class="process-time">Weeks 2–8</span><h3>Learn by doing</h3><p>Gain hands-on BA experience through live training, end-to-end project work, workplace tasks, and mentor feedback.</p></article>
+        <article class="process-step confidence"><div class="process-marker">Ready</div><span class="process-time">90 days</span><h3>Become BA-ready</h3><p>Create professional BA artefacts and confidently explain your analysis, decisions, and project contribution.</p></article>
+        <article class="process-step hired"><div class="process-marker">Career</div><span class="process-time">6 months</span><h3>Get hired</h3><p>Stand out with an ATS-ready CV, optimised LinkedIn, portfolio evidence, our Signature Application Guide, and mock interviews.</p></article>
+        <article class="process-step support"><div class="process-marker">Ongoing</div><span class="process-time">Lifetime</span><h3>Lifetime career support</h3><p>Keep progressing with lifetime career check-ins, on-the-job guidance, opportunities, and community accountability.</p></article>
       </div>
       <aside class="salary-strip" aria-label="Indicative UK Business Analysis salary ranges">
         <div class="salary-strip-text">
@@ -1259,7 +1286,28 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
 
 
 
-  <section class="section alt" id="contact">
+  <section class="section alt" id="faq">
+    <div class="section-inner">
+      <div class="section-head center">
+        <div class="section-label">FAQ</div>
+        <h2>Quick answers before you join</h2>
+        <p class="section-copy">Clear answers about suitability, recorded sessions, practical experience, career outcomes, payments, refunds, and the support you receive before and after the programme.</p>
+      </div>
+      <div class="faq-list">
+        <article class="faq-item open"><button class="faq-question" id="homepage-faq-question-1" type="button" aria-expanded="true" aria-controls="homepage-faq-answer-1">Is the mentorship suitable for complete beginners with no IT experience?</button><div class="faq-answer" id="homepage-faq-answer-1" role="region" aria-labelledby="homepage-faq-question-1">Yes. The mentorship is designed to take beginners from foundational Business Analysis concepts into guided project work, portfolio artefacts, career positioning, and interview preparation. You do not need previous IT employment, although you must be willing to practise, complete tasks, and act on feedback.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-2" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-2">Can I join from outside the UK?</button><div class="faq-answer" id="homepage-faq-answer-2" role="region" aria-labelledby="homepage-faq-question-2">Yes. The mentorship is open to adult learners worldwide. The projects, terminology, documentation standards, recruitment guidance, and professional expectations use UK-style Business Analysis industry practice, while the underlying skills and artefacts are transferable to many international markets.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-3" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-3">Are the live sessions recorded?</button><div class="faq-answer" id="homepage-faq-answer-3" role="region" aria-labelledby="homepage-faq-question-3">Yes. Teaching sessions are recorded so enrolled learners can revisit explanations or catch up when work and personal commitments prevent live attendance. Recordings are for the registered cohort only and are not a substitute for completing the practical work or engaging with feedback.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-4" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-4">What practical experience and portfolio work will I build?</button><div class="faq-answer" id="homepage-faq-answer-4" role="region" aria-labelledby="homepage-faq-question-4">You will work through an end-to-end business case and create artefacts such as stakeholder analysis, a RACI matrix, a power-interest grid, AS-IS and TO-BE process maps, BPMN diagrams, requirements, user stories, acceptance criteria, a BRD, and a prototype walkthrough. The emphasis is on understanding why each artefact is needed and being able to explain your decisions.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-5" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-5">How much time should I commit each week?</button><div class="faq-answer" id="homepage-faq-answer-5" role="region" aria-labelledby="homepage-faq-question-5">There is no single weekly number that suits everyone. Your commitment depends on your starting point, work and family responsibilities, project pace, and career goals. Plan for the live or recorded teaching plus regular time for project tasks, portfolio development, CV or LinkedIn work, applications, and feedback.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-6" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-6">Does the 90-day journey or six-month support guarantee a job?</button><div class="faq-answer" id="homepage-faq-answer-6" role="region" aria-labelledby="homepage-faq-question-6">No. The journey shown on the website is a realistic happy-path illustration, not a promise that every learner will be hired within 90 days or six months. Employment outcomes depend on your effort, prior experience, location, market conditions, application consistency, interview performance, right-to-work position, and employer decisions.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-7" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-7">What are the payment, cancellation and refund options?</button><div class="faq-answer" id="homepage-faq-answer-7" role="region" aria-labelledby="homepage-faq-question-7">You can pay by the methods displayed at checkout. For an online purchase, the current terms provide a 14-day cancellation period. If you ask Anderseed to begin providing services during that period and then cancel, a proportionate amount may be retained for services already supplied; after the cancellation period, fees are generally non-refundable except where the law or your statutory rights require otherwise.</div></article>
+        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-8" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-8">What support continues after the live cohort?</button><div class="faq-answer" id="homepage-faq-answer-8" role="region" aria-labelledby="homepage-faq-question-8">Learners retain access to the alumni community for ongoing peer support, encouragement, career discussion, and relevant updates. Once you secure a role, Anderseed also provides six months of reasonable workplace guidance, including help thinking through unfamiliar BA tasks and professional situations; it does not replace your employer&#039;s training, management, or accountability.</div></article>
+      </div>
+      <div class="faq-more"><a class="btn btn-secondary" href="faq/index.html">View all FAQs</a></div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
     <div class="section-inner">
       <div class="section-head center">
         <div class="section-label">Contact us</div>
@@ -1290,27 +1338,6 @@ body.menu-open .tg-float{visibility:hidden;pointer-events:none}
         <a class="social-link" href="https://www.tiktok.com/@ba.transition?_r=1&amp;_t=ZN-97tTUfgYvmY" target="_blank" rel="noopener"><span class="tiktok-icon"><svg viewBox="0 0 24 24"><path d="M17.6 6.2c-1.2-.8-2-2-2.2-3.4h-3.1v12.3a2.9 2.9 0 1 1-2.1-2.8V9.1a6.1 6.1 0 1 0 5.3 6V8.8c1.2.8 2.5 1.2 4 1.2V6.9c-.7 0-1.3-.2-1.9-.7Z"/></svg></span><div>TikTok<small>Quick tips</small></div></a>
         <a class="social-link" href="https://youtube.com/@YOUR-HANDLE" target="_blank" rel="noopener"><span class="youtube-icon"><svg viewBox="0 0 24 24"><path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4.1-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.8v1.7c0 1.8.2 3.6.2 3.6s.2 1.5.8 2.1c.8.8 1.9.8 2.4.9 1.7.2 6.4.2 6.4.2s3.8 0 6.7-.2c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.6v-1.7c0-1.8-.2-3.6-.2-3.6ZM10.1 14.9V8.7l5.8 3.1-5.8 3.1Z"/></svg></span><div>YouTube<small>BA videos</small></div></a>
       </div>
-    </div>
-  </section>
-
-  <section class="section" id="faq">
-    <div class="section-inner">
-      <div class="section-head center">
-        <div class="section-label">FAQ</div>
-        <h2>Quick answers before you join</h2>
-        <p class="section-copy">Clear answers about suitability, recorded sessions, practical experience, career outcomes, payments, refunds, and the support you receive before and after the programme.</p>
-      </div>
-      <div class="faq-list">
-        <article class="faq-item open"><button class="faq-question" id="homepage-faq-question-1" type="button" aria-expanded="true" aria-controls="homepage-faq-answer-1">Is the mentorship suitable for complete beginners with no IT experience?</button><div class="faq-answer" id="homepage-faq-answer-1" role="region" aria-labelledby="homepage-faq-question-1">Yes. The mentorship is designed to take beginners from foundational Business Analysis concepts into guided project work, portfolio artefacts, career positioning, and interview preparation. You do not need previous IT employment, although you must be willing to practise, complete tasks, and act on feedback.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-2" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-2">Can I join from outside the UK?</button><div class="faq-answer" id="homepage-faq-answer-2" role="region" aria-labelledby="homepage-faq-question-2">Yes. The mentorship is open to adult learners worldwide. The projects, terminology, documentation standards, recruitment guidance, and professional expectations use UK-style Business Analysis industry practice, while the underlying skills and artefacts are transferable to many international markets.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-3" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-3">Are the live sessions recorded?</button><div class="faq-answer" id="homepage-faq-answer-3" role="region" aria-labelledby="homepage-faq-question-3">Yes. Teaching sessions are recorded so enrolled learners can revisit explanations or catch up when work and personal commitments prevent live attendance. Recordings are for the registered cohort only and are not a substitute for completing the practical work or engaging with feedback.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-4" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-4">What practical experience and portfolio work will I build?</button><div class="faq-answer" id="homepage-faq-answer-4" role="region" aria-labelledby="homepage-faq-question-4">You will work through an end-to-end business case and create artefacts such as stakeholder analysis, a RACI matrix, a power-interest grid, AS-IS and TO-BE process maps, BPMN diagrams, requirements, user stories, acceptance criteria, a BRD, and a prototype walkthrough. The emphasis is on understanding why each artefact is needed and being able to explain your decisions.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-5" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-5">How much time should I commit each week?</button><div class="faq-answer" id="homepage-faq-answer-5" role="region" aria-labelledby="homepage-faq-question-5">There is no single weekly number that suits everyone. Your commitment depends on your starting point, work and family responsibilities, project pace, and career goals. Plan for the live or recorded teaching plus regular time for project tasks, portfolio development, CV or LinkedIn work, applications, and feedback.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-6" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-6">Does the 90-day journey or six-month support guarantee a job?</button><div class="faq-answer" id="homepage-faq-answer-6" role="region" aria-labelledby="homepage-faq-question-6">No. The journey shown on the website is a realistic happy-path illustration, not a promise that every learner will be hired within 90 days or six months. Employment outcomes depend on your effort, prior experience, location, market conditions, application consistency, interview performance, right-to-work position, and employer decisions.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-7" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-7">What are the payment, cancellation and refund options?</button><div class="faq-answer" id="homepage-faq-answer-7" role="region" aria-labelledby="homepage-faq-question-7">You can pay by the methods displayed at checkout. For an online purchase, the current terms provide a 14-day cancellation period. If you ask Anderseed to begin providing services during that period and then cancel, a proportionate amount may be retained for services already supplied; after the cancellation period, fees are generally non-refundable except where the law or your statutory rights require otherwise.</div></article>
-        <article class="faq-item"><button class="faq-question" id="homepage-faq-question-8" type="button" aria-expanded="false" aria-controls="homepage-faq-answer-8">What support continues after the live cohort?</button><div class="faq-answer" id="homepage-faq-answer-8" role="region" aria-labelledby="homepage-faq-question-8">Learners retain access to the alumni community for ongoing peer support, encouragement, career discussion, and relevant updates. Once you secure a role, Anderseed also provides six months of reasonable workplace guidance, including help thinking through unfamiliar BA tasks and professional situations; it does not replace your employer&#039;s training, management, or accountability.</div></article>
-      </div>
-      <div class="faq-more"><a class="btn btn-secondary" href="faq/index.html">View all FAQs</a></div>
     </div>
   </section>
 

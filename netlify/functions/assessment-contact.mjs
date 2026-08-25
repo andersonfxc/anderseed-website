@@ -52,24 +52,26 @@ export default async (request) => {
       }
       result = run.result_json;
       await client.query(
-        `INSERT INTO assessment_contacts (assessment_id, first_name, email, email_hash, created_at, updated_at)
-         VALUES ($1,$2,$3,$4,NOW(),NOW())
-         ON CONFLICT (assessment_id) DO UPDATE SET first_name=EXCLUDED.first_name,email=EXCLUDED.email,email_hash=EXCLUDED.email_hash,updated_at=NOW()`,
-        [body.assessmentId, firstName, email, sha256(email)]
-      );
-      await client.query(
-        `INSERT INTO assessment_marketing_consents (assessment_id, opted_in, consent_text_version, decision_captured_at, opted_in_at)
-         VALUES ($1,$2,$3,NOW(),CASE WHEN $2 THEN NOW() ELSE NULL END)
-         ON CONFLICT (assessment_id) DO UPDATE SET
-           opted_in=EXCLUDED.opted_in,
-           consent_text_version=EXCLUDED.consent_text_version,
-           decision_captured_at=NOW(),
-           opted_in_at=CASE WHEN EXCLUDED.opted_in THEN COALESCE(assessment_marketing_consents.opted_in_at,NOW()) ELSE NULL END`,
-        [body.assessmentId, Boolean(body.marketingOptIn), consentVersion]
-      );
-      await client.query(
-        "UPDATE assessment_runs SET contact_submitted_at=NOW(),result_viewed_at=NOW(),expires_at=NOW() + INTERVAL '365 days',updated_at=NOW() WHERE assessment_id=$1",
-        [body.assessmentId]
+        `WITH contact_upsert AS (
+           INSERT INTO assessment_contacts (assessment_id, first_name, email, email_hash, created_at, updated_at)
+           VALUES ($1,$2,$3,$4,NOW(),NOW())
+           ON CONFLICT (assessment_id) DO UPDATE SET
+             first_name=EXCLUDED.first_name,email=EXCLUDED.email,email_hash=EXCLUDED.email_hash,updated_at=NOW()
+           RETURNING assessment_id
+         ), consent_upsert AS (
+           INSERT INTO assessment_marketing_consents (assessment_id, opted_in, consent_text_version, decision_captured_at, opted_in_at)
+           VALUES ($1,$5,$6,NOW(),CASE WHEN $5 THEN NOW() ELSE NULL END)
+           ON CONFLICT (assessment_id) DO UPDATE SET
+             opted_in=EXCLUDED.opted_in,
+             consent_text_version=EXCLUDED.consent_text_version,
+             decision_captured_at=NOW(),
+             opted_in_at=CASE WHEN EXCLUDED.opted_in THEN COALESCE(assessment_marketing_consents.opted_in_at,NOW()) ELSE NULL END
+           RETURNING assessment_id
+         )
+         UPDATE assessment_runs SET
+           contact_submitted_at=NOW(),result_viewed_at=NOW(),expires_at=NOW() + INTERVAL '365 days',updated_at=NOW()
+         WHERE assessment_id=$1`,
+        [body.assessmentId, firstName, email, sha256(email), Boolean(body.marketingOptIn), consentVersion]
       );
       await client.query("COMMIT");
     } catch (error) {
@@ -87,5 +89,5 @@ export default async (request) => {
 
 export const config = {
   path: "/api/v1/assessment/contact",
-  rateLimit: { windowLimit: 20, windowSize: 60, aggregateBy: ["ip", "domain"] },
+  rateLimit: { windowLimit: 60, windowSize: 60, aggregateBy: ["ip", "domain"] },
 };

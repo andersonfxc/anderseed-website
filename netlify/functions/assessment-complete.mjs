@@ -95,15 +95,22 @@ export default async (request) => {
         return errorResponse("This assessment has already been securely completed.", 409);
       }
       await client.query("DELETE FROM assessment_answers WHERE assessment_id = $1", [body.assessmentId]);
-      for (const question of assessmentContent.questions) {
+      const answerRows = assessmentContent.questions.flatMap((question) => {
         const values = Array.isArray(body.answers[question.id]) ? body.answers[question.id] : [body.answers[question.id]];
-        for (let index = 0; index < values.length; index += 1) {
-          await client.query(
-            "INSERT INTO assessment_answers (assessment_id, question_id, answer_value, selection_order) VALUES ($1,$2,$3,$4)",
-            [body.assessmentId, question.id, values[index], index]
-          );
-        }
-      }
+        return values.map((value, selectionOrder) => ({ questionId: question.id, value, selectionOrder }));
+      });
+      await client.query(
+        `INSERT INTO assessment_answers (assessment_id, question_id, answer_value, selection_order)
+         SELECT $1::uuid, answer.question_id, answer.answer_value, answer.selection_order
+         FROM UNNEST($2::text[], $3::text[], $4::smallint[])
+           AS answer(question_id, answer_value, selection_order)`,
+        [
+          body.assessmentId,
+          answerRows.map((answer) => answer.questionId),
+          answerRows.map((answer) => answer.value),
+          answerRows.map((answer) => answer.selectionOrder),
+        ]
+      );
       await client.query("COMMIT");
     } catch (error) {
       await client.query("ROLLBACK");
@@ -120,5 +127,5 @@ export default async (request) => {
 
 export const config = {
   path: "/api/v1/assessment/complete",
-  rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ["ip", "domain"] },
+  rateLimit: { windowLimit: 60, windowSize: 60, aggregateBy: ["ip", "domain"] },
 };
