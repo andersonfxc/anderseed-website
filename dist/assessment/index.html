@@ -284,14 +284,14 @@
               <input id="assessmentFirstName" name="firstName" type="text" autocomplete="given-name" required maxlength="80" placeholder="Enter your first name" />
             </label>
             <label class="assessment-field" for="assessmentEmail">Email address <span aria-hidden="true">*</span>
-              <input id="assessmentEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" placeholder="Enter your email address" />
+              <input id="assessmentEmail" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="assessmentContactStatus" required maxlength="254" placeholder="Enter your email address" />
             </label>
             <label class="assessment-marketing" for="assessmentMarketing">
               <input id="assessmentMarketing" name="marketingOptIn" value="yes" type="checkbox" />
               <span>Yes — email me practical BA career tips, portfolio advice, Anderseed programme updates and occasional offers. Unsubscribe anytime.</span>
             </label>
             <p class="assessment-privacy-link"><a href="../privacy/index.html" target="_blank" rel="noopener">Privacy Notice</a></p>
-            <p class="assessment-storage-status" data-storage-status role="alert" hidden></p>
+            <p class="assessment-storage-status" id="assessmentContactStatus" data-storage-status role="alert" hidden></p>
             <button class="btn btn-primary" type="submit">See My Result &amp; Get My Free Roadmap →</button>
           </form>
           <div class="assessment-gate-benefits-wrap">

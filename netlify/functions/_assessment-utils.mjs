@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { getDatabase } from "@netlify/database";
+import { normalizeEmail } from "./_email-validation.mjs";
 
 const require = createRequire(import.meta.url);
 export const assessmentContent = require("../../content/pages/assessment.json");
@@ -28,7 +29,6 @@ export const allowedEvents = new Set([
 
 export const questionIds = new Set(assessmentContent.questions.map((question) => question.id));
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
@@ -41,8 +41,8 @@ export function jsonResponse(payload, status = 200) {
   });
 }
 
-export function errorResponse(message, status = 400) {
-  return jsonResponse({ ok: false, message }, status);
+export function errorResponse(message, status = 400, code = "request_invalid") {
+  return jsonResponse({ ok: false, code, message }, status);
 }
 
 export function enforceSameOrigin(request) {
@@ -75,10 +75,7 @@ export function normalizeName(value) {
   return String(value || "").trim().replace(/\s+/g, " ").slice(0, 80);
 }
 
-export function normalizeEmail(value) {
-  const email = String(value || "").trim().toLowerCase().slice(0, 254);
-  return emailPattern.test(email) ? email : "";
-}
+export { normalizeEmail };
 
 export function sha256(value) {
   return createHash("sha256").update(String(value || "")).digest("hex");

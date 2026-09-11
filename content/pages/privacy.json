@@ -28,7 +28,7 @@
       "title": "How the assessment uses your information",
       "paragraphs": [
         "While you work through the assessment, your answers and progress are saved in first-party browser storage for up to 24 hours so you can continue if the page is refreshed. At the result-delivery step, the temporary draft also holds an opaque continuation token so the completed assessment can resume securely without processing the answers again. The draft does not include your name or email address, and you can remove it sooner by clearing this site's browser data.",
-        "When you complete all eight questions, your answers and calculated result are stored in Anderseed's structured assessment database. We ask for your first name and an email address as part of the result-delivery step; after submission, the personalised result is shown immediately on screen. Automated result emails are not included in this MVP.",
+        "When you complete all eight questions, your answers and calculated result are stored in Anderseed's structured assessment database. We ask for your first name and an email address as part of the result-delivery step; after submission, the personalised result is shown immediately on screen. A one-way hash of the normalised email address is used during the same retention period to prevent repeat assessment submissions. Automated result emails are not included in this MVP.",
         "Providing an email address for your requested result is not marketing consent. The marketing checkbox is separate and optional, and leaving it unticked does not prevent you from seeing your result."
       ],
       "bullets": [],

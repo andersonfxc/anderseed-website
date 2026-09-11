@@ -55,6 +55,7 @@
   const backButton = app.querySelector("[data-back]");
   const gateBackButton = app.querySelector("[data-gate-back]");
   const leadForm = app.querySelector("[data-lead-form]");
+  const emailInput = leadForm?.querySelector("input[name='email']");
   const storageStatus = app.querySelector("[data-storage-status]");
   const gateResumeStatus = app.querySelector("[data-gate-resume-status]");
   const landingTitle = app.querySelector("#assessmentLandingTitle");
@@ -511,6 +512,7 @@
         if (response.ok && data.ok !== false) return data;
         const error = new Error(data.message || "We could not securely save your assessment. Please try again.");
         error.status = response.status;
+        error.code = data.code || "request_failed";
         throw error;
       } catch (error) {
         lastError = error;
@@ -790,6 +792,7 @@
     const submitButton = leadForm.querySelector("button[type='submit']");
     submitButton.disabled = true;
     submitButton.textContent = "Revealing Your Result…";
+    emailInput?.removeAttribute("aria-invalid");
     setStatus(storageStatus, "");
     try {
       const outcome = await postJson(config.endpoints.contact, {
@@ -811,6 +814,10 @@
     } catch (error) {
       submitButton.disabled = false;
       submitButton.textContent = "Try Revealing My Results Again";
+      if (String(error.code || "").startsWith("email_") || error.code === "assessment_email_already_used") {
+        emailInput?.setAttribute("aria-invalid", "true");
+        emailInput?.focus();
+      }
       setStatus(storageStatus, error.message);
     }
   }
@@ -880,6 +887,12 @@
   gateBackButton.addEventListener("click", () => {
     show(questionView);
     renderQuestion();
+  });
+  emailInput?.addEventListener("input", () => {
+    if (emailInput.getAttribute("aria-invalid") === "true") {
+      emailInput.removeAttribute("aria-invalid");
+      setStatus(storageStatus, "");
+    }
   });
   leadForm.addEventListener("submit", submitLead);
   const roadmapCta = app.querySelector("[data-roadmap-cta]");

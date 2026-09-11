@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { validateEmailDeliverability } from "./_email-validation.mjs";
 import {
   database,
   enforceSameOrigin,
@@ -30,10 +31,15 @@ export default async (request) => {
     const consentVersion = String(body.marketingConsentTextVersion || "").slice(0, 100);
     if (!validUuid(body.assessmentId) || !String(body.completionToken || "")) return errorResponse("Your completed assessment could not be verified.");
     if (firstName.length < 1) return errorResponse("Please enter your first name.");
-    if (!email) return errorResponse("Please enter a valid email address.");
+    if (!email) return errorResponse("Please enter a complete, valid email address.", 400, "email_invalid");
     if (typeof body.marketingOptIn !== "boolean") return errorResponse("Please record your marketing preference.");
     if (consentVersion !== siteSettings.assessment.marketingConsentTextVersion) {
       return errorResponse("This form version is no longer current. Please refresh and try again.", 409);
+    }
+
+    const emailValidation = await validateEmailDeliverability(email);
+    if (!emailValidation.valid) {
+      return errorResponse(emailValidation.message, 422, emailValidation.code);
     }
 
     const db = database();
@@ -51,6 +57,31 @@ export default async (request) => {
         return errorResponse("Your result link has expired. Please return to the assessment and try again.", 410);
       }
       result = run.result_json;
+      const emailHash = sha256(email);
+      const claim = await client.query(
+        `INSERT INTO assessment_email_claims (email_hash, assessment_id, claimed_at)
+         VALUES ($1,$2,NOW())
+         ON CONFLICT DO NOTHING
+         RETURNING assessment_id`,
+        [emailHash, body.assessmentId]
+      );
+      if (claim.rowCount !== 1) {
+        const existingClaim = await client.query(
+          "SELECT assessment_id, email_hash FROM assessment_email_claims WHERE email_hash = $1 OR assessment_id = $2",
+          [emailHash, body.assessmentId]
+        );
+        const isSameClaim = existingClaim.rows.some(
+          (row) => row.assessment_id === body.assessmentId && row.email_hash === emailHash
+        );
+        if (!isSameClaim) {
+          await client.query("ROLLBACK");
+          return errorResponse(
+            "This email has already been used for the BA Readiness Assessment. Please use your original result and roadmap, or contact Anderseed if you need help.",
+            409,
+            "assessment_email_already_used"
+          );
+        }
+      }
       await client.query(
         `WITH contact_upsert AS (
            INSERT INTO assessment_contacts (assessment_id, first_name, email, email_hash, created_at, updated_at)
@@ -71,7 +102,7 @@ export default async (request) => {
          UPDATE assessment_runs SET
            contact_submitted_at=NOW(),result_viewed_at=NOW(),expires_at=NOW() + INTERVAL '365 days',updated_at=NOW()
          WHERE assessment_id=$1`,
-        [body.assessmentId, firstName, email, sha256(email), Boolean(body.marketingOptIn), consentVersion]
+        [body.assessmentId, firstName, email, emailHash, Boolean(body.marketingOptIn), consentVersion]
       );
       await client.query("COMMIT");
     } catch (error) {

@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, "..");
 const distRoot = path.join(root, "dist");
 const dataDirectory = path.join(root, ".local-data");
 const dataFile = path.join(dataDirectory, "assessment-preview.json");
+const emailValidationPromise = import("../netlify/functions/_email-validation.mjs");
 const assessment = require(path.join(root, "content/pages/assessment.json"));
 const scoringConfig = require(path.join(root, "content/assessment-scoring.json"));
 const settings = require(path.join(root, "content/settings.json"));
@@ -33,7 +34,6 @@ const allowedEvents = new Set([
 ]);
 const questionIds = new Set(assessment.questions.map((question) => question.id));
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function emptyStore() {
   return { runs: {}, contacts: {}, consents: {}, events: [] };
@@ -128,18 +128,34 @@ async function complete(request, response) {
 
 async function contact(request, response) {
   const payload = await body(request, 16384);
+  const { normalizeEmail, validateEmailDeliverability } = await emailValidationPromise;
   const firstName = String(payload.firstName || "").trim().replace(/\s+/g, " ").slice(0, 80);
-  const email = String(payload.email || "").trim().toLowerCase().slice(0, 254);
+  const email = normalizeEmail(payload.email);
   if (!firstName) return json(response, 400, { ok: false, message: "Please enter your first name." });
-  if (!emailPattern.test(email)) return json(response, 400, { ok: false, message: "Please enter a valid email address." });
+  if (!email) return json(response, 400, { ok: false, code: "email_invalid", message: "Please enter a complete, valid email address." });
   if (typeof payload.marketingOptIn !== "boolean") return json(response, 400, { ok: false, message: "Please record your marketing preference." });
   if (payload.marketingConsentTextVersion !== settings.assessment.marketingConsentTextVersion) {
     return json(response, 409, { ok: false, message: "This form version is no longer current. Please refresh and try again." });
+  }
+  const emailValidation = await validateEmailDeliverability(email);
+  if (!emailValidation.valid) {
+    return json(response, 422, { ok: false, code: emailValidation.code, message: emailValidation.message });
   }
   const store = readStore();
   const run = store.runs[payload.assessmentId];
   if (!run || tokenHash(payload.completionToken) !== run.completionTokenHash) {
     return json(response, 410, { ok: false, message: "Your result link has expired. Please return to the assessment and try again." });
+  }
+  const existingByEmail = Object.values(store.contacts).find(
+    (contactRecord) => contactRecord.email === email && contactRecord.assessmentId !== payload.assessmentId
+  );
+  const existingForAssessment = store.contacts[payload.assessmentId];
+  if (existingByEmail || (existingForAssessment && existingForAssessment.email !== email)) {
+    return json(response, 409, {
+      ok: false,
+      code: "assessment_email_already_used",
+      message: "This email has already been used for the BA Readiness Assessment. Please use your original result and roadmap, or contact Anderseed if you need help.",
+    });
   }
   const now = new Date().toISOString();
   store.contacts[payload.assessmentId] = { assessmentId: payload.assessmentId, firstName, email, capturedAt: now };
