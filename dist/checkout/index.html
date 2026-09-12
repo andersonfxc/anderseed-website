@@ -246,18 +246,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--leaf-dark)}
         if(window.__anderseedPostHogAssessmentBridgeInstalled)return;
         window.__anderseedPostHogAssessmentBridgeInstalled=!0;
         var sentEventIds=new Set();
+        var pendingDetails=[];
+        var pendingEventIds=new Set();
         var hostname=String(window.location&&window.location.hostname||"").toLowerCase();
         var environment=!hostname||hostname==="localhost"||hostname==="127.0.0.1"||hostname==="0.0.0.0"||hostname==="::1"||hostname.endsWith(".local")||hostname.endsWith(".test")?"development":hostname.includes("deploy-preview")||hostname.includes("--")||hostname.includes("preview")||hostname.includes("staging")?"test":"production";
-        window.addEventListener("anderseed:analytics",function(event){
+        function captureDetail(detail){
             try{
-                var detail=event&&event.detail;
                 if(!detail||typeof detail.eventName!=="string"||!detail.eventName)return;
-                if(detail.eventName==="assessment_started"){
-                    try{window.localStorage.setItem("anderseed.assessmentPrompt.started.v1","1")}catch(_error){}
-                }
-                if(!window.posthog||typeof window.posthog.capture!=="function")return;
+                if(!window.posthog||typeof window.posthog.capture!=="function")return false;
                 var eventId=typeof detail.eventId==="string"?detail.eventId:"";
-                if(eventId&&sentEventIds.has(eventId))return;
+                if(eventId&&sentEventIds.has(eventId))return true;
                 var properties={environment:environment};
                 var allowedProperties={
                     event_id:eventId,
@@ -274,6 +272,45 @@ input:focus,select:focus,textarea:focus{border-color:var(--leaf-dark)}
                 });
                 window.posthog.capture(detail.eventName,properties);
                 if(eventId)sentEventIds.add(eventId);
+                return true;
+            }catch(_error){return false}
+        }
+        function queuePendingDetail(detail){
+            var eventId=detail&&typeof detail.eventId==="string"?detail.eventId:"";
+            if(eventId&&(sentEventIds.has(eventId)||pendingEventIds.has(eventId)))return;
+            pendingDetails.push(detail);
+            if(eventId)pendingEventIds.add(eventId);
+            if(pendingDetails.length>100){
+                var removed=pendingDetails.shift();
+                if(removed&&removed.eventId)pendingEventIds.delete(removed.eventId);
+            }
+        }
+        function flushPendingDetails(){
+            if(!window.posthog||typeof window.posthog.capture!=="function")return;
+            var queued=pendingDetails.slice();
+            pendingDetails=[];
+            pendingEventIds.clear();
+            queued.forEach(captureDetail);
+        }
+        window.addEventListener("anderseed:analytics",function(event){
+            try{
+                var detail=event&&event.detail;
+                if(!detail||typeof detail.eventName!=="string"||!detail.eventName)return;
+                if(detail.eventName==="assessment_started"){
+                    try{window.localStorage.setItem("anderseed.assessmentPrompt.started.v1","1")}catch(_error){}
+                }
+                if(captureDetail(detail))return;
+                if(document.documentElement.getAttribute("data-analytics-consent")==="pending")queuePendingDetail(detail);
+            }catch(_error){}
+        });
+        document.addEventListener("anderseed:analytics-consent-changed",function(event){
+            try{
+                var choice=event&&event.detail&&event.detail.choice;
+                if(choice==="accepted")flushPendingDetails();
+                else if(choice==="rejected"){
+                    pendingDetails=[];
+                    pendingEventIds.clear();
+                }
             }catch(_error){}
         });
     }();

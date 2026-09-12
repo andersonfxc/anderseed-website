@@ -782,6 +782,28 @@
     dimensions.replaceChildren(...dimensionCards);
   }
 
+  function trackResultViewedWhenVisible() {
+    let tracked = false;
+    let observer = null;
+    const capture = () => {
+      if (tracked || resultView.hidden) return;
+      tracked = true;
+      observer?.disconnect();
+      trackEvent("result_viewed");
+      void flushAnalytics();
+    };
+
+    if (typeof window.IntersectionObserver === "function") {
+      observer = new window.IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.25)) capture();
+      }, { threshold: 0.25 });
+      observer.observe(resultView);
+      return;
+    }
+
+    window.requestAnimationFrame(capture);
+  }
+
   async function submitLead(event) {
     event.preventDefault();
     if (!leadForm.reportValidity()) return;
@@ -809,8 +831,7 @@
       show(resultView);
       focusViewHeading(resultTitle);
       trackEvent("contact_details_submitted");
-      trackEvent("result_viewed");
-      void flushAnalytics();
+      trackResultViewedWhenVisible();
     } catch (error) {
       submitButton.disabled = false;
       submitButton.textContent = "Try Revealing My Results Again";

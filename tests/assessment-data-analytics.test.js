@@ -252,27 +252,41 @@ test("the central PostHog bridge forwards each assessment event once with only a
   const match = homepage.match(/\/\* Anderseed PostHog assessment bridge \*\/([\s\S]*?)\/\* End Anderseed PostHog assessment bridge \*\//);
   assert.ok(match, "the generated site must include the central PostHog assessment bridge");
 
-  const runBridge = (hostname, captureImpl) => {
-    const listeners = new Map();
+  const runBridge = (hostname, captureImpl, consent = "accepted", withPostHog = true) => {
+    const windowListeners = new Map();
+    const documentListeners = new Map();
     const captures = [];
     const window = {
       location: { hostname },
-      posthog: {
+      posthog: withPostHog ? {
         capture: (...args) => {
           captures.push(args);
           if (captureImpl) captureImpl(...args);
         },
-      },
+      } : undefined,
       addEventListener: (name, listener) => {
         assert.equal(name, "anderseed:analytics");
-        assert.equal(listeners.has(name), false, "the bridge must install only one listener");
-        listeners.set(name, listener);
+        assert.equal(windowListeners.has(name), false, "the bridge must install only one analytics listener");
+        windowListeners.set(name, listener);
       },
     };
-    const context = vm.createContext({ window, Set, Object, String });
+    const document = {
+      documentElement: { getAttribute: () => consent },
+      addEventListener: (name, listener) => {
+        assert.equal(name, "anderseed:analytics-consent-changed");
+        assert.equal(documentListeners.has(name), false, "the bridge must install only one consent listener");
+        documentListeners.set(name, listener);
+      },
+    };
+    const context = vm.createContext({ window, document, Set, Object, String });
     vm.runInContext(match[1], context);
     vm.runInContext(match[1], context);
-    return { captures, listener: listeners.get("anderseed:analytics") };
+    return {
+      captures,
+      window,
+      listener: windowListeners.get("anderseed:analytics"),
+      consentListener: documentListeners.get("anderseed:analytics-consent-changed"),
+    };
   };
 
   const production = runBridge("singular-cendol-c4edc0.netlify.app");
@@ -321,6 +335,23 @@ test("the central PostHog bridge forwards each assessment event once with only a
 
   const resilient = runBridge("localhost", () => { throw new Error("PostHog unavailable"); });
   assert.doesNotThrow(() => resilient.listener({ detail: { ...detail, eventId: "e4aeb370-f4ab-4efb-bf1d-664f28d962cc" } }));
+
+  const pending = runBridge("localhost", undefined, "pending", false);
+  const pendingDetail = { ...detail, eventId: "edb2f7d3-8590-4681-80c5-9fc42e0d24e5" };
+  pending.listener({ detail: pendingDetail });
+  pending.listener({ detail: pendingDetail });
+  assert.equal(pending.captures.length, 0, "PostHog must not receive events before consent");
+  pending.window.posthog = { capture: (...args) => pending.captures.push(args) };
+  pending.consentListener({ detail: { choice: "accepted" } });
+  pending.consentListener({ detail: { choice: "accepted" } });
+  assert.equal(pending.captures.length, 1, "acceptance must flush each queued event exactly once");
+
+  const rejected = runBridge("localhost", undefined, "pending", false);
+  rejected.listener({ detail: { ...detail, eventId: "bf53221b-4ca9-407c-a355-0dafbbcf8e89" } });
+  rejected.consentListener({ detail: { choice: "rejected" } });
+  rejected.window.posthog = { capture: (...args) => rejected.captures.push(args) };
+  rejected.consentListener({ detail: { choice: "accepted" } });
+  assert.equal(rejected.captures.length, 0, "rejected analytics events must be discarded");
 });
 
 test("assessment, contact, consent and analytics data are structurally separated", () => {

@@ -312,11 +312,11 @@ test("starting the assessment suppresses future sticky prompts even without Post
   const html = read("dist/assessment/index.html");
   const bridge = between(html, "/* Anderseed PostHog assessment bridge */", "/* End Anderseed PostHog assessment bridge */");
   const markerPosition = bridge.indexOf('detail.eventName==="assessment_started"');
-  const posthogGuardPosition = bridge.indexOf('if(!window.posthog||typeof window.posthog.capture!=="function")return');
+  const capturePosition = bridge.indexOf("if(captureDetail(detail))return");
 
   assert.ok(markerPosition >= 0, "the bridge should recognise assessment_started");
   assert.match(bridge, /window\.localStorage\.setItem\("anderseed\.assessmentPrompt\.started\.v1","1"\)/);
-  assert.ok(markerPosition < posthogGuardPosition, "the started marker must be written before checking PostHog availability");
+  assert.ok(markerPosition < capturePosition, "the started marker must be written before attempting PostHog capture");
 });
 
 test("the deployed assessment CSP permits PostHog scripts and event delivery", () => {
@@ -455,6 +455,10 @@ test("the approved post-survey journey pauses at completion and reveals a tailor
   assert.doesNotMatch(completeFlow, /FormData|formData\.get\("(?:firstName|email)"\)/);
   assert.match(contactFlow, /postJson\(config\.endpoints\.contact/);
   assert.ok(contactFlow.indexOf("postJson(config.endpoints.contact") < contactFlow.indexOf("show(resultView)"));
+  assert.match(contactFlow, /trackResultViewedWhenVisible\(\)/);
+  assert.doesNotMatch(contactFlow, /trackEvent\("result_viewed"\)/);
+  assert.match(client, /function trackResultViewedWhenVisible\(\)/);
+  assert.match(client, /entry\.isIntersecting && entry\.intersectionRatio >= 0\.25/);
   assert.doesNotMatch(contactFlow, /check your email|email has been sent/i);
 
   assert.match(result, /data-result-stage/);
