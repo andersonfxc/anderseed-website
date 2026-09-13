@@ -1,6 +1,10 @@
 import { timingSafeEqual } from "node:crypto";
 import { validateEmailDeliverability } from "./_email-validation.mjs";
 import {
+  recordAssessmentBrevoSync,
+  syncAssessmentContactWithBrevo,
+} from "./_brevo-client.mjs";
+import {
   database,
   enforceSameOrigin,
   errorResponse,
@@ -45,10 +49,12 @@ export default async (request) => {
     const db = database();
     const client = await db.pool.connect();
     let result;
+    let transitionTimeline;
+    let completedAt;
     try {
       await client.query("BEGIN");
       const { rows } = await client.query(
-        "SELECT completion_token_hash, result_json, contact_submitted_at, expires_at FROM assessment_runs WHERE assessment_id = $1 FOR UPDATE",
+        "SELECT completion_token_hash, result_json, contact_submitted_at, expires_at, transition_timeline, completed_at FROM assessment_runs WHERE assessment_id = $1 FOR UPDATE",
         [body.assessmentId]
       );
       const run = rows[0];
@@ -57,6 +63,8 @@ export default async (request) => {
         return errorResponse("Your result link has expired. Please return to the assessment and try again.", 410);
       }
       result = run.result_json;
+      transitionTimeline = run.transition_timeline;
+      completedAt = run.completed_at;
       const emailHash = sha256(email);
       const claim = await client.query(
         `INSERT INTO assessment_email_claims (email_hash, assessment_id, claimed_at)
@@ -112,7 +120,25 @@ export default async (request) => {
       client.release();
     }
 
-    return jsonResponse({ ok: true, assessmentId: body.assessmentId, persisted: true, result: publicResult(result) }, 201);
+    const brevoOutcome = await syncAssessmentContactWithBrevo({
+      assessmentId: body.assessmentId,
+      email,
+      firstName,
+      marketingOptIn: Boolean(body.marketingOptIn),
+      consentVersion,
+      result,
+      transitionTimeline,
+      completedAt,
+    });
+    await recordAssessmentBrevoSync(db, body.assessmentId, brevoOutcome);
+
+    return jsonResponse({
+      ok: true,
+      assessmentId: body.assessmentId,
+      persisted: true,
+      result: publicResult(result),
+      roadmapDelivery: brevoOutcome.roadmapStatus,
+    }, 201);
   } catch {
     return errorResponse("We could not securely save your details. Your answers are still here—please try again.", 500);
   }

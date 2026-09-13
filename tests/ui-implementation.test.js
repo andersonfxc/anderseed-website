@@ -234,7 +234,9 @@ test("the generated publish folder excludes private and development-only files",
   for (const relativePath of [
     "dist/.local-data",
     "dist/netlify",
+    "dist/integrations",
     "dist/.gitignore",
+    "dist/.env.example",
     "dist/ANDERSEED-COLOUR-INVENTORY.md",
     "dist/mobile-preview.html",
   ]) {

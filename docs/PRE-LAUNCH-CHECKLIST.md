@@ -36,7 +36,16 @@ Complete this checklist before connecting the final domain or accepting live pay
 ## Lead capture and payments
 
 - Connect the roadmap form to Brevo or the selected email platform.
+- Replace the placeholder roadmap PDF, change its manifest status to `final`, and verify its checksum before production delivery.
+- Add the final-domain Brevo sender address and remove the temporary test sender.
+- Authenticate the sending domain with SPF and DKIM; add and verify DMARC alignment.
+- Keep `BREVO_PRODUCTION_SEND_ENABLED=false` until sender authentication and delivery testing pass.
 - Test confirmation, roadmap delivery, marketing opt-in, unsubscribe, and failed-delivery handling.
+- Deploy the Brevo delivery-event database migration before enabling its webhook.
+- Generate a production webhook secret in the hosting environment; never reuse or expose the Brevo API key.
+- Register the public HTTPS `/api/v1/brevo/webhook` URL in Brevo with bearer authentication.
+- Verify sent, delivered, opened, clicked, deferred, soft-bounce, hard-bounce, invalid, blocked, spam, and unsubscribe events.
+- Confirm webhook retries remain idempotent and do not duplicate lead-score adjustments.
 - Replace payment placeholders with approved Stripe, Klarna, Clearpay, and bank-transfer flows.
 - Verify that payment is available only after application approval, as described on the site.
 - Test confirmation emails and the internal follow-up process.

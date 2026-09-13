@@ -304,8 +304,8 @@ function copyDir(source, target) {
     if (
       source === root &&
       [
-        "content", "dist", "docs", "roadmap", "scripts", "tests", "node_modules", "netlify", ".git", ".local-data",
-        ".gitignore", "README.md", "ANDERSEED-COLOUR-INVENTORY.md", "mobile-preview.html", "package.json", "package-lock.json", "netlify.toml",
+        "content", "dist", "docs", "roadmap", "scripts", "tests", "integrations", "node_modules", "netlify", ".git", ".local-data",
+        ".gitignore", ".env.example", "README.md", "ANDERSEED-COLOUR-INVENTORY.md", "mobile-preview.html", "package.json", "package-lock.json", "netlify.toml",
       ].includes(entry.name)
     ) {
       continue;

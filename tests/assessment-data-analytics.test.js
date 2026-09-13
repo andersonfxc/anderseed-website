@@ -433,7 +433,9 @@ test("assessment APIs validate server-side and bulk-write all answer and analyti
   assert.match(events, /event\.questionNumber/);
   assert.doesNotMatch(events, /firstName|normalizeEmail|answers_json|assessment_contacts/);
   assert.doesNotMatch(helpers, /Brevo/i);
-  assert.doesNotMatch(complete + contact + events, /Brevo|brevo\.com/i);
+  assert.doesNotMatch(complete + events, /Brevo|brevo\.com/i);
+  assert.match(contact, /syncAssessmentContactWithBrevo/);
+  assert.match(contact, /recordAssessmentBrevoSync/);
   assert.match(complete, /windowLimit: 60/);
   assert.match(contact, /windowLimit: 60/);
   assert.match(events, /windowLimit: 180/);

@@ -1,0 +1,226 @@
+{
+  "version": "2026-09-13-v2",
+  "category": "Anderseed Lead Management",
+  "sourceOfTruth": {
+    "automaticScore": "LEAD_SCORE",
+    "automaticTier": "LEAD_TIER",
+    "manualTierOverride": "MANUAL_TIER_OVERRIDE",
+    "manualOverrideRule": "A populated MANUAL_TIER_OVERRIDE takes priority over LEAD_TIER."
+  },
+  "segments": [
+    {
+      "name": "Anderseed - Cold Leads",
+      "purpose": "Contacts whose effective lead temperature is Cold.",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "MANUAL_TIER_OVERRIDE",
+            "operator": "equals",
+            "value": "Cold"
+          },
+          {
+            "all": [
+              {
+                "attribute": "MANUAL_TIER_OVERRIDE",
+                "operator": "is_empty"
+              },
+              {
+                "attribute": "LEAD_SCORE",
+                "operator": "less_than",
+                "value": 35
+              }
+            ]
+          }
+        ]
+      },
+      "brevoId": 1
+    },
+    {
+      "name": "Anderseed - Warm Leads",
+      "purpose": "Contacts whose effective lead temperature is Warm.",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "MANUAL_TIER_OVERRIDE",
+            "operator": "equals",
+            "value": "Warm"
+          },
+          {
+            "all": [
+              {
+                "attribute": "MANUAL_TIER_OVERRIDE",
+                "operator": "is_empty"
+              },
+              {
+                "attribute": "LEAD_SCORE",
+                "operator": "greater_than_or_equal",
+                "value": 35
+              },
+              {
+                "attribute": "LEAD_SCORE",
+                "operator": "less_than",
+                "value": 70
+              }
+            ]
+          }
+        ]
+      },
+      "brevoId": 2
+    },
+    {
+      "name": "Anderseed - Hot Leads",
+      "purpose": "Contacts whose effective lead temperature is Hot.",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "MANUAL_TIER_OVERRIDE",
+            "operator": "equals",
+            "value": "Hot"
+          },
+          {
+            "all": [
+              {
+                "attribute": "MANUAL_TIER_OVERRIDE",
+                "operator": "is_empty"
+              },
+              {
+                "attribute": "LEAD_SCORE",
+                "operator": "greater_than_or_equal",
+                "value": 70
+              },
+              {
+                "attribute": "LEAD_SCORE",
+                "operator": "less_than",
+                "value": 90
+              }
+            ]
+          }
+        ]
+      },
+      "brevoId": 3
+    },
+    {
+      "name": "Anderseed - Super Hot Leads",
+      "purpose": "Contacts whose effective lead temperature is Super Hot.",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "MANUAL_TIER_OVERRIDE",
+            "operator": "equals",
+            "value": "Super Hot"
+          },
+          {
+            "all": [
+              {
+                "attribute": "MANUAL_TIER_OVERRIDE",
+                "operator": "is_empty"
+              },
+              {
+                "attribute": "LEAD_SCORE",
+                "operator": "greater_than_or_equal",
+                "value": 90
+              }
+            ]
+          }
+        ]
+      },
+      "brevoId": 4
+    },
+    {
+      "name": "Anderseed - Service Only",
+      "purpose": "Requested service delivery is allowed, but marketing nurture is not.",
+      "conditions": {
+        "all": [
+          {
+            "attribute": "NURTURE_STATUS",
+            "operator": "equals",
+            "value": "Service only"
+          }
+        ]
+      },
+      "brevoId": 5
+    },
+    {
+      "name": "Anderseed - Invalid or Undeliverable Emails",
+      "purpose": "Focused data-quality view of contacts whose addresses failed validation or permanently failed delivery.",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "EMAIL_VALIDATION_STATUS",
+            "operator": "equals",
+            "value": "Invalid"
+          },
+          {
+            "attribute": "EMAIL_VALIDATION_STATUS",
+            "operator": "equals",
+            "value": "Blocked"
+          },
+          {
+            "attribute": "EMAIL_DELIVERY_STATUS",
+            "operator": "equals",
+            "value": "Hard Bounce"
+          }
+        ]
+      },
+      "brevoId": 6
+    },
+    {
+      "name": "Anderseed - Suppressed",
+      "purpose": "Contacts who must not enter marketing nurture.",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "NURTURE_STATUS",
+            "operator": "equals",
+            "value": "Suppressed"
+          },
+          {
+            "attribute": "EMAIL_VALIDATION_STATUS",
+            "operator": "equals",
+            "value": "Invalid"
+          },
+          {
+            "attribute": "EMAIL_VALIDATION_STATUS",
+            "operator": "equals",
+            "value": "Blocked"
+          },
+          {
+            "attribute": "EMAIL_DELIVERY_STATUS",
+            "operator": "equals",
+            "value": "Hard Bounce"
+          },
+          {
+            "attribute": "EMAIL_DELIVERY_STATUS",
+            "operator": "equals",
+            "value": "Unsubscribed"
+          }
+        ]
+      },
+      "brevoId": 7
+    },
+    {
+      "name": "Anderseed - Nurture Eligible",
+      "purpose": "Contacts who explicitly consented and are safe to nurture.",
+      "conditions": {
+        "all": [
+          {
+            "attribute": "MARKETING_CONSENT",
+            "operator": "equals",
+            "value": true
+          },
+          {
+            "attribute": "NURTURE_STATUS",
+            "operator": "equals",
+            "value": "Eligible"
+          },
+          {
+            "attribute": "EMAIL_VALIDATION_STATUS",
+            "operator": "equals",
+            "value": "Validated"
+          }
+        ]
+      },
+      "brevoId": 8
+    }
+  ]
+}
