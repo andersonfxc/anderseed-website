@@ -60,7 +60,7 @@ A central authenticated webhook endpoint is available at `/api/v1/brevo/webhook`
 - Events are correlated to the assessment using Brevo's message ID. Webhook audit rows do not store the learner's email address, name, answers, score breakdown, or result.
 - Duplicate webhook deliveries are idempotent. Each event is audited once, and each scoring category can affect a lead only once.
 - Delivery and engagement statuses are written to both the website audit record and the existing Brevo contact attributes.
-- Opens carry no lead score. The first roadmap click adds 2 points. Invalid delivery, blocked mail, spam complaints, and unsubscribes subtract points and suppress nurture where appropriate.
+- Opens carry no lead score. The first roadmap click adds 2 points. Current marketing subscription contributes 10 points; unsubscribe replaces it with -15, and verified resubscription restores +10 without accumulating points. Invalid delivery, blocked mail, and spam complaints apply the approved state-based penalties and suppress nurture where appropriate. Automated digital activity is capped at 89.
 - Delayed and soft-bounce events are marked retry-eligible for review. The website does not automatically resend a new roadmap email, avoiding duplicate messages when delivery state is uncertain.
 - Permanent failures are not retried automatically. Invalid, hard-bounced, blocked, spam, and unsubscribed contacts are suppressed from nurture.
 - A temporary database failure returns HTTP 429 so Brevo can retry. Duplicate retries cannot duplicate lead-score changes.

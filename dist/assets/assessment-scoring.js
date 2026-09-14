@@ -19,8 +19,9 @@
     assertWeights(config.readiness?.dimensionWeights, "Readiness");
     assertWeights(config.readiness?.analyticalQuestionWeights, "Analytical question");
     assertWeights(config.readiness?.developmentWeights, "Development");
-    assertWeights(config.leadIntent?.weights, "Lead intent");
     if ((config.readiness?.stageThresholds || []).length !== 4) throw new Error("Four readiness stage thresholds are required");
+    if ((config.leadIntent?.temperatureThresholds || []).length !== 4) throw new Error("Four lead temperature thresholds are required");
+    if (!config.leadIntent?.scoringVersion || !config.leadIntent?.transitionPoints) throw new Error("Lead heat configuration is missing or incomplete");
     return true;
   }
 
@@ -93,18 +94,13 @@
   }
 
   function calculateLeadIntent(answers, config) {
-    const scores = config.answerScores;
-    const weights = config.leadIntent.weights;
-    const career = scores.careerPosition?.[answers.careerPosition] || {};
-    const exposure = scores.baExposure?.[answers.baExposure] || {};
-    const barrier = scores.primaryBarrier?.[answers.primaryBarrier] || {};
+    const transitionPoints = Number(config.leadIntent.transitionPoints?.[answers.transitionTimeline] || 0);
+    const completionPoints = Number(config.leadIntent.completionPoints || 0);
     const components = {
-      urgency: scoreFromMap(scores.transitionTimeline, answers.transitionTimeline),
-      careerActivity: rawClamp(career.leadActivity || 0),
-      priorCommitment: rawClamp(exposure.leadCommitment || 0),
-      pain: rawClamp(barrier.leadPain || 0),
+      transitionTimeline: transitionPoints,
+      assessmentCompleted: completionPoints,
     };
-    const score = clamp(Object.entries(components).reduce((total, [key, value]) => total + value * Number(weights[key] || 0), 0));
+    const score = clamp(transitionPoints + completionPoints);
     const temperature = config.leadIntent.temperatureThresholds.find(({ min, max }) => score >= min && score <= max);
     if (!temperature) throw new Error(`No lead temperature configured for score ${score}`);
     return { score, temperature: temperature.label, temperatureKey: temperature.key, components };

@@ -77,6 +77,26 @@ test("assessment contact payload maps lifecycle data without raw answers", () =>
   assert.equal(JSON.stringify(payload).includes("completionToken"), false);
 });
 
+test("subscribed contacts receive the recalculated dynamic heat score", () => {
+  const config = getBrevoConfig(baseEnvironment);
+  const payload = brevo.buildAssessmentContactPayload({
+    ...assessmentInput,
+    marketingOptIn: true,
+    leadScore: 70,
+    leadTier: "Hot",
+    lastScoreEvent: "email_subscribed",
+    lastScoreDelta: 10,
+    config,
+  });
+
+  assert.equal(payload.attributes.MARKETING_CONSENT, true);
+  assert.equal(payload.attributes.LEAD_SCORE, 70);
+  assert.equal(payload.attributes.LEAD_TIER, "Hot");
+  assert.equal(payload.attributes.LAST_SCORE_EVENT, "email_subscribed");
+  assert.equal(payload.attributes.LAST_SCORE_DELTA, 10);
+  assert.equal(payload.attributes.NURTURE_STATUS, "Eligible");
+});
+
 test("allowlisted development assessment sync upserts once and sends one roadmap email", async () => {
   const calls = [];
   const outcome = await brevo.syncAssessmentContactWithBrevo(assessmentInput, {

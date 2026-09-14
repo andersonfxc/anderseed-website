@@ -111,6 +111,25 @@ export default async (request) => {
           answerRows.map((answer) => answer.selectionOrder),
         ]
       );
+      await client.query(
+        `INSERT INTO lead_heat_events (
+           assessment_id, score_group, event_name, score_delta, source, scoring_version, downstream_sync_status
+         ) VALUES
+           ($1, 'transition_timeline', 'transition_timeline', $2, 'assessment', $4, 'included_in_initial_sync'),
+           ($1, 'assessment_completion', 'assessment_completed', $3, 'assessment', $4, 'included_in_initial_sync')
+         ON CONFLICT (assessment_id, score_group) DO UPDATE SET
+           event_name=EXCLUDED.event_name,
+           score_delta=EXCLUDED.score_delta,
+           source=EXCLUDED.source,
+           scoring_version=EXCLUDED.scoring_version,
+           downstream_sync_status=EXCLUDED.downstream_sync_status`,
+        [
+          body.assessmentId,
+          result.leadComponents.transitionTimeline,
+          result.leadComponents.assessmentCompleted,
+          scoringConfig.leadIntent.scoringVersion,
+        ]
+      );
       await client.query("COMMIT");
     } catch (error) {
       await client.query("ROLLBACK");

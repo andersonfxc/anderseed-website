@@ -261,6 +261,7 @@ function injectPostHog(content, relativePath) {
   const depth = path.dirname(relativePath).split(path.sep).filter((part) => part && part !== ".").length;
   const base = "../".repeat(depth);
   const privacyHref = `${base}privacy/index.html`;
+  const leadActivityAsset = `<script src="${base}assets/lead-activity.js" defer></script>\n`;
   const includeAssessmentPrompt = shouldIncludeAssessmentPrompt(relativePath);
   const promptAssets = includeAssessmentPrompt
     ? `<link rel="stylesheet" href="${base}assets/assessment-prompt.css" />\n<script src="${base}assets/assessment-prompt.js" defer></script>\n`
@@ -269,7 +270,7 @@ function injectPostHog(content, relativePath) {
     ? `${assessmentPromptMarkup(`${base}assessment/index.html?intro=1`)}\n`
     : "";
   return content
-    .replace("</head>", `${promptAssets}${posthogSnippet}\n</head>`)
+    .replace("</head>", `${leadActivityAsset}${promptAssets}${posthogSnippet}\n</head>`)
     .replace("</body>", `${promptMarkup}${analyticsConsentMarkup(privacyHref)}\n</body>`);
 }
 

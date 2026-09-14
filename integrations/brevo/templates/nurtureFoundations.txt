@@ -1,0 +1,33 @@
+Hi {{ contact.FIRSTNAME }},
+
+Start with what you already know
+
+You do not need to have worked under the title Business Analyst before you can begin recognising relevant experience. Think about a time when you:
+
+- Found a better way to complete a task at work.
+
+- Asked questions to understand what someone needed.
+
+- Helped resolve a recurring problem.
+
+- Explained a new process or change to other people.
+
+- Compared different options before recommending a solution.
+
+If one of these sounds familiar, you already have a useful starting point. The next step is learning how to explain the problem you noticed, the people involved, what you did and the outcome you helped achieve. Use this short exercise to choose one example and begin translating it into clear Business Analysis language.
+
+Find my transferable BA experience:
+{{ params.content_url }}
+
+Stay connected with Anderseed
+
+Join the free Telegram community for BA guidance, shared resources, session updates and peer support.
+Join Telegram: {{ params.telegram_url }}
+TikTok: {{ params.tiktok_url }}
+Instagram: {{ params.instagram_url }}
+YouTube: {{ params.youtube_url }}
+
+You are receiving this email because you chose to receive practical BA tips and Anderseed programme updates.
+Unsubscribe: {{ unsubscribe }}
+
+Anderseed Consulting

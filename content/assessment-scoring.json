@@ -1,6 +1,6 @@
 {
   "schemaVersion": "ba-readiness-mvp-v2",
-  "scoringVersion": "2026-08-22-v1",
+  "scoringVersion": "2026-09-14-v1",
   "readiness": {
     "dimensionWeights": {
       "analyticalProblemSolving": 0.3,
@@ -25,16 +25,37 @@
     ]
   },
   "leadIntent": {
-    "weights": {
-      "urgency": 0.45,
-      "careerActivity": 0.3,
-      "priorCommitment": 0.15,
-      "pain": 0.1
+    "scoringVersion": "lead-heat-2026-09-14-v2",
+    "digitalScoreCap": 89,
+    "completionPoints": 20,
+    "transitionPoints": {
+      "asap": 25,
+      "one_to_three": 20,
+      "three_to_six": 10,
+      "six_to_twelve": 5,
+      "exploring": 0
+    },
+    "events": {
+      "assessment_completed": { "group": "assessment_completion", "delta": 20 },
+      "result_viewed": { "group": "result_view", "delta": 15 },
+      "pricing_section_viewed": { "group": "pricing_view", "delta": 10 },
+      "telegram_link_clicked": { "group": "telegram_click", "delta": 5 },
+      "telegram_join_confirmed": { "group": "telegram_join", "delta": 10 },
+      "telegram_left": { "group": "telegram_join", "delta": 0 },
+      "roadmap_link_clicked": { "group": "roadmap_click", "delta": 2 },
+      "email_not_subscribed": { "group": "marketing_subscription", "delta": 0 },
+      "email_subscribed": { "group": "marketing_subscription", "delta": 10 },
+      "email_hard_bounce": { "group": "invalid_delivery", "delta": -20 },
+      "email_invalid": { "group": "invalid_delivery", "delta": -20 },
+      "email_blocked": { "group": "invalid_delivery", "delta": -10 },
+      "email_spam": { "group": "marketing_subscription", "delta": -30 },
+      "email_unsubscribed": { "group": "marketing_subscription", "delta": -15 }
     },
     "temperatureThresholds": [
       { "key": "cold", "label": "Cold", "min": 0, "max": 34 },
       { "key": "warm", "label": "Warm", "min": 35, "max": 69 },
-      { "key": "hot", "label": "Hot", "min": 70, "max": 100 }
+      { "key": "hot", "label": "Hot", "min": 70, "max": 89 },
+      { "key": "super_hot", "label": "Super Hot", "min": 90, "max": 100 }
     ]
   },
   "answerScores": {
@@ -68,34 +89,27 @@
       "accept_solution": 5
     },
     "careerPosition": {
-      "exploring": { "development": 0, "market": 0, "leadActivity": 0 },
-      "starting_learning": { "development": 25, "market": 10, "leadActivity": 20 },
-      "trained_not_ready": { "development": 60, "market": 35, "leadActivity": 55 },
-      "applying_no_response": { "development": 70, "market": 70, "leadActivity": 80 },
-      "interviewing_no_offer": { "development": 80, "market": 90, "leadActivity": 95 },
-      "ba_like_work": { "development": 90, "market": 65, "leadActivity": 60 }
+      "exploring": { "development": 0, "market": 0 },
+      "starting_learning": { "development": 25, "market": 10 },
+      "trained_not_ready": { "development": 60, "market": 35 },
+      "applying_no_response": { "development": 70, "market": 70 },
+      "interviewing_no_offer": { "development": 80, "market": 90 },
+      "ba_like_work": { "development": 90, "market": 65 }
     },
     "baExposure": {
-      "none": { "development": 0, "leadCommitment": 0 },
-      "informal": { "development": 25, "leadCommitment": 25 },
-      "structured": { "development": 55, "leadCommitment": 60 },
-      "multiple_courses": { "development": 70, "leadCommitment": 80 },
-      "workplace": { "development": 100, "leadCommitment": 70 }
+      "none": { "development": 0 },
+      "informal": { "development": 25 },
+      "structured": { "development": 55 },
+      "multiple_courses": { "development": 70 },
+      "workplace": { "development": 100 }
     },
     "primaryBarrier": {
-      "clarity": { "growthArea": "conditional_clarity", "leadPain": 50 },
-      "translate_experience": { "growthArea": "transferableEvidence", "leadPain": 65 },
-      "practical_experience": { "growthArea": "appliedExperience", "leadPain": 85 },
-      "cv_positioning": { "growthArea": "marketPositioning", "leadPain": 80 },
-      "interview_confidence": { "growthArea": "interviewReadiness", "leadPain": 90 },
-      "no_barrier": { "growthArea": "diagnostic_fallback", "leadPain": 0 }
-    },
-    "transitionTimeline": {
-      "asap": 100,
-      "one_to_three": 80,
-      "three_to_six": 55,
-      "six_to_twelve": 25,
-      "exploring": 0
+      "clarity": { "growthArea": "conditional_clarity" },
+      "translate_experience": { "growthArea": "transferableEvidence" },
+      "practical_experience": { "growthArea": "appliedExperience" },
+      "cv_positioning": { "growthArea": "marketPositioning" },
+      "interview_confidence": { "growthArea": "interviewReadiness" },
+      "no_barrier": { "growthArea": "diagnostic_fallback" }
     }
   },
   "dimensionLabels": {

@@ -1,0 +1,12 @@
+Hi {{ contact.FIRSTNAME }},
+
+Your free BA Career Roadmap is ready.
+
+Use this roadmap to understand the practical steps involved in building your Business Analysis capability and planning your next move.
+
+View your roadmap:
+{{ params.roadmap_url }}
+
+This service email delivers the resource you requested. Marketing emails are managed separately and require your consent.
+
+Anderseed Consulting

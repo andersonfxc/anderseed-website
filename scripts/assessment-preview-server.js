@@ -36,7 +36,7 @@ const questionIds = new Set(assessment.questions.map((question) => question.id))
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function emptyStore() {
-  return { runs: {}, contacts: {}, consents: {}, events: [] };
+  return { runs: {}, contacts: {}, consents: {}, events: [], heatEvents: {} };
 }
 
 function readStore() {
@@ -121,6 +121,18 @@ async function complete(request, response) {
     completedAt: new Date().toISOString(),
     contactSubmittedAt: null,
     resultViewedAt: null,
+    engagementTokenHash: null,
+    engagementExpiresAt: null,
+    leadScore: result.initialLeadScore,
+    leadTier: result.leadTemperature,
+  };
+  store.heatEvents[`${payload.assessmentId}:transition_timeline`] = {
+    eventName: "transition_timeline",
+    delta: result.leadComponents.transitionTimeline,
+  };
+  store.heatEvents[`${payload.assessmentId}:assessment_completion`] = {
+    eventName: "assessment_completed",
+    delta: result.leadComponents.assessmentCompleted,
   };
   writeStore(store);
   return json(response, 201, { ok: true, assessmentId: payload.assessmentId, completionToken, result: publicResult(result) });
@@ -158,18 +170,72 @@ async function contact(request, response) {
     });
   }
   const now = new Date().toISOString();
+  const previousConsent = store.consents[payload.assessmentId] || null;
   store.contacts[payload.assessmentId] = { assessmentId: payload.assessmentId, firstName, email, capturedAt: now };
   store.consents[payload.assessmentId] = {
     assessmentId: payload.assessmentId,
     optedIn: payload.marketingOptIn,
     consentTextVersion: payload.marketingConsentTextVersion,
     decisionCapturedAt: now,
-    optedInAt: payload.marketingOptIn ? now : null,
+    optedInAt: payload.marketingOptIn ? previousConsent?.optedInAt || now : previousConsent?.optedInAt || null,
+    withdrawnAt: payload.marketingOptIn ? null : previousConsent?.optedIn ? now : previousConsent?.withdrawnAt || null,
   };
+  const engagementToken = crypto.randomBytes(32).toString("base64url");
   run.contactSubmittedAt = now;
-  run.resultViewedAt = now;
+  run.engagementTokenHash = tokenHash(engagementToken);
+  run.engagementExpiresAt = new Date(Date.now() + 365 * 86400000).toISOString();
+  const subscriptionEvent = payload.marketingOptIn
+    ? "email_subscribed"
+    : previousConsent?.optedIn
+      ? "email_unsubscribed"
+      : "email_not_subscribed";
+  const subscriptionRule = scoringConfig.leadIntent.events[subscriptionEvent];
+  store.heatEvents[payload.assessmentId + ":" + subscriptionRule.group] = {
+    eventName: subscriptionEvent,
+    delta: subscriptionRule.delta,
+    occurredAt: now,
+  };
+  recalculateLeadHeat(store, run);
   writeStore(store);
-  return json(response, 201, { ok: true, assessmentId: payload.assessmentId, persisted: true, result: publicResult(run.result) });
+  return json(response, 201, { ok: true, assessmentId: payload.assessmentId, engagementToken, persisted: true, result: publicResult(run.result) });
+}
+
+function leadTier(score) {
+  const tier = scoringConfig.leadIntent.temperatureThresholds.find(({ min, max }) => score >= min && score <= max);
+  return tier?.label || "Cold";
+}
+
+function recalculateLeadHeat(store, run) {
+  const prefix = run.assessmentId + ":";
+  const rawScore = Object.entries(store.heatEvents)
+    .filter(([key]) => key.startsWith(prefix))
+    .reduce((total, [, event]) => total + Number(event.delta || 0), 0);
+  const cap = Number(scoringConfig.leadIntent.digitalScoreCap || 89);
+  run.leadScore = Math.max(0, Math.min(cap, rawScore));
+  run.leadTier = leadTier(run.leadScore);
+}
+
+async function leadActivity(request, response) {
+  const payload = await body(request, 4096);
+  const eventName = String(payload.eventName || "");
+  const allowed = new Set(["result_viewed", "pricing_section_viewed", "telegram_link_clicked"]);
+  if (!allowed.has(eventName)) return json(response, 400, { ok: false, code: "activity_invalid", message: "This activity is not scoreable." });
+  const store = readStore();
+  const run = store.runs[payload.assessmentId];
+  const validToken = run && tokenHash(payload.engagementToken) === run.engagementTokenHash;
+  if (!validToken || new Date(run.engagementExpiresAt || 0).getTime() <= Date.now()) {
+    return json(response, 401, { ok: false, code: "activity_unauthorized", message: "This activity could not be verified." });
+  }
+  const rule = scoringConfig.leadIntent.events[eventName];
+  const key = `${payload.assessmentId}:${rule.group}`;
+  const duplicate = Boolean(store.heatEvents[key]);
+  if (!duplicate) {
+    store.heatEvents[key] = { eventName, delta: rule.delta, occurredAt: new Date().toISOString() };
+    recalculateLeadHeat(store, run);
+  }
+  if (eventName === "result_viewed" && !run.resultViewedAt) run.resultViewedAt = new Date().toISOString();
+  writeStore(store);
+  return json(response, 200, { ok: true, recorded: !duplicate, duplicate });
 }
 
 async function events(request, response) {
@@ -300,6 +366,7 @@ const server = http.createServer(async (request, response) => {
     if (request.method === "POST" && url.pathname === "/api/v1/assessment/complete") return await complete(request, response);
     if (request.method === "POST" && url.pathname === "/api/v1/assessment/contact") return await contact(request, response);
     if (request.method === "POST" && url.pathname === "/api/v1/assessment/events") return await events(request, response);
+    if (request.method === "POST" && url.pathname === "/api/v1/lead/activity") return await leadActivity(request, response);
     if (request.method === "GET" && url.pathname === "/api/v1/admin/assessment-funnel") return funnel(response, url);
     if (request.method !== "GET" && request.method !== "HEAD") return json(response, 405, { ok: false, message: "Method not allowed." });
     return serveStatic(request, response, url);

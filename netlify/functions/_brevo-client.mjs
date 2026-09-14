@@ -33,6 +33,10 @@ export function buildAssessmentContactPayload({
   result,
   transitionTimeline,
   completedAt,
+  leadScore,
+  leadTier,
+  lastScoreEvent,
+  lastScoreDelta,
 }) {
   const assessmentDate = dateOnly(completedAt);
   const now = dateOnly();
@@ -49,11 +53,11 @@ export function buildAssessmentContactPayload({
     STRONGEST_AREA: cleanText(result?.strongestArea?.label || result?.strongestArea?.key),
     PRIMARY_GROWTH_AREA: cleanText(result?.primaryGrowthArea || result?.primaryGrowthAreaKey),
     START_TIMELINE: cleanText(transitionTimeline, 100),
-    LEAD_SCORE: Number(result?.initialLeadScore || 0),
-    LEAD_TIER: cleanText(result?.leadTemperature, 50),
+    LEAD_SCORE: Number(leadScore ?? result?.initialLeadScore ?? 0),
+    LEAD_TIER: cleanText(leadTier || result?.leadTemperature, 50),
     LEAD_SCORE_DATE: now,
-    LAST_SCORE_EVENT: "assessment_completed",
-    LAST_SCORE_DELTA: Number(result?.initialLeadScore || 0),
+    LAST_SCORE_EVENT: cleanText(lastScoreEvent || "assessment_completed", 100),
+    LAST_SCORE_DELTA: Number(lastScoreDelta ?? result?.initialLeadScore ?? 0),
     NURTURE_STATUS: marketingOptIn ? "Eligible" : "Service only",
     LAST_ENGAGEMENT_DATE: now,
     ROADMAP_DELIVERY_STATUS: "Requested",

@@ -1,0 +1,17 @@
+Hi {{ contact.FIRSTNAME }},
+
+Your application has been received
+
+Thank you for applying to Anderseed. Your application is now ready for review. This confirmation does not mean that a place has been offered yet.
+
+- We will review the information you submitted.
+
+- We will contact you using the details in your application.
+
+- You do not need to submit another application while this one is being reviewed.
+
+Your application reference is {{ params.application_reference }}. Keep this email for your records.
+
+This service email relates to an action or transaction you completed with Anderseed. It is separate from marketing consent.
+
+Anderseed Consulting

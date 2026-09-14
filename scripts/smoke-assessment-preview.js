@@ -76,6 +76,19 @@ async function run() {
     marketingConsentTextVersion: settings.assessment.marketingConsentTextVersion,
   });
   assert.equal(contact.persisted, true);
+  assert.equal(typeof contact.engagementToken, "string");
+  const scored = await post("/api/v1/lead/activity", {
+    assessmentId,
+    engagementToken: contact.engagementToken,
+    eventName: "result_viewed",
+  });
+  const duplicateScore = await post("/api/v1/lead/activity", {
+    assessmentId,
+    engagementToken: contact.engagementToken,
+    eventName: "result_viewed",
+  });
+  assert.equal(scored.recorded, true);
+  assert.equal(duplicateScore.duplicate, true);
 
   await post("/api/v1/assessment/events", {
     events: ["contact_details_submitted", "result_viewed"].map((eventName) => ({

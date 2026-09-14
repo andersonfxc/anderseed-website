@@ -6,7 +6,7 @@ Complete this checklist before connecting the final domain or accepting live pay
 
 - Choose the final production host: Netlify or Hostinger.
 - Configure the production build to run `node scripts/build.js` and publish `dist`.
-- Add a deployment test gate so a failed test cannot replace the live site.
+- Deployment test gate configured in netlify.toml: the complete test suite must pass before the production build runs.
 - Apply equivalent security response headers on the chosen host.
 - Test the custom 404 page and every clean URL on the production host.
 - Confirm a tested rollback route to the previous successful deployment.
@@ -41,11 +41,15 @@ Complete this checklist before connecting the final domain or accepting live pay
 - Authenticate the sending domain with SPF and DKIM; add and verify DMARC alignment.
 - Keep `BREVO_PRODUCTION_SEND_ENABLED=false` until sender authentication and delivery testing pass.
 - Test confirmation, roadmap delivery, marketing opt-in, unsubscribe, and failed-delivery handling.
-- Deploy the Brevo delivery-event database migration before enabling its webhook.
+- Apply all database migrations in filename order before enabling Brevo, lead-heat, or Telegram webhooks.
 - Generate a production webhook secret in the hosting environment; never reuse or expose the Brevo API key.
 - Register the public HTTPS `/api/v1/brevo/webhook` URL in Brevo with bearer authentication.
 - Verify sent, delivered, opened, clicked, deferred, soft-bounce, hard-bounce, invalid, blocked, spam, and unsubscribe events.
 - Confirm webhook retries remain idempotent and do not duplicate lead-score adjustments.
+- Add TELEGRAM_MEMBER_HASH_SECRET to the hosting environment and keep Telegram production disabled until testing.
+- Keep the Telegram bot as a group administrator and register /api/v1/telegram/webhook with chat_member in allowed_updates.
+- Test personalised Telegram join, leave, removal and rejoin score movements before production activation.
+- Configure Brevo Events registration and attendance scoring after its score values and event-source workflow are approved.
 - Replace payment placeholders with approved Stripe, Klarna, Clearpay, and bank-transfer flows.
 - Verify that payment is available only after application approval, as described on the site.
 - Test confirmation emails and the internal follow-up process.

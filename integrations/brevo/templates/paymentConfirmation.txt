@@ -1,0 +1,19 @@
+Hi {{ contact.FIRSTNAME }},
+
+Payment confirmed
+
+Thank you. Your payment has been recorded successfully. Keep this email as confirmation of the transaction.
+
+Reference: {{ params.payment_reference }}
+
+Amount: {{ params.payment_amount }}
+
+Payment plan: {{ params.payment_plan }}
+
+Date: {{ params.payment_date }}
+
+We will send any relevant onboarding information separately. If you have a question about this payment, quote the reference above when contacting Anderseed.
+
+This service email relates to an action or transaction you completed with Anderseed. It is separate from marketing consent.
+
+Anderseed Consulting

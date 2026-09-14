@@ -1,0 +1,31 @@
+Hi {{ contact.FIRSTNAME }},
+
+A portfolio should show how you think
+
+A useful BA portfolio is more than a folder of templates. It should show how you moved from a business problem to a practical recommendation and how each artefact supported that journey.
+
+- Choose a realistic CRM, HCM or ERP implementation scenario.
+
+- Create stakeholder analysis and AS-IS and TO-BE process maps.
+
+- Write Jira-ready user stories, acceptance criteria and a BRD.
+
+- Present your decisions through a prototype and an interview-ready story.
+
+The goal is connected evidence you can show, explain and defend with confidence.
+
+See the portfolio project:
+{{ params.portfolio_url }}
+
+Stay connected with Anderseed
+
+Join the free Telegram community for BA guidance, shared resources, session updates and peer support.
+Join Telegram: {{ params.telegram_url }}
+TikTok: {{ params.tiktok_url }}
+Instagram: {{ params.instagram_url }}
+YouTube: {{ params.youtube_url }}
+
+You are receiving this email because you chose to receive practical BA tips and Anderseed programme updates.
+Unsubscribe: {{ unsubscribe }}
+
+Anderseed Consulting

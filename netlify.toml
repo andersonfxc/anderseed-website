@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/build.js"
+  command = "npm test && npm run build"
   publish = "dist"
 
 [functions]

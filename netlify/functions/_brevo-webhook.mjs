@@ -2,6 +2,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { normalizeEmail } from "./_email-validation.mjs";
 import { updateBrevoContactAttributes } from "./_brevo-client.mjs";
 import { getBrevoConfig } from "./_brevo-config.mjs";
+import { applyLeadHeatRule, leadTier as configuredLeadTier } from "./_lead-heat.mjs";
 
 const EVENT_ALIASES = new Map([
   ["request", "sent"],
@@ -29,13 +30,13 @@ const PERMANENT_FAILURES = new Set(["hard_bounce", "invalid", "blocked", "spam"]
 const DELAYED_EVENTS = new Set(["soft_bounce", "deferred", "error"]);
 const DELIVERED_EVENTS = new Set(["delivered", "opened", "click"]);
 
-const SCORE_RULES = Object.freeze({
-  click: { group: "roadmap_click", delta: 2 },
-  hard_bounce: { group: "invalid_delivery", delta: -20 },
-  invalid: { group: "invalid_delivery", delta: -20 },
-  blocked: { group: "invalid_delivery", delta: -10 },
-  spam: { group: "email_suppression", delta: -30 },
-  unsubscribed: { group: "email_suppression", delta: -15 },
+const WEBHOOK_SCORE_EVENTS = Object.freeze({
+  click: "roadmap_link_clicked",
+  hard_bounce: "email_hard_bounce",
+  invalid: "email_invalid",
+  blocked: "email_blocked",
+  spam: "email_spam",
+  unsubscribed: "email_unsubscribed",
 });
 
 function clean(value, maxLength = 255) {
@@ -99,10 +100,7 @@ export function authenticateBrevoWebhook(request, config = getBrevoConfig()) {
 }
 
 export function leadTier(score) {
-  if (score >= 90) return "Super Hot";
-  if (score >= 70) return "Hot";
-  if (score >= 35) return "Warm";
-  return "Cold";
+  return configuredLeadTier(score);
 }
 
 export function nextDeliveryState(previous, eventName) {
@@ -249,19 +247,20 @@ export async function processBrevoWebhookEvent(database, payload, options = {}) 
     }
 
     let scoreDelta = 0;
-    const scoreRule = SCORE_RULES[event.name];
-    if (scoreRule) {
-      const scored = await client.query(
-        `INSERT INTO brevo_lead_score_events (assessment_id, score_group, event_name, score_delta)
-         VALUES ($1,$2,$3,$4)
-         ON CONFLICT (assessment_id, score_group) DO NOTHING
-         RETURNING score_delta`,
-        [current.assessment_id, scoreRule.group, event.name, scoreRule.delta]
-      );
-      scoreDelta = Number(scored.rows[0]?.score_delta || 0);
+    let leadScore = Number(current.lead_score || 0);
+    let calculatedLeadTier = leadTier(leadScore);
+    const scoreEventName = WEBHOOK_SCORE_EVENTS[event.name];
+    if (scoreEventName) {
+      const scoreChange = await applyLeadHeatRule(client, {
+        assessmentId: current.assessment_id,
+        eventName: scoreEventName,
+        source: "brevo_webhook",
+        occurredAt: event.timestamp,
+      }, current.lead_score);
+      scoreDelta = scoreChange.delta;
+      leadScore = scoreChange.leadScore;
+      calculatedLeadTier = scoreChange.leadTier;
     }
-
-    const leadScore = Math.max(0, Math.min(100, Number(current.lead_score || 0) + scoreDelta));
     const staleEvent = current.last_event_at &&
       new Date(event.timestamp).getTime() < new Date(current.last_event_at).getTime();
     const delivery = staleEvent
@@ -277,9 +276,20 @@ export async function processBrevoWebhookEvent(database, payload, options = {}) 
       ...delivery,
       eventTimestamp: event.timestamp,
       leadScore,
-      leadTier: leadTier(leadScore),
+      leadTier: calculatedLeadTier,
       scoreDelta,
     };
+
+    if (["spam", "unsubscribed"].includes(event.name)) {
+      await client.query(
+        `UPDATE assessment_marketing_consents SET
+           opted_in=FALSE,
+           withdrawn_at=COALESCE(withdrawn_at,$2),
+           decision_captured_at=$2
+         WHERE assessment_id=$1`,
+        [current.assessment_id, event.timestamp]
+      );
+    }
 
     await client.query(
       `UPDATE assessment_brevo_syncs SET

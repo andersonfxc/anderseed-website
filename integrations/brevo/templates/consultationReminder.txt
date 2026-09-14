@@ -1,0 +1,18 @@
+Hi {{ contact.FIRSTNAME }},
+
+Your consultation is coming up
+
+This is a reminder of your upcoming Anderseed consultation. Bring any questions about your BA direction, practical experience or the programme.
+
+Date: {{ params.consultation_date }}
+
+Time: {{ params.consultation_time }} {{ params.consultation_timezone }}
+
+Please join on time using the button below. If you can no longer attend, use the same link to manage your booking.
+
+View consultation details:
+{{ params.manage_booking_url }}
+
+This service email relates to an action or transaction you completed with Anderseed. It is separate from marketing consent.
+
+Anderseed Consulting

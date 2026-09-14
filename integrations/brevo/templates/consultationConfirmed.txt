@@ -1,0 +1,18 @@
+Hi {{ contact.FIRSTNAME }},
+
+Your consultation is confirmed
+
+Your free consultation has been booked. We will use the time to understand your current position, answer relevant questions and help you identify a sensible next step.
+
+Date: {{ params.consultation_date }}
+
+Time: {{ params.consultation_time }} {{ params.consultation_timezone }}
+
+Please use the button below at the scheduled time. If your plans change, use the booking management link in your confirmation details.
+
+Join or manage consultation:
+{{ params.manage_booking_url }}
+
+This service email relates to an action or transaction you completed with Anderseed. It is separate from marketing consent.
+
+Anderseed Consulting

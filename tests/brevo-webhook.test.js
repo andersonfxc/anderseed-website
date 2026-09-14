@@ -130,9 +130,12 @@ test("contact delivery update uses PUT and remains development-allowlisted", asy
 function mockDatabase() {
   const state = {
     insertedKeys: new Set(),
-    scoreGroups: new Set(),
+    events: new Map([["baseline", { event_name: "baseline", score_delta: 72 }]]),
+    currentScore: 72,
     syncUpdates: [],
     contactUpdates: [],
+    changeAudits: [],
+    consentUpdates: [],
   };
   const client = {
     async query(sql, values = []) {
@@ -144,7 +147,7 @@ function mockDatabase() {
             roadmap_status: "sent",
             email_status: "pending",
             last_event_at: null,
-            lead_score: 72,
+            lead_score: state.currentScore,
           }],
           rowCount: 1,
         };
@@ -154,20 +157,35 @@ function mockDatabase() {
         state.insertedKeys.add(values[0]);
         return { rows: [{ event_key: values[0] }], rowCount: 1 };
       }
-      if (sql.includes("INSERT INTO brevo_lead_score_events")) {
-        const group = `${values[0]}:${values[1]}`;
-        if (state.scoreGroups.has(group)) return { rows: [], rowCount: 0 };
-        state.scoreGroups.add(group);
-        return { rows: [{ score_delta: values[3] }], rowCount: 1 };
+      if (sql.includes("COALESCE(SUM(score_delta)")) {
+        const raw_score = [...state.events.values()].reduce((total, event) => total + Number(event.score_delta), 0);
+        return { rows: [{ raw_score }], rowCount: 1 };
+      }
+      if (sql.includes("SELECT event_name, score_delta") && sql.includes("FROM lead_heat_events")) {
+        const event = state.events.get(values[1]);
+        return { rows: event ? [event] : [], rowCount: event ? 1 : 0 };
+      }
+      if (sql.includes("INSERT INTO lead_heat_events")) {
+        state.events.set(values[1], { event_name: values[2], score_delta: values[3], occurred_at: values[6] });
+        return { rows: [], rowCount: 1 };
+      }
+      if (sql.includes("INSERT INTO lead_heat_change_audit")) {
+        state.changeAudits.push(values);
+        return { rows: [], rowCount: 1 };
+      }
+      if (sql.includes("UPDATE assessment_marketing_consents SET")) {
+        state.consentUpdates.push(values);
+        return { rows: [], rowCount: 1 };
       }
       if (sql.includes("UPDATE assessment_brevo_syncs SET")) {
+        state.currentScore = values[8];
         state.syncUpdates.push(values);
         return { rows: [], rowCount: 1 };
       }
       if (sql.includes("UPDATE brevo_webhook_events SET processing_status")) {
         return { rows: [], rowCount: 1 };
       }
-      throw new Error(`Unexpected query: ${sql}`);
+      throw new Error("Unexpected query: " + sql);
     },
     release() {},
   };
@@ -184,7 +202,6 @@ function mockDatabase() {
     },
   };
 }
-
 test("a retried click webhook is audited once and never scores twice", async () => {
   const { database, state } = mockDatabase();
   const options = {
@@ -198,9 +215,36 @@ test("a retried click webhook is audited once and never scores twice", async () 
   assert.equal(first.status, "processed");
   assert.equal(first.scoreDelta, 2);
   assert.equal(second.status, "duplicate");
-  assert.equal(state.scoreGroups.size, 1);
+  assert.equal(state.events.size, 2);
   assert.equal(state.syncUpdates.length, 1);
   assert.equal(state.syncUpdates[0][8], 74);
   assert.equal(state.syncUpdates[0][9], "Hot");
   assert.equal(state.contactUpdates.length, 1);
+});
+
+
+test("unsubscribe replaces subscription points and moves the lead backward", async () => {
+  const { database, state } = mockDatabase();
+  state.events = new Map([
+    ["baseline", { event_name: "baseline", score_delta: 60 }],
+    ["marketing_subscription", { event_name: "email_subscribed", score_delta: 10 }],
+  ]);
+  state.currentScore = 70;
+  const options = {
+    env: environment,
+    fetchImpl: async () => ({ ok: true, status: 204, text: async () => "" }),
+  };
+
+  const result = await webhook.processBrevoWebhookEvent(database, payload("unsubscribed"), options);
+
+  assert.equal(result.status, "processed");
+  assert.equal(result.scoreDelta, -25);
+  assert.equal(state.currentScore, 45);
+  assert.equal(state.syncUpdates[0][9], "Warm");
+  assert.equal(state.consentUpdates.length, 1);
+  assert.deepEqual(state.events.get("marketing_subscription"), {
+    event_name: "email_unsubscribed",
+    score_delta: -15,
+    occurred_at: "2026-09-12T16:40:00.000Z",
+  });
 });

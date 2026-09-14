@@ -790,6 +790,7 @@
       tracked = true;
       observer?.disconnect();
       trackEvent("result_viewed");
+      void window.AnderseedLeadActivity?.record("result_viewed");
       void flushAnalytics();
     };
 
@@ -826,6 +827,10 @@
         marketingConsentTextVersion: config.marketingConsentTextVersion,
       });
       state.result = outcome.result;
+      window.AnderseedLeadActivity?.setIdentity({
+        assessmentId: outcome.assessmentId,
+        engagementToken: outcome.engagementToken,
+      });
       renderResult();
       clearDraft();
       show(resultView);

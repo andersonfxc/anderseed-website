@@ -1,0 +1,29 @@
+Hi {{ contact.FIRSTNAME }},
+
+Welcome to your Business Analysis journey
+
+You do not need to have everything figured out before you begin. The strongest starting point is understanding what Business Analysts actually do and then building evidence that you can do it.
+
+- Learn the language and thinking used by Business Analysts.
+
+- Practise with realistic workplace scenarios, not theory alone.
+
+- Build evidence you can explain in applications and interviews.
+
+Over the next few emails, we will share practical guidance to help you turn your existing experience into a clearer BA direction.
+
+Explore the Anderseed approach:
+{{ params.programme_url }}
+
+Stay connected with Anderseed
+
+Join the free Telegram community for BA guidance, shared resources, session updates and peer support.
+Join Telegram: {{ params.telegram_url }}
+TikTok: {{ params.tiktok_url }}
+Instagram: {{ params.instagram_url }}
+YouTube: {{ params.youtube_url }}
+
+You are receiving this email because you chose to receive practical BA tips and Anderseed programme updates.
+Unsubscribe: {{ unsubscribe }}
+
+Anderseed Consulting

@@ -1,0 +1,17 @@
+Hi {{ contact.FIRSTNAME }},
+
+Your BA Career Roadmap is ready
+
+Thank you for completing the Anderseed BA Readiness Assessment. Your personalised result was displayed immediately after completing the assessment.
+
+Your free BA Career Roadmap is ready. Use it to understand the steps involved in developing your Business Analysis capability and planning your next move.
+
+View your BA Career Roadmap:
+{{ params.roadmap_url }}
+
+If you are not currently subscribed to ongoing Anderseed emails, review your email preferences:
+{{ params.preferences_url }}
+
+This service email relates to an action or transaction you completed with Anderseed. It is separate from marketing consent.
+
+Anderseed Consulting

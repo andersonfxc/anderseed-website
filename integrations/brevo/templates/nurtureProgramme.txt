@@ -1,0 +1,31 @@
+Hi {{ contact.FIRSTNAME }},
+
+Turn learning into credible BA evidence
+
+The Anderseed BA Career Journey combines eight weeks of live mentorship with a four-week guided portfolio project, helping you connect BA knowledge to realistic, end-to-end project work.
+
+- Live sessions, mentor feedback and structured practical tasks.
+
+- A guided CRM, HCM or ERP portfolio project.
+
+- CV, LinkedIn, application and interview preparation.
+
+- Ongoing community and workplace support.
+
+Review the full programme and pricing when you are ready. Joining is your decision, and there is no obligation to apply.
+
+Explore the programme and pricing:
+{{ params.pricing_url }}
+
+Stay connected with Anderseed
+
+Join the free Telegram community for BA guidance, shared resources, session updates and peer support.
+Join Telegram: {{ params.telegram_url }}
+TikTok: {{ params.tiktok_url }}
+Instagram: {{ params.instagram_url }}
+YouTube: {{ params.youtube_url }}
+
+You are receiving this email because you chose to receive practical BA tips and Anderseed programme updates.
+Unsubscribe: {{ unsubscribe }}
+
+Anderseed Consulting

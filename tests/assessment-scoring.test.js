@@ -56,7 +56,7 @@ const fixtures = {
         baDevelopment: 0,
         marketReadiness: 0,
       },
-      leadScore: 5,
+      leadScore: 20,
       temperature: "Cold",
       growthArea: "careerClarity",
       strongestArea: "analyticalProblemSolving",
@@ -83,8 +83,8 @@ const fixtures = {
         baDevelopment: 25,
         marketReadiness: 10,
       },
-      leadScore: 43,
-      temperature: "Warm",
+      leadScore: 30,
+      temperature: "Cold",
       growthArea: "appliedExperience",
       strongestArea: "transferableExperience",
     },
@@ -110,8 +110,8 @@ const fixtures = {
         baDevelopment: 56,
         marketReadiness: 35,
       },
-      leadScore: 79,
-      temperature: "Hot",
+      leadScore: 45,
+      temperature: "Warm",
       growthArea: "appliedExperience",
       strongestArea: "analyticalProblemSolving",
     },
@@ -137,8 +137,8 @@ const fixtures = {
         baDevelopment: 95,
         marketReadiness: 90,
       },
-      leadScore: 93,
-      temperature: "Hot",
+      leadScore: 45,
+      temperature: "Warm",
       growthArea: "interviewReadiness",
       strongestArea: "analyticalProblemSolving",
     },
@@ -237,9 +237,38 @@ test("Q7 diagnosis and Q8 urgency never change BA readiness", () => {
     scoringConfig
   );
   assert.equal(lowIntent.readinessScore, highIntent.readinessScore);
-  assert.ok(highIntent.initialLeadScore > lowIntent.initialLeadScore);
-  assert.notEqual(highIntent.leadTemperature, lowIntent.leadTemperature);
+  assert.equal(lowIntent.initialLeadScore, 20);
+  assert.equal(highIntent.initialLeadScore, 45);
   assert.notEqual(highIntent.primaryGrowthAreaKey, lowIntent.primaryGrowthAreaKey);
+});
+
+
+test("only transition timing and completion contribute to initial lead heat", () => {
+  const baseline = fixtures.established.answers;
+  const expectedByTimeline = {
+    asap: 45,
+    one_to_three: 40,
+    three_to_six: 30,
+    six_to_twelve: 25,
+    exploring: 20,
+  };
+  for (const [transitionTimeline, expected] of Object.entries(expectedByTimeline)) {
+    const result = scoreAssessment({ ...baseline, transitionTimeline }, scoringConfig);
+    assert.equal(result.initialLeadScore, expected);
+    assert.deepEqual(result.leadComponents, {
+      transitionTimeline: expected - 20,
+      assessmentCompleted: 20,
+    });
+  }
+
+  const changedNonTransitionAnswers = {
+    ...fixtures.seed.answers,
+    transitionTimeline: "asap",
+  };
+  assert.equal(
+    scoreAssessment(changedNonTransitionAnswers, scoringConfig).initialLeadScore,
+    scoreAssessment({ ...baseline, transitionTimeline: "asap" }, scoringConfig).initialLeadScore
+  );
 });
 
 test("readiness uses only the four configured dimensions and their configured weights", () => {
@@ -307,12 +336,15 @@ test("configuration validation rejects incomplete versions and invalid weight to
     (config) => { config.readiness.dimensionWeights.marketReadiness = 0.5; },
     (config) => { config.readiness.analyticalQuestionWeights.problemFraming = 0; },
     (config) => { config.readiness.developmentWeights.careerPosition = 0.5; },
-    (config) => { config.leadIntent.weights.pain = 0.5; },
   ]) {
     const invalid = clone(scoringConfig);
     mutate(invalid);
     assert.throws(() => validateConfig(invalid), /weights must total 1/i);
   }
+
+  const missingLeadRules = clone(scoringConfig);
+  delete missingLeadRules.leadIntent.transitionPoints;
+  assert.throws(() => validateConfig(missingLeadRules), /Lead heat configuration/i);
 
   const wrongStageCount = clone(scoringConfig);
   wrongStageCount.readiness.stageThresholds.pop();
@@ -340,8 +372,8 @@ test("lead payload is normalized, structured and keeps consent separate", () => 
   assert.equal(payload.careerStage, "interviewing_no_offer");
   assert.equal(payload.baExposure, "workplace");
   assert.equal(payload.transitionTimeline, "asap");
-  assert.equal(payload.leadTemperature, "Hot");
-  assert.equal(payload.initialLeadScore, 93);
+  assert.equal(payload.leadTemperature, "Warm");
+  assert.equal(payload.initialLeadScore, 45);
   assert.deepEqual(Object.keys(payload.supportingScores), [
     "analyticalProblemSolving",
     "transferableExperience",

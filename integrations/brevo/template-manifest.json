@@ -1,0 +1,169 @@
+{
+  "roadmapDelivery": {
+    "templateId": 1,
+    "name": "Anderseed - Free BA Career Roadmap",
+    "subject": "Your free BA Career Roadmap is ready",
+    "status": "active",
+    "assetStatus": "placeholder",
+    "assetPath": "assets/downloads/anderseed-ba-career-roadmap.pdf",
+    "assetSha256": "09fded85c84f45b93320987473b815b0db3f6b2f42b7767448ff3e6d274aa35e",
+    "linkParameter": "roadmap_url"
+  },
+  "draftLibrary": {
+    "senderId": 1,
+    "syncRule": "Create missing templates. Modify an inactive template only with an explicit --update key. Never activate templates.",
+    "pendingTemplates": [],
+    "templates": [
+      {
+        "key": "nurtureWelcome",
+        "templateId": 2,
+        "name": "Anderseed - Nurture 01 - Welcome",
+        "subject": "Welcome to your Business Analysis journey",
+        "classification": "marketing",
+        "status": "inactive",
+        "tag": "anderseed-nurture-welcome",
+        "parameters": [
+          "programme_url",
+          "telegram_url",
+          "tiktok_url",
+          "instagram_url",
+          "youtube_url"
+        ]
+      },
+      {
+        "key": "nurtureFoundations",
+        "templateId": 3,
+        "name": "Anderseed - Cold 01 - Transferable Experience",
+        "subject": "Your experience may already contain BA skills",
+        "classification": "marketing",
+        "status": "inactive",
+        "tag": "anderseed-cold-transferable-experience",
+        "parameters": [
+          "content_url",
+          "telegram_url",
+          "tiktok_url",
+          "instagram_url",
+          "youtube_url"
+        ]
+      },
+      {
+        "key": "nurtureCareer",
+        "templateId": 11,
+        "name": "Anderseed - Cold 02 - Career Opportunities",
+        "subject": "Where could a Business Analysis career take you?",
+        "classification": "marketing",
+        "status": "inactive",
+        "tag": "anderseed-cold-career-opportunities",
+        "parameters": [
+          "career_path_url",
+          "telegram_url",
+          "tiktok_url",
+          "instagram_url",
+          "youtube_url"
+        ]
+      },
+      {
+        "key": "nurturePortfolio",
+        "templateId": 4,
+        "name": "Anderseed - Nurture 03 - Portfolio Evidence",
+        "subject": "Build BA evidence employers can understand",
+        "classification": "marketing",
+        "status": "inactive",
+        "tag": "anderseed-nurture-portfolio",
+        "parameters": [
+          "portfolio_url",
+          "telegram_url",
+          "tiktok_url",
+          "instagram_url",
+          "youtube_url"
+        ]
+      },
+      {
+        "key": "nurtureProgramme",
+        "templateId": 5,
+        "name": "Anderseed - Nurture 04 - Programme",
+        "subject": "Ready to build practical BA experience?",
+        "classification": "marketing",
+        "status": "inactive",
+        "tag": "anderseed-nurture-programme",
+        "parameters": [
+          "pricing_url",
+          "telegram_url",
+          "tiktok_url",
+          "instagram_url",
+          "youtube_url"
+        ]
+      },
+      {
+        "key": "assessmentRoadmapDelivery",
+        "templateId": 10,
+        "name": "Anderseed - Assessment Roadmap Delivery",
+        "subject": "Your free BA Career Roadmap is ready",
+        "classification": "service",
+        "status": "inactive",
+        "tag": "anderseed-assessment-roadmap",
+        "parameters": [
+          "roadmap_url",
+          "preferences_url"
+        ]
+      },
+      {
+        "key": "applicationReceived",
+        "templateId": 6,
+        "name": "Anderseed - Application Received",
+        "subject": "We have received your Anderseed application",
+        "classification": "service",
+        "status": "inactive",
+        "tag": "anderseed-application-received",
+        "parameters": [
+          "application_reference"
+        ]
+      },
+      {
+        "key": "consultationConfirmed",
+        "templateId": 7,
+        "name": "Anderseed - Consultation Confirmed",
+        "subject": "Your Anderseed consultation is confirmed",
+        "classification": "service",
+        "status": "inactive",
+        "tag": "anderseed-consultation-confirmed",
+        "parameters": [
+          "manage_booking_url",
+          "consultation_date",
+          "consultation_time",
+          "consultation_timezone"
+        ]
+      },
+      {
+        "key": "consultationReminder",
+        "templateId": 8,
+        "name": "Anderseed - Consultation Reminder",
+        "subject": "Reminder: your Anderseed consultation",
+        "classification": "service",
+        "status": "inactive",
+        "tag": "anderseed-consultation-reminder",
+        "parameters": [
+          "manage_booking_url",
+          "consultation_date",
+          "consultation_time",
+          "consultation_timezone"
+        ]
+      },
+      {
+        "key": "paymentConfirmation",
+        "templateId": 9,
+        "name": "Anderseed - Payment Confirmation",
+        "subject": "Your Anderseed payment confirmation",
+        "classification": "service",
+        "status": "inactive",
+        "tag": "anderseed-payment-confirmation",
+        "parameters": [
+          "payment_reference",
+          "payment_amount",
+          "payment_plan",
+          "payment_date"
+        ]
+      }
+    ]
+  }
+}

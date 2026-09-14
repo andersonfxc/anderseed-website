@@ -1,0 +1,202 @@
+{
+  "version": "2026-09-13-v1",
+  "name": "Anderseed - Hot Lead Consultation Invitation",
+  "status": "inactive_pending_template_and_booking_link",
+  "purpose": "Invite an eligible Hot lead once, 24 hours after entering the Hot tier, and retain clear consultation lifecycle views.",
+  "invitationWorkflow": {
+    "trigger": {
+      "type": "contact_in_segment",
+      "segment": "Anderseed - Hot Leads",
+      "reentryAllowed": false
+    },
+    "delay": {
+      "value": 24,
+      "unit": "hours"
+    },
+    "preSendChecks": {
+      "all": [
+        {
+          "attribute": "MARKETING_CONSENT",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "attribute": "NURTURE_STATUS",
+          "operator": "equals",
+          "value": "Eligible"
+        },
+        {
+          "attribute": "EMAIL_VALIDATION_STATUS",
+          "operator": "equals",
+          "value": "Validated"
+        },
+        {
+          "attribute": "CONSULTATION_INVITED_DATE",
+          "operator": "is_empty"
+        },
+        {
+          "attribute": "CONSULTATION_STATUS",
+          "operator": "is_empty"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "type": "send_email",
+        "templateKey": "consultationInvitation",
+        "status": "pending_content_approval"
+      },
+      {
+        "type": "update_contact",
+        "attribute": "CONSULTATION_STATUS",
+        "value": "Invited"
+      },
+      {
+        "type": "update_contact",
+        "attribute": "CONSULTATION_INVITED_DATE",
+        "value": "current_date"
+      }
+    ],
+    "duplicatePrevention": [
+      "Do not allow contacts to enter the automation more than once.",
+      "Require CONSULTATION_INVITED_DATE to be empty before sending.",
+      "Require CONSULTATION_STATUS to be empty before sending.",
+      "Recheck eligibility after the 24-hour delay.",
+      "Record Invited status and invitation date after the send action."
+    ]
+  },
+  "lifecycleStates": {
+    "Invited": {
+      "source": "invitation_email_sent",
+      "updates": {
+        "CONSULTATION_STATUS": "Invited",
+        "CONSULTATION_INVITED_DATE": "event_date"
+      }
+    },
+    "Booked": {
+      "source": "booking_created",
+      "updates": {
+        "CONSULTATION_STATUS": "Booked",
+        "CONSULTATION_BOOKED_DATE": "event_date",
+        "CONSULTATION_NO_SHOW": false
+      },
+      "leadTierRule": "Remain Hot."
+    },
+    "Attended": {
+      "source": "meeting_attended",
+      "updates": {
+        "CONSULTATION_STATUS": "Attended",
+        "CONSULTATION_ATTENDED_DATE": "event_date",
+        "CONSULTATION_NO_SHOW": false
+      },
+      "leadTierRule": "Become Super Hot."
+    },
+    "NoShow": {
+      "source": "meeting_no_show",
+      "updates": {
+        "CONSULTATION_STATUS": "No-show",
+        "CONSULTATION_NO_SHOW": true
+      },
+      "leadTierRule": "Move to Warm and retain the no-show marker."
+    },
+    "Cancelled": {
+      "source": "booking_cancelled",
+      "updates": {
+        "CONSULTATION_STATUS": "Cancelled"
+      },
+      "leadTierRule": "Do not send another invitation automatically."
+    }
+  },
+  "brevoViews": [
+    {
+      "name": "Anderseed - Consultation Invited",
+      "conditions": {
+        "all": [
+          {
+            "attribute": "CONSULTATION_STATUS",
+            "operator": "equals",
+            "value": "Invited"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Anderseed - Consultation Booked",
+      "conditions": {
+        "all": [
+          {
+            "attribute": "CONSULTATION_STATUS",
+            "operator": "equals",
+            "value": "Booked"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Anderseed - Consultation Attended",
+      "conditions": {
+        "all": [
+          {
+            "attribute": "CONSULTATION_STATUS",
+            "operator": "equals",
+            "value": "Attended"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Anderseed - Consultation No-show",
+      "conditions": {
+        "any": [
+          {
+            "attribute": "CONSULTATION_STATUS",
+            "operator": "equals",
+            "value": "No-show"
+          },
+          {
+            "attribute": "CONSULTATION_NO_SHOW",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      }
+    }
+  ],
+  "activationRequirements": [
+    "Approve the consultation invitation email content.",
+    "Complete the pending Brevo booking-page customization: Anderseed title, description, logo, brand colour, public link, and desktop/mobile preview.",
+    "Insert the configurable booking URL in the email.",
+    "Configure the Brevo automation in the visual editor and keep re-entry disabled.",
+    "Run allowlisted booking, attendance and no-show tests before activation."
+  ],
+  "dayOneOperations": {
+    "status": "approved_for_brevo_standard",
+    "consultationReport": {
+      "source": "Conversations > Meetings > Planned Meetings",
+      "views": [
+        "Upcoming",
+        "Past",
+        "Canceled"
+      ],
+      "purpose": "Review bookings, participant questions, completed appointments, and cancellations."
+    },
+    "ownerReviewTask": {
+      "name": "Review completed consultations",
+      "type": "To do",
+      "priority": "High",
+      "reminderChannels": [
+        "email",
+        "browser"
+      ],
+      "procedure": [
+        "Open Planned Meetings and review consultations that have passed.",
+        "Open the matching contact record.",
+        "Record Attended, No-show, or Cancelled in CONSULTATION_STATUS.",
+        "Apply the corresponding manual lead-tier override and no-show marker.",
+        "Reschedule the owner task for the next review period."
+      ],
+      "limitation": "Brevo Standard does not create this task automatically from a meeting booking."
+    },
+    "attendanceRule": "The owner must confirm attendance manually. A Meeting started event is not proof that the participant attended."
+  }
+}
